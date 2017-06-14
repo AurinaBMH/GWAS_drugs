@@ -66,4 +66,6 @@ fclose(fileID);
 %% Create output variable
 eQTLedges = table(dataArray{1:end-1}, 'VariableNames', {'InteractorA','PartnerinteractorA','Interactiontype','InteractorB','PartnerinteractorB','ADHD','ASD','MDD','BIP','SZP'});
 
+
+
 end
