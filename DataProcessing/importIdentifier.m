@@ -62,6 +62,9 @@ fclose(fileID);
 % script.
 
 %% Create output variable
+% Make logicals:
+dataArray(2:end-1) = cellfun(@(x)logical(x),dataArray(2:end-1),'UniformOutput',false);
+
 eQTLidentifier = table(dataArray{1:end-1}, 'VariableNames', {'Name','ADHD','ASD','BIP','MDD','SZP','LD','GWAS','Partners'});
 
 end
