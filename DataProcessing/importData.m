@@ -23,6 +23,7 @@ for k = 1:numInteractions
     jj = strcmp(eQTLproteinnames,eQTLedges.InteractorB(k));
     Adj(ii,jj) = 1;
 end
+Adj = (Adj | Adj');
 
 %-------------------------------------------------------------------------------
 % Process node annotations
