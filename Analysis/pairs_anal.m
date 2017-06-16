@@ -8,6 +8,7 @@ isD2 = ismember(eQTLproteinnames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease2) & ~eQTLidentifier.Partners)));
 
 isEither = (isD1|isD2);
+isBoth = (isD1&isD2);
 Adj_filter = Adj(isEither,isEither);
 isD1_filter = isD1(isEither);
 isD2_filter = isD2(isEither);
@@ -24,12 +25,13 @@ axis('square')
 
 
 diseases = {'ADHD','ASD','BIP','MDD','SZP'};
+doKeepPartners = true;
 numDiseases = length(diseases);
 howMuchOverlap = zeros(numDiseases,numDiseases);
 for i = 1:numDiseases
     for j = i:numDiseases
         howMuchOverlap(i,j) = quantifyOverlap(diseases{i},diseases{j},...
-                            eQTLproteinnames,eQTLidentifier,Adj);
+                            eQTLproteinnames,eQTLidentifier,Adj,doKeepPartners);
     end
 end
 f = figure('color','w'); ax = gca;
