@@ -35,29 +35,48 @@ interactingNames = eQTLproteinnames(fisEither(doesCrossInteract));
 fprintf(1,'%u Interacting protein-coding genes:\n',length(interactingNames));
 disp(interactingNames);
 
+% List proteins overlapping and BIP:
+crossInteract_d2 = any(crossInteraction,2) & isD2_filter;
+fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
+                        sum(crossInteract_d2),disease2);
+theNames = eQTLproteinnames(fisEither(crossInteract_d2));
+for i = 1:length(theNames)
+    fprintf(1,'%s\n',theNames{i});
+end
 
-both_D1 = repmat(isBoth_filter,1,numEither) & repmat(isD1spec_filter,1,numEither)';
-both_D1 = (both_D1|both_D1');
-cross_both_d1 = (Adj_filter & both_D1);
-doesBothD1 = any(cross_both_d1,2);
+crossInteract_d1 = any(crossInteraction,2) & isD1_filter;
+fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
+                        sum(crossInteract_d1),disease1);
+theNames = eQTLproteinnames(fisEither(crossInteract_d1));
+for i = 1:length(theNames)
+    fprintf(1,'%s\n',theNames{i});
+end
+
+%-------------------------------------------------------------------------------
+% Genes involved in specific types of cross-disorder interactions
+%-------------------------------------------------------------------------------
+% D1/D2 <-> D1
+doesBothD1 = countUnique(isBoth_filter,isD1spec_filter,Adj_filter);
 fprintf(1,'%u %s/%s - %s\n',sum(doesBothD1),disease1,disease2,disease1);
 
-both_D2 = repmat(isBoth_filter,1,numEither) & repmat(isD2spec_filter,1,numEither)';
-both_D2 = (both_D2|both_D2');
-cross_both_d2 = (Adj_filter & both_D2);
-doesBothD2 = any(cross_both_d2,1);
+% D1/D2 <-> D2
+doesBothD2 = countUnique(isBoth_filter,isD2spec_filter,Adj_filter);
 fprintf(1,'%u %s/%s - %s\n',sum(doesBothD2),disease1,disease2,disease2);
 
-both_both = repmat(isBoth_filter,1,numEither) & repmat(isBoth_filter,1,numEither)';
-both_both = (both_both|both_both');
-cross_both_both = (Adj_filter & both_both);
-doesBothBoth = any(cross_both_both,2);
+% D1/D2 <-> D1/D2
+doesBothBoth = countUnique(isBoth_filter,isBoth_filter,Adj_filter);
 fprintf(1,'%u %s/%s - %s/%s\n',sum(doesBothBoth),disease1,disease2,disease1,disease2);
 
-D1_D2 = repmat(isD1spec_filter,1,numEither) & repmat(isD2spec_filter,1,numEither)';
-D1_D2 = (D1_D2|D1_D2');
-cross_d1_d2 = (Adj_filter & D1_D2);
-doesD1D2 = any(cross_d1_d2,2);
+% D1 <-> D2
+doesD1D2 = countUnique(isD1spec_filter,isD2spec_filter,Adj_filter);
 fprintf(1,'%u %s - %s\n',sum(doesD1D2),disease1,disease2);
+
+% D1 <-> []
+uniqueD1 = countUnique(isD1spec_filter,~isD2_filter,Adj_filter);
+fprintf(1,'%u %s - []\n',sum(uniqueD1),disease1);
+
+% D2 <-> []
+uniqueD2 = countUnique(isD2spec_filter,~isD1_filter,Adj_filter);
+fprintf(1,'%u %s - <>\n',sum(uniqueD2),disease2);
 
 d2overlapList = (doesD1D2 | doesBothBoth | doesBothD2) & isD2_filter;
