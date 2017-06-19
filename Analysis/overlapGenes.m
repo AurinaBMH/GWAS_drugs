@@ -8,16 +8,23 @@ isD2 = ismember(eQTLproteinnames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease2) & ~eQTLidentifier.Partners)));
 
 isBoth = (isD1&isD2);
+
+% Write full eQTL lists for each:
+writeOut(eQTLproteinnames,isD1,sprintf('%s_eQTL.csv',disease1));
+writeOut(eQTLproteinnames,isD2,sprintf('%s_eQTL.csv',disease2));
+
+%-------------------------------------------------------------------------------
 % List proteins overlapping:
+%-------------------------------------------------------------------------------
 fprintf(1,'%u overlapping annotations:\n',sum(isBoth));
+writeOut(eQTLproteinnames,isBoth,sprintf('%s_%s_overlapping.csv',disease1,disease2));
 overLappingNames = eQTLproteinnames(isBoth);
 disp(overLappingNames);
 
-f_takeUpper = @(x) triu(x);
-
-% Interactions
+%-------------------------------------------------------------------------------
+% Filter all to the subset of genes involved in either disorder
+%-------------------------------------------------------------------------------
 isEither = (isD1|isD2);
-fisEither = find(isEither);
 numEither = sum(isEither);
 isBoth_filter = isBoth(isEither);
 isD1_filter = isD1(isEither);
@@ -25,32 +32,46 @@ isD1spec_filter = isD1_filter & ~isBoth_filter;
 isD2_filter = isD2(isEither);
 isD2spec_filter = isD2_filter & ~isBoth_filter;
 Adj_filter = Adj(isEither,isEither);
+eQTLproteinnames_filter = eQTLproteinnames(isEither);
+
+%-------------------------------------------------------------------------------
+% Remove self-interactions
+%-------------------------------------------------------------------------------
+fprintf(1,'EXCLUDING %u self-interactions\n',sum(diag(Adj_filter)));
+Adj_filter(logical(eye(size(Adj_filter)))) = 0;
+
+%-------------------------------------------------------------------------------
 % crossFilt tells us where D1 interacts with D2
-crossFilt = repmat(isD1_filter,1,numEither) & repmat(isD2_filter,1,numEither)';
-crossFilt = (crossFilt | crossFilt');
-crossInteraction = (Adj_filter & crossFilt);
-doesCrossInteract = any(crossInteraction,1);
-interactingNames = eQTLproteinnames(fisEither(doesCrossInteract));
+%-------------------------------------------------------------------------------
+doesCrossInteract = countUnique(isD1_filter,isD2_filter,Adj_filter);
+fprintf(1,'%u Interacting protein-coding genes:\n',sum(doesCrossInteract));
+writeOut(eQTLproteinnames_filter,doesCrossInteract,...
+                    sprintf('%s_%s_interact_any.csv',disease1,disease2));
 % List proteins overlapping:
-fprintf(1,'%u Interacting protein-coding genes:\n',length(interactingNames));
-disp(interactingNames);
+% interactingNames = eQTLproteinnames_filter(doesCrossInteract);
+% disp(interactingNames);
 
-% List proteins overlapping and BIP:
-crossInteract_d2 = any(crossInteraction,2) & isD2_filter;
-fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
-                        sum(crossInteract_d2),disease2);
-theNames = eQTLproteinnames(fisEither(crossInteract_d2));
-for i = 1:length(theNames)
-    fprintf(1,'%s\n',theNames{i});
-end
+%-------------------------------------------------------------------------------
+% List proteins overlapping and disease1; disease2:
+%-------------------------------------------------------------------------------
+crossInteract_d1 = doesCrossInteract & isD1_filter;
+crossInteract_d2 = doesCrossInteract & isD2_filter;
 
-crossInteract_d1 = any(crossInteraction,2) & isD1_filter;
+writeOut(eQTLproteinnames_filter,crossInteract_d1,...
+            sprintf('%s_%s_interact_is%s.csv',disease1,disease2,disease1));
+writeOut(eQTLproteinnames_filter,crossInteract_d2,...
+            sprintf('%s_%s_interact_is%s.csv',disease1,disease2,disease2));
+
+
 fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
                         sum(crossInteract_d1),disease1);
-theNames = eQTLproteinnames(fisEither(crossInteract_d1));
-for i = 1:length(theNames)
-    fprintf(1,'%s\n',theNames{i});
-end
+% theNames = eQTLproteinnames(fisEither(crossInteract_d1));
+fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
+                        sum(crossInteract_d2),disease2);
+% theNames = eQTLproteinnames(fisEither(crossInteract_d2));
+% for i = 1:length(theNames)
+%     fprintf(1,'%s\n',theNames{i});
+% end
 
 %-------------------------------------------------------------------------------
 % Genes involved in specific types of cross-disorder interactions
@@ -80,3 +101,11 @@ uniqueD2 = countUnique(isD2spec_filter,~isD1_filter,Adj_filter);
 fprintf(1,'%u %s - <>\n',sum(uniqueD2),disease2);
 
 d2overlapList = (doesD1D2 | doesBothBoth | doesBothD2) & isD2_filter;
+
+
+%-------------------------------------------------------------------------------
+% Write:
+writeOut(eQTLproteinnames_filter,uniqueD1,...
+            sprintf('%s_%s_unique_%s.csv',disease1,disease2,disease1));
+writeOut(eQTLproteinnames_filter,uniqueD2,...
+            sprintf('%s_%s_unique_%s.csv',disease1,disease2,disease2));
