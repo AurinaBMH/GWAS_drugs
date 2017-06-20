@@ -1,6 +1,18 @@
+function overlapGenes(disease1,disease2)
 
-disease1 = 'SZP';
-disease2 = 'BIP';
+if nargin < 1
+    disease1 = 'SZP';
+end
+if nargin < 2
+    disease2 = 'BIP';
+end
+
+%-------------------------------------------------------------------------------
+% Load data:
+load(fullfile('Data','processedData.mat'),'Adj','eQTLproteinnames');
+eQTLidentifier = importIdentifier();
+
+%-------------------------------------------------------------------------------
 
 isD1 = ismember(eQTLproteinnames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease1) & ~eQTLidentifier.Partners)));

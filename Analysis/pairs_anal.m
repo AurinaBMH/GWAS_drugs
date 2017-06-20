@@ -23,6 +23,7 @@ imagesc([repmat(isD1_filter,1,10),repmat(isD2_filter,1,10),Adj_filter]);
 colormap(gray);
 axis('square')
 
+%===============================================================================
 
 diseases = {'ADHD','ASD','BIP','MDD','SZP'};
 doKeepPartners = true;
