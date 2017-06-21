@@ -33,4 +33,6 @@ for i = 1:numDiseases
     isD_specific = isD & notOthers;
     uniqueD = countUnique(isD_specific,notOthers,Adj_filter);
     fprintf(1,'%u/%u %s - []\n',sum(uniqueD),sum(isD),diseases{i});
+    writeOut(eQTLproteinnames_filt,uniqueD,...
+                sprintf('allFive_unique_%s.csv',diseases{i}));
 end
