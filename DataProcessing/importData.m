@@ -1,16 +1,28 @@
+function importData(doEQTL)
+
+if nargin < 1
+    doEQTL = true;
+end
+
 %-------------------------------------------------------------------------------
 % Do the importing from csv files:
 %-------------------------------------------------------------------------------
 fprintf(1,'Importing data from csv files\n');
-eQTLedges = importEdges();
-eQTLidentifier = importIdentifier();
-eQTLproteinnames = importProteinNames();
+if doEQTL
+    geneIdentifier = importIdentifier_eQTL();
+    proteinNames = importProteinNames();
+    PPI_edges = importEdges_eQTL();
+else
+    geneIdentifier = ImportIdentifierMapped();
+    proteinNames = geneIdentifier.Name;
+    PPI_edges = importEdgesMapped();
+end
+numProteins = length(proteinNames);
 
 %-------------------------------------------------------------------------------
 % Interaction matrix
 %-------------------------------------------------------------------------------
-numInteractions = height(eQTLedges);
-numProteins = length(eQTLproteinnames);
+numInteractions = height(PPI_edges);
 
 fprintf(1,['Constructing a %ux%u protein-protein interaction network',...
                 ' containing %u interactions...\n'],...
@@ -19,8 +31,8 @@ fprintf(1,['Constructing a %ux%u protein-protein interaction network',...
 Adj = zeros(numProteins,numProteins);
 
 for k = 1:numInteractions
-    ii = strcmp(eQTLproteinnames,eQTLedges.InteractorA(k));
-    jj = strcmp(eQTLproteinnames,eQTLedges.InteractorB(k));
+    ii = strcmp(proteinNames,PPI_edges.InteractorA(k));
+    jj = strcmp(proteinNames,PPI_edges.InteractorB(k));
     Adj(ii,jj) = 1;
 end
 Adj = (Adj | Adj');
@@ -28,15 +40,27 @@ Adj = (Adj | Adj');
 %-------------------------------------------------------------------------------
 % Process node annotations
 %-------------------------------------------------------------------------------
-% Agglomerate data in eQTLidentifier
+% Agglomerate data in geneIdentifier
 % proteinMetaData = table();
-isGWAS = ismember(eQTLproteinnames,unique(eQTLidentifier.Name(eQTLidentifier.GWAS)));
-isLD = ismember(eQTLproteinnames,unique(eQTLidentifier.Name(eQTLidentifier.LD)));
-isNeighbor = ismember(eQTLproteinnames,unique(eQTLidentifier.Name(eQTLidentifier.Partners)));
+isGWAS = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.GWAS)));
+isLD = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.LD)));
+if doEQTL
+    isNeighbor = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.Partners)));
+else
+    % No neighbors in the matched version:
+    isNeighbor = false(numProteins,1);
+end
 fprintf(1,'%u GWAS, %u LD, %u neighbor\n',sum(isGWAS),sum(isLD),sum(isNeighbor));
 
 
 %-------------------------------------------------------------------------------
 % Save to file
 %-------------------------------------------------------------------------------
-save(fullfile('Data','processedData.mat'),'Adj','eQTLproteinnames');
+
+if doEQTL
+    fileName = 'processedData_eQTL.mat';
+else
+    fileName = 'processedData_Matched.mat';
+end
+save(fullfile('Data',fileName),'Adj','proteinNames');
+fprintf(1,'Saved processed data to ''%s''\n',fileName);
