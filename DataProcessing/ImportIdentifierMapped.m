@@ -66,3 +66,6 @@ fclose(fileID);
 
 %% Create output variable
 MappedGenesidentifier = table(dataArray{1:end-1}, 'VariableNames', {'Name','SZP','ADHD','ASD','MDD','BIP','GWAS','LD'});
+
+% Add logical partners (all false):
+MappedGenesidentifier.Partners = false(height(MappedGenesidentifier),1);

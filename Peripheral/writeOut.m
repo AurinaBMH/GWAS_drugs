@@ -10,7 +10,7 @@ end
 
 fclose(fid);
 
-fprintf(1,'Wrote %u protien names to %s!\n',length(theNames),fileName);
+fprintf(1,'Wrote %u protein names to %s!\n',length(theNames),fileName);
 
 
 end

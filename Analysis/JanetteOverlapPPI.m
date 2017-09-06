@@ -7,7 +7,7 @@
 %-------------------------------------------------------------------------------
 % (i.e., get the list, then filter out genes that have no interactions in PPI network)
 %-------------------------------------------------------------------------------
-doeQTL = true;
+doeQTL = false;
 
 %-------------------------------------------------------------------------------
 % Load data:
@@ -15,18 +15,20 @@ doeQTL = true;
 if doeQTL
     dataFile = 'processedData_eQTL.mat';
     geneIdentifier = importIdentifier();
+    extraText = '';
 else
     dataFile = 'processedData_Mapped.mat';
     geneIdentifier = ImportIdentifierMapped();
+    extraText = '_mapped';
 end
-load(fullfile('Data','processedData_eQTL.mat'),'Adj','proteinNames');
+load(dataFile,'Adj','proteinNames');
 
 %===============================================================================
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DOUBLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %===============================================================================
 % disease1 = 'SZP'; disease2 = 'BIP';
 % disease1 = 'ADHD'; disease2 = 'ASD';
-% disease1 = 'SZP'; disease2 = 'MDD';
+disease1 = 'SZP'; disease2 = 'MDD';
 
 isD1 = ismember(proteinNames,...
             unique(geneIdentifier.Name(geneIdentifier.(disease1) & ~geneIdentifier.Partners)));
@@ -42,9 +44,9 @@ fprintf(1,'%u genes have no interactions within the PPI network -> %u\n',...
                 sum(hasNoInteractions),numEither-sum(hasNoInteractions));
 
 % Write out the original list:
-writeOut(proteinNames,isEither,sprintf('%s_%s_either.csv',disease1,disease2));
+writeOut(proteinNames,isEither,sprintf('%s_%s_either%s.csv',disease1,disease2,extraText));
 % Now after filtering on P-P interactions:
-writeOut(proteinNames(isEither),~hasNoInteractions,sprintf('%s_%s_either_PPIfilter.csv',disease1,disease2));
+writeOut(proteinNames(isEither),~hasNoInteractions,sprintf('%s_%s_either_PPIfilter%s.csv',disease1,disease2,extraText));
 
 %===============================================================================
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TRIPLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,6 +69,6 @@ fprintf(1,'%u genes have no interactions within the PPI network -> %u\n',...
                 sum(hasNoInteractions),numEither-sum(hasNoInteractions));
 
 % Write out the original list:
-writeOut(proteinNames,isEither,sprintf('%s_%s_%s_either.csv',disease1,disease2,disease3));
+writeOut(proteinNames,isEither,sprintf('%s_%s_%s_either%s.csv',disease1,disease2,disease3,extraText));
 % Now after filtering on P-P interactions:
-writeOut(proteinNames(isEither),~hasNoInteractions,sprintf('%s_%s_%s_either_PPIfilter.csv',disease1,disease2,disease3));
+writeOut(proteinNames(isEither),~hasNoInteractions,sprintf('%s_%s_%s_either_PPIfilter%s.csv',disease1,disease2,disease3,extraText));

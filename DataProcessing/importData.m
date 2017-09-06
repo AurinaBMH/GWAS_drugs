@@ -14,7 +14,7 @@ if doEQTL
     PPI_edges = importEdges_eQTL();
 else
     geneIdentifier = ImportIdentifierMapped();
-    proteinNames = geneIdentifier.Name;
+    proteinNames = unique(geneIdentifier.Name);
     PPI_edges = importEdgesMapped();
 end
 numProteins = length(proteinNames);
@@ -44,12 +44,7 @@ Adj = (Adj | Adj');
 % proteinMetaData = table();
 isGWAS = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.GWAS)));
 isLD = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.LD)));
-if doEQTL
-    isNeighbor = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.Partners)));
-else
-    % No neighbors in the matched version:
-    isNeighbor = false(numProteins,1);
-end
+isNeighbor = ismember(proteinNames,unique(geneIdentifier.Name(geneIdentifier.Partners)));
 fprintf(1,'%u GWAS, %u LD, %u neighbor\n',sum(isGWAS),sum(isLD),sum(isNeighbor));
 
 
