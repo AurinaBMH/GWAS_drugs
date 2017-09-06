@@ -6,23 +6,23 @@ diseases = {'ADHD','ASD','BIP','MDD','SZP'};
 
 %-------------------------------------------------------------------------------
 % Load data:
-load(fullfile('Data','processedData.mat'),'Adj','eQTLproteinnames');
+load(fullfile('Data','processedData_eQTL.mat'),'Adj','proteinNames');
 eQTLidentifier = importIdentifier();
 
 
 %-------------------------------------------------------------------------------
 numDiseases = length(diseases);
-diseaseMarker = false(length(eQTLproteinnames),numDiseases);
+diseaseMarker = false(length(proteinNames),numDiseases);
 
 for i = 1:numDiseases
-    diseaseMarker(:,i) = ismember(eQTLproteinnames,...
+    diseaseMarker(:,i) = ismember(proteinNames,...
                 unique(eQTLidentifier.Name(eQTLidentifier.(diseases{i}) & ~eQTLidentifier.Partners)));
 end
 
 % Filter by genes that mark for disorders (i.e., no partners):
 isAny = any(diseaseMarker,2);
 diseaseMarker_filt = diseaseMarker(isAny,:);
-eQTLproteinnames_filt = eQTLproteinnames(isAny);
+proteinNames_filt = proteinNames(isAny);
 Adj_filter = Adj(isAny,isAny);
 
 %-------------------------------------------------------------------------------
@@ -33,6 +33,6 @@ for i = 1:numDiseases
     isD_specific = isD & notOthers;
     uniqueD = countUnique(isD_specific,notOthers,Adj_filter);
     fprintf(1,'%u/%u %s - []\n',sum(uniqueD),sum(isD),diseases{i});
-    writeOut(eQTLproteinnames_filt,uniqueD,...
+    writeOut(proteinNames_filt,uniqueD,...
                 sprintf('allFive_unique_%s.csv',diseases{i}));
 end

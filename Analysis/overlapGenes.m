@@ -9,28 +9,28 @@ end
 
 %-------------------------------------------------------------------------------
 % Load data:
-load(fullfile('Data','processedData.mat'),'Adj','eQTLproteinnames');
+load(fullfile('Data','processedData_eQTL.mat'),'Adj','proteinNames');
 eQTLidentifier = importIdentifier();
 
 %-------------------------------------------------------------------------------
 
-isD1 = ismember(eQTLproteinnames,...
+isD1 = ismember(proteinNames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease1) & ~eQTLidentifier.Partners)));
-isD2 = ismember(eQTLproteinnames,...
+isD2 = ismember(proteinNames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease2) & ~eQTLidentifier.Partners)));
 
 isBoth = (isD1&isD2);
 
 % Write full eQTL lists for each:
-writeOut(eQTLproteinnames,isD1,sprintf('%s_eQTL.csv',disease1));
-writeOut(eQTLproteinnames,isD2,sprintf('%s_eQTL.csv',disease2));
+writeOut(proteinNames,isD1,sprintf('%s_eQTL.csv',disease1));
+writeOut(proteinNames,isD2,sprintf('%s_eQTL.csv',disease2));
 
 %-------------------------------------------------------------------------------
 % List proteins overlapping:
 %-------------------------------------------------------------------------------
 fprintf(1,'%u overlapping annotations:\n',sum(isBoth));
-writeOut(eQTLproteinnames,isBoth,sprintf('%s_%s_overlapping.csv',disease1,disease2));
-overLappingNames = eQTLproteinnames(isBoth);
+writeOut(proteinNames,isBoth,sprintf('%s_%s_overlapping.csv',disease1,disease2));
+overLappingNames = proteinNames(isBoth);
 disp(overLappingNames);
 
 %-------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ isD1spec_filter = isD1_filter & ~isBoth_filter;
 isD2_filter = isD2(isEither);
 isD2spec_filter = isD2_filter & ~isBoth_filter;
 Adj_filter = Adj(isEither,isEither);
-eQTLproteinnames_filter = eQTLproteinnames(isEither);
+proteinNames_filter = proteinNames(isEither);
 
 %-------------------------------------------------------------------------------
 % Remove self-interactions
@@ -57,10 +57,10 @@ Adj_filter(logical(eye(size(Adj_filter)))) = 0;
 %-------------------------------------------------------------------------------
 doesCrossInteract = countUnique(isD1_filter,isD2_filter,Adj_filter);
 fprintf(1,'%u Interacting protein-coding genes:\n',sum(doesCrossInteract));
-writeOut(eQTLproteinnames_filter,doesCrossInteract,...
+writeOut(proteinNames_filter,doesCrossInteract,...
                     sprintf('%s_%s_interact_any.csv',disease1,disease2));
 % List proteins overlapping:
-% interactingNames = eQTLproteinnames_filter(doesCrossInteract);
+% interactingNames = proteinNames_filter(doesCrossInteract);
 % disp(interactingNames);
 
 %-------------------------------------------------------------------------------
@@ -69,18 +69,18 @@ writeOut(eQTLproteinnames_filter,doesCrossInteract,...
 crossInteract_d1 = doesCrossInteract & isD1_filter;
 crossInteract_d2 = doesCrossInteract & isD2_filter;
 
-writeOut(eQTLproteinnames_filter,crossInteract_d1,...
+writeOut(proteinNames_filter,crossInteract_d1,...
             sprintf('%s_%s_interact_is%s.csv',disease1,disease2,disease1));
-writeOut(eQTLproteinnames_filter,crossInteract_d2,...
+writeOut(proteinNames_filter,crossInteract_d2,...
             sprintf('%s_%s_interact_is%s.csv',disease1,disease2,disease2));
 
 
 fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
                         sum(crossInteract_d1),disease1);
-% theNames = eQTLproteinnames(fisEither(crossInteract_d1));
+% theNames = proteinNames(fisEither(crossInteract_d1));
 fprintf(1,'%u %s-annotated and interacting protein-coding genes:\n',...
                         sum(crossInteract_d2),disease2);
-% theNames = eQTLproteinnames(fisEither(crossInteract_d2));
+% theNames = proteinNames(fisEither(crossInteract_d2));
 % for i = 1:length(theNames)
 %     fprintf(1,'%s\n',theNames{i});
 % end
@@ -117,9 +117,9 @@ d2overlapList = (doesD1D2 | doesBothBoth | doesBothD2) & isD2_filter;
 
 %-------------------------------------------------------------------------------
 % Write:
-writeOut(eQTLproteinnames_filter,uniqueD1,...
+writeOut(proteinNames_filter,uniqueD1,...
             sprintf('%s_%s_unique_%s.csv',disease1,disease2,disease1));
-writeOut(eQTLproteinnames_filter,uniqueD2,...
+writeOut(proteinNames_filter,uniqueD2,...
             sprintf('%s_%s_unique_%s.csv',disease1,disease2,disease2));
 
 end

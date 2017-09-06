@@ -60,7 +60,7 @@ fprintf(1,'%u GWAS, %u LD, %u neighbor\n',sum(isGWAS),sum(isLD),sum(isNeighbor))
 if doEQTL
     fileName = 'processedData_eQTL.mat';
 else
-    fileName = 'processedData_Matched.mat';
+    fileName = 'processedData_Mapped.mat';
 end
 save(fullfile('Data',fileName),'Adj','proteinNames');
 fprintf(1,'Saved processed data to ''%s''\n',fileName);

@@ -2,9 +2,9 @@
 disease1 = 'SZP';
 disease2 = 'BIP';
 
-isD1 = ismember(eQTLproteinnames,...
+isD1 = ismember(proteinNames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease1) & ~eQTLidentifier.Partners)));
-isD2 = ismember(eQTLproteinnames,...
+isD2 = ismember(proteinNames,...
             unique(eQTLidentifier.Name(eQTLidentifier.(disease2) & ~eQTLidentifier.Partners)));
 
 isEither = (isD1|isD2);
@@ -32,7 +32,7 @@ howMuchOverlap = zeros(numDiseases,numDiseases);
 for i = 1:numDiseases
     for j = i:numDiseases
         howMuchOverlap(i,j) = quantifyOverlap(diseases{i},diseases{j},...
-                            eQTLproteinnames,eQTLidentifier,Adj,doKeepPartners);
+                            proteinNames,eQTLidentifier,Adj,doKeepPartners);
     end
 end
 f = figure('color','w'); ax = gca;
