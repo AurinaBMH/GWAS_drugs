@@ -47,6 +47,8 @@ fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnn
 fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',sum(isGWAS & hasGeneName),sum(isGWAS));
 fprintf(1,'%u/%u LD annotations have gene names\n',sum(isLD & hasGeneName),sum(isLD));
 
+allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
+
 %-------------------------------------------------------------------------------
 % Generate a SNP->Gene map
 %-------------------------------------------------------------------------------
@@ -130,6 +132,8 @@ numGWASMapped = zeros(numUniqueGenes,1);
 numLDSNPs = zeros(numUniqueGenes,1);
 numEGenes = zeros(numUniqueGenes,1);
 numSNPGenes = zeros(numUniqueGenes,1);
+numEGenes_LD = zeros(numUniqueGenes,1);
+numSNPGenes_LD = zeros(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
     gene_i = allUniqueGenes{i};
@@ -159,23 +163,61 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % eQTLs-GWAS
     %-------------------------------------------------------------------------------
+    isGene_i = strcmp(eQTLTable.eQTL,gene_i);
     % eGenes
-    numEGenes(i) = sum(~isnan(eQTLTable.eGene_qVal) & strcmp(eQTLTable.eQTL,gene_i));
-    % SNPGenes
-    numSNPGenes(i) = sum(~isnan(eQTLTable.SNPgene_pVal) & strcmp(eQTLTable.eQTL,gene_i));
+    isEGene = ~isnan(eQTLTable.eGene_qVal);
+    isSNPGene = ~isnan(eQTLTable.SNPgene_pVal);
+    eGeneCandidates = unique(eQTLTable.SNP(isEGene & isGene_i));
+    SNPGeneCandidates = unique(eQTLTable.SNP(isSNPGene & isGene_i));
+
+    % Filter lists by disease (assume Janette already did??)
+    isDisease_e = ismember(eGeneCandidates,allDiseaseSNPs);
+    isDisease_SNP = ismember(SNPGeneCandidates,allDiseaseSNPs);
+
+    if ~all(isDisease_e)
+        warning('Some eGenes have no disease annotation??');
+    end
+    if ~all(isDisease_SNP)
+        warning('Some SNPGenes have no disease annotation??');
+    end
+
+    % Count how many eGenes/SNPgenes have direct disease annotations
+    numEGeneSNPs(i) = sum(isDisease_e);
+    numSNPGeneSNPs(i) = sum(isDisease_SNP);
 
     %-------------------------------------------------------------------------------
     % eQTLs-LD
     %-------------------------------------------------------------------------------
+    % How many unique SNPs are LD to SNPs that are eQTL for a given gene??
+    eGeneSNPs = eGeneCandidates(isDisease_e);
+    SNPGeneSNPs = SNPGeneCandidates(isDisease_SNP);
+
+    % How many SNPs are LD to eGenes
+    % fprintf(1,'%u eGeneSNPS\n',numEGeneSNPs(i));
+    numLD = zeros(numEGeneSNPs(i),1);
+    for j = 1:numEGeneSNPs(i)
+        numLD(j) = HowManyLD(eGeneSNPs{j},SNPAnnotationTable,LDRelateTable);
+    end
+    numEGenes_LD(i) = sum(numLD);
+
+    % How many SNPs are LD to SNPgenes
+    % fprintf(1,'%u SNPGeneSNPS\n',numSNPGeneSNPs(i));
+    numLD = zeros(numSNPGeneSNPs(i),1);
+    for j = 1:numSNPGeneSNPs(i)
+        numLD(j) = HowManyLD(SNPGeneSNPs{j},SNPAnnotationTable,LDRelateTable);
+    end
+    numSNPGenes_LD(i) = sum(numLD);
 
 end
 
 % Now make a table
 gene = allUniqueGenes;
-results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes);
+results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD);
 results = sortrows(results,{'numGWASMapped','numLDSNPs','numEGenes','numSNPGenes'},'descend');
 fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs>0 & results.numGWASMapped>0));
 fprintf(1,'%u genes have mapped but no LD\n',sum(results.numLDSNPs==0 & results.numGWASMapped>0));
 fprintf(1,'%u genes have LD but no mapped\n',sum(results.numLDSNPs>0 & results.numGWASMapped==0));
 fprintf(1,'%u genes have eGene annotations\n',sum(results.numEGenes>0));
 fprintf(1,'%u genes have SNPgene annotations\n',sum(results.numSNPGenes>0));
+fprintf(1,'%u genes have eGene-LD annotations\n',sum(results.numEGenes_LD>0));
+fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(results.numSNPGenes_LD>0));
