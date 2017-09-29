@@ -217,4 +217,4 @@ fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(results.numSNPGenes_LD > 
 fprintf(1,'%u genes have LD-eGene annotations\n',sum(results.numEGenes_LD > 0));
 fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(results.numSNPGenes_LD > 0));
 
-display(results(1:40,:));
+display(results(1:60,:));
