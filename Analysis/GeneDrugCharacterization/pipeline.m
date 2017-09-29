@@ -1,5 +1,8 @@
 % Pipeline for producing table characterizing individual genes
 
+% Parameters:
+PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
+
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
 %===============================================================================
@@ -8,6 +11,9 @@
 [geneDrugTable,allUniqueGenes] = DrugGeneImport();
 numUniqueGenes = length(allUniqueGenes);
 numUniqueDrugs = length(unique(geneDrug.drugName));
+
+% Import drug classification
+drugClassTable = DrugClassImport();
 
 % SNP, gene, disease, GWAS, LD annotations:
 [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport()
@@ -19,14 +25,13 @@ LDRelateTable = LDImport();
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
 % Get PPIN data:
-evidenceThreshold = 0;
-fileName = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
+fileName = sprintf('PPIN_processed_th%u.mat',PPINevidenceThreshold);
 try
-    fprintf(1,'Loading PPIN data for evidence threshold of %u\n',evidenceThreshold);
+    fprintf(1,'Loading PPIN data for evidence threshold of %u\n',PPINevidenceThreshold);
     load(fileName,'AdjPPI','geneNames','PPIN');
 catch
-    warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',evidenceThreshold)
-    PPIN = PPINImport(evidenceThreshold);
+    warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',PPINevidenceThreshold)
+    PPIN = PPINImport(PPINevidenceThreshold);
 end
 
 %-------------------------------------------------------------------------------
@@ -72,6 +77,7 @@ numEGenes_LD = zeros(numUniqueGenes,1);
 numSNPGenes_LD = zeros(numUniqueGenes,1);
 numLDeGeneseQTL = zeros(numUniqueGenes,1);
 numLDSNPGeneseQTL = zeros(numUniqueGenes,1);
+matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
     gene_i = allUniqueGenes{i};
@@ -180,12 +186,23 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % Genes are neighbors on PPI network:
 
+
+    %-------------------------------------------------------------------------------
+    % Drugs, classes
+    %-------------------------------------------------------------------------------
+    % Match to drugs using geneDrugTable
+    % assign class using drugClassTable
+    matchingDrugs = geneDrugTable.drugName(strcmp(geneDrugTable.geneName,gene_i));
+    assignClass = @(druggy)drugClassTable.whatClass(strcmp(drugClassTable.drugName,druggy));
+    matchingDrugsClass = cellfun(@(x)sprintf('%s(%s)',x,char(assignClass(x))),...
+                        matchingDrugs,'UniformOutput',false);
+    matchingDrugsString{i} = BF_cat(matchingDrugsClass);
 end
 
 % Now make a table
 gene = allUniqueGenes;
 results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes,...
-                numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL);
+                numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
 results = sortrows(results,{'numGWASMapped','numLDSNPs','numEGenes','numSNPGenes',...
         'numEGenes_LD','numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
 fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs > 0 & results.numGWASMapped > 0));
@@ -197,3 +214,5 @@ fprintf(1,'%u genes have eGene-LD annotations\n',sum(results.numEGenes_LD > 0));
 fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(results.numSNPGenes_LD > 0));
 fprintf(1,'%u genes have LD-eGene annotations\n',sum(results.numEGenes_LD > 0));
 fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(results.numSNPGenes_LD > 0));
+
+display(results(1:40,:));
