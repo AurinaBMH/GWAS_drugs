@@ -36,6 +36,6 @@ AdjPPI = (AdjPPI | AdjPPI');
 %-------------------------------------------------------------------------------
 % Save to .mat file:
 fileName = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
-save(fileName,'AdjPPI','geneNames','PPIN');
+save(fullfile('Data',fileName),'AdjPPI','geneNames','PPIN');
 
 end
