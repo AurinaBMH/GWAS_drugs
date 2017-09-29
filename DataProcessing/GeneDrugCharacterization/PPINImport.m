@@ -24,6 +24,7 @@ PPIN = [gene1(keepEdge),gene2(keepEdge)];
 % All genes in the PPIN:
 geneNames = unique([unique(PPIN(:,1));unique(PPIN(:,2))]);
 numGenes = length(geneNames);
+fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
 AdjPPI = sparse(numGenes,numGenes);
 for k = 1:numInteractions
