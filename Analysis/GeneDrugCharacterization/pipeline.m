@@ -18,6 +18,10 @@ LDRelateTable = LDImport();
 % Get cis-eQTL data:
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
+% Get PPIN data:
+evidenceThreshold = 0;
+PPIN = PPINImport(evidenceThreshold);
+
 %-------------------------------------------------------------------------------
 % Infer the LD gene (i.e., the gene causing the annotation) for LD annotations
 % in SNPAnnotationTable
