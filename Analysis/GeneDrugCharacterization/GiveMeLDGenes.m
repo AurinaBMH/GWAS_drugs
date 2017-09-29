@@ -1,4 +1,4 @@
-function theLDgenes = GiveMeLDGenes(myGene,SNPGeneMap,LDRelateTable,allDiseaseSNPs)
+function theLDGenes = GiveMeLDGenes(myGene,SNPGeneMap,LDRelateTable,allDiseaseSNPs)
 %-------------------------------------------------------------------------------
 % 1. Find SNPs for a given gene (from SNPAnnotationTable)
 % 2. Find SNPs LD to those SNPs
@@ -13,35 +13,26 @@ if isempty(theSNPs)
     return
 end
 
-% --2-- Get SNPs LD to these SNPs:
+% --2-- Get SNPs LD to these SNPs (that have a relevant disease annotation):
 numSNPs = length(theSNPs);
 theLDSNPs = cell(numSNPs,1);
 for i = 1:numSNPs
     theLDSNPs{i} = GiveMeLDSNPs(theSNPs{i},LDRelateTable,allDiseaseSNPs)
 end
-
-
-theLDGenes = cellfun(@(x)SNPGeneMap.mappedGene(strcmp(SNPGeneMap.SNP_id,x)),theLDSNPs,'UniformOutput',false);
-theSNPs =
-
-% Get all SNPs LD to the input SNP:
-theLDSNP1 = LDRelateTable.SNP_id_2(strcmp(LDRelateTable.SNP_id_1,mySNP));
-theLDSNP2 = LDRelateTable.SNP_id_1(strcmp(LDRelateTable.SNP_id_2,mySNP));
-theLDSNPs = unique(vertcat(theLDSNP1,theLDSNP2));
-
-% if isempty(theLDSNPs)
-%     numLD = 0;
-%     return
-% end
-
-% Check which are in the SNPAnnotationTable:
-isInAnnotation = ismember(theLDSNPs,SNPAnnotationTable.SNP_id);
-
-if ~all(isInAnnotation)
-    warning('Not all LD SNPs have annotations?')
+theLDSNPs = vertcat(theLDSNPs{:});
+if isempty(theLDSNPs)
+    theLDGenes = {};
+    return
 end
 
-% Count how many:
-theLDSNPs = theLDSNPs(isInAnnotation);
+% --3-- Map SNPs to genes
+theLDSNPs = unique(theLDSNPs);
+theLDGenes = cellfun(@(x)SNPGeneMap.mappedGene(strcmp(SNPGeneMap.SNP_id,x)),theLDSNPs,'UniformOutput',false);
+theLDGenes = unique(vertcat(theLDGenes{:}));
+
+if ismember(myGene,theLDGenes)
+    theLDGenes = theLDGenes(~strcmp(theLDGenes,myGene));
+    fprintf(1,'Removed target gene, %s, from theLDGene list\n',myGene);
+end
 
 end

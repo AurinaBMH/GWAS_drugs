@@ -89,8 +89,10 @@ isMissing = strcmp(eQTL,'0');
 fprintf(1,'%u eQTLs assigned ''0'' -- no hgnc gene symbol -- removed\n',sum(isMissing));
 eQTLTable = eQTLTable(~isMissing,:);
 fprintf(1,'%u eQTL annotations loaded\n',height(eQTLTable));
-fprintf(1,'%u eGene annotations\n',sum(~isnan(eQTLTable.eGene_qVal)));
-fprintf(1,'%u SNPgene annotations\n',sum(~isnan(eQTLTable.SNPgene_pVal)));
+isEGene = ~isnan(eQTLTable.eGene_qVal);
+fprintf(1,'%u eGene annotations\n',sum(isEGene));
+isSNPGene = ~isnan(eQTLTable.SNPgene_pVal);
+fprintf(1,'%u SNPgene annotations\n',sum(isSNPGene));
 
 %-------------------------------------------------------------------------------
 % Infer the LD gene (i.e., the gene causing the annotation) for LD annotations
@@ -134,10 +136,20 @@ numEGenes = zeros(numUniqueGenes,1);
 numSNPGenes = zeros(numUniqueGenes,1);
 numEGenes_LD = zeros(numUniqueGenes,1);
 numSNPGenes_LD = zeros(numUniqueGenes,1);
+numLDeGeneseQTL = zeros(numUniqueGenes,1);
+numLDSNPGeneseQTL = zeros(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
     gene_i = allUniqueGenes{i};
     fprintf(1,'[%u/%u]: %s\n',i,numUniqueGenes,gene_i);
+
+    %-------------------------------------------------------------------------------
+    % Preliminaries:
+    %-------------------------------------------------------------------------------
+    % (I assume this can be comprehensive given the data provided??? Maybe not??)
+    theLDgenes = GiveMeLDGenes(gene_i,SNPGeneMap,LDRelateTable,allDiseaseSNPs);
+    fprintf(1,'%u genes LD to the target\n',length(theLDgenes));
+
     %-------------------------------------------------------------------------------
     % --numGWASMapped: the number of GWAS SNPs mapped directly to a gene
     %-------------------------------------------------------------------------------
@@ -165,8 +177,6 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     isGene_i = strcmp(eQTLTable.eQTL,gene_i);
     % eGenes
-    isEGene = ~isnan(eQTLTable.eGene_qVal);
-    isSNPGene = ~isnan(eQTLTable.SNPgene_pVal);
     eGeneCandidates = unique(eQTLTable.SNP(isEGene & isGene_i));
     SNPGeneCandidates = unique(eQTLTable.SNP(isSNPGene & isGene_i));
 
@@ -210,14 +220,27 @@ for i = 1:numUniqueGenes
     end
     numSNPGenes_LD(i) = length(unique(vertcat(theLDSNPs{:})));
 
-
     %-------------------------------------------------------------------------------
     % gene->LD->eQTL-SNPs
     %-------------------------------------------------------------------------------
     % How many SNPs are eQTL to SNPs LD to the gene of interest?
     % (1) get genes LD to the target gene
     % (2) count SNPs that are eQTL to LD genes
-    theLDgenes = GiveMeLDGenes(gene_i,SNPGeneMap,LDRelateTable,allDiseaseSNPs);
+    numLDgenes = length(theLDgenes);
+    eQTLSNPs_egene = cell(numLDgenes,1);
+    eQTLSNPs_SNPgene = cell(numLDgenes,1);
+    for j = 1:numLDgenes
+        isGene_j = strcmp(eQTLTable.eQTL,theLDgenes{j});
+        eGeneCandidates = unique(eQTLTable.SNP(isEGene & isGene_j));
+        isDisease_e = ismember(eGeneCandidates,allDiseaseSNPs);
+        SNPGeneCandidates = unique(eQTLTable.SNP(isSNPGene & isGene_j));
+        isDisease_SNP = ismember(SNPGeneCandidates,allDiseaseSNPs);
+        eQTLSNPs_egene{j} = eGeneCandidates(isDisease_e);
+        eQTLSNPs_SNPgene{j} = SNPGeneCandidates(isDisease_SNP);
+    end
+    numLDeGeneseQTL(i) = length(unique(vertcat(eQTLSNPs_egene{:})));
+    numLDSNPGeneseQTL(i) = length(unique(vertcat(eQTLSNPs_SNPgene{:})));
+
 
 end
 
