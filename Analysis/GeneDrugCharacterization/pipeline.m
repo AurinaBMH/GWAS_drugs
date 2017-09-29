@@ -20,7 +20,14 @@ LDRelateTable = LDImport();
 
 % Get PPIN data:
 evidenceThreshold = 0;
-PPIN = PPINImport(evidenceThreshold);
+fileName = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
+try
+    fprintf(1,'Loading PPIN data for evidence threshold of %u\n',evidenceThreshold);
+    load(fileName,'AdjPPI','geneNames','PPIN');
+catch
+    warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',evidenceThreshold)
+    PPIN = PPINImport(evidenceThreshold);
+end
 
 %-------------------------------------------------------------------------------
 % Infer the LD gene (i.e., the gene causing the annotation) for LD annotations
@@ -171,6 +178,7 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % PPIN
     %-------------------------------------------------------------------------------
+    % Genes are neighbors on PPI network:
 
 end
 

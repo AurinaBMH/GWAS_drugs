@@ -29,7 +29,6 @@ fprintf(1,['Constructing a %ux%u protein-protein interaction network',...
                     numProteins,numProteins,numInteractions);
 
 Adj = zeros(numProteins,numProteins);
-
 for k = 1:numInteractions
     ii = strcmp(proteinNames,PPI_edges.InteractorA(k));
     jj = strcmp(proteinNames,PPI_edges.InteractorB(k));
