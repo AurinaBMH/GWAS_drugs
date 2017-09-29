@@ -7,10 +7,10 @@ if nargin < 3
 end
 
 % One approach is to just count the number of LD annotations in SNPAnnotationTable
-numLDSNPs = sum(strcmp(SNPAnnotationTable.mappedGeneSNP,theGene) & SNPAnnotationTable.isLD);
+numLDSNPs = sum(strcmp(SNPAnnotationTable.mappedGene,theGene) & SNPAnnotationTable.isLD);
 
 % % (i) Check every SNP in the gene (maybe all are in SNPAnnotationTable???)
-% allSNPs = SNPGeneMap.SNP_id(strcmp(SNPGeneMap.mappedGeneSNP,theGene));
+% allSNPs = SNPGeneMap.SNP_id(strcmp(SNPGeneMap.mappedGene,theGene));
 % numSNPs = length(allSNPs);
 %
 % if beVocal
