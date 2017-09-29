@@ -1,104 +1,27 @@
 % Pipeline for producing table characterizing individual genes
 
 %===============================================================================
-% LOAD AND PROCESS DATA
+% LOAD AND PROCESS DATA from .csv files:
 %===============================================================================
 
-%-------------------------------------------------------------------------------
-% Get genes
-%-------------------------------------------------------------------------------
 % List of all genes with drug targets in Drugbank are in **gene_ATC_matrix.csv**
-
-fid = fopen('8_1_drug_gene.csv','r');
-C = textscan(fid,'%s%s','Delimiter',',');
-fclose(fid);
-geneName = C{1}; drugName = C{2};
-geneDrug = table(geneName,drugName);
-allUniqueGenes = unique(geneDrug.geneName);
+[geneDrugTable,allUniqueGenes] = DrugGeneImport();
 numUniqueGenes = length(allUniqueGenes);
-fprintf(1,'%u genes have drug targets in Drugbank\n',numUniqueGenes);
 numUniqueDrugs = length(unique(geneDrug.drugName));
-fprintf(1,'%u drugs have gene targets in Drugbank\n',numUniqueDrugs);
 
-%-------------------------------------------------------------------------------
-% Read in SNP annotations
-%-------------------------------------------------------------------------------
-fid = fopen('2_1_SNP_identifier.csv','r');
-C = textscan(fid,'%s%u%u%u%u%u%s%u%u','Delimiter',',','HeaderLines',1);
-fclose(fid);
-SNP_id = C{1};
-isSZP = logical(C{2});
-isADHD = logical(C{3});
-isASD = logical(C{4});
-isBIP = logical(C{5});
-isMDD = logical(C{6});
-mappedGene = C{7};
-mappedGene(strcmp(mappedGene,'0')) = {''}; % remove '0' -> empty
-isGWAS = logical(C{8});
-isLD = logical(C{9});
-SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD);
-numAnnotations = height(SNPAnnotationTable);
-fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,sum(isGWAS),sum(isLD));
-fprintf(1,'%u/%u genes with drug targets have annotations\n',...
-                sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
+% SNP, gene, disease, GWAS, LD annotations:
+[SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport()
 
-hasGeneName = cellfun(@(x)~isempty(x),mappedGene);
-fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnnotations);
-fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',sum(isGWAS & hasGeneName),sum(isGWAS));
-fprintf(1,'%u/%u LD annotations have gene names\n',sum(isLD & hasGeneName),sum(isLD));
-
-allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
-
-%-------------------------------------------------------------------------------
-% Generate a SNP->Gene map
-%-------------------------------------------------------------------------------
-SNPGeneMap = SNPAnnotationTable(cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene),1:2);
-% Make unique:
-[~,ix] = unique(SNPGeneMap.SNP_id);
-SNPGeneMap = SNPGeneMap(ix,:);
-fprintf(1,'%u/%u SNPs have a matching gene name (%u genes)\n',height(SNPGeneMap),...
-        length(unique(SNPAnnotationTable.SNP_id)),length(unique(SNPGeneMap.mappedGene)));
-
-%-------------------------------------------------------------------------------
 % Load the LD relationship data:
-%-------------------------------------------------------------------------------
-fid = fopen('2_2_LD_r2.csv','r');
-C = textscan(fid,'%s%f%s','Delimiter',',','HeaderLines',1);
-fclose(fid);
-SNP_id_1 = C{1};
-SNP_id_2 = C{3};
-LD = C{2};
-LDRelateTable = table(SNP_id_1,SNP_id_2,LD);
-%-------------------------------------------------------------------------------
+LDRelateTable = LDImport();
 
-%-------------------------------------------------------------------------------
-% Get cis-eQTL data
-%-------------------------------------------------------------------------------
-fid = fopen('4_GWAS_eQTL_combn.csv','r');
-C = textscan(fid,'%s%s%f%s%f','Delimiter',',','HeaderLines',1);
-fclose(fid);
-eQTL = C{1};
-SNP = C{2};
-eGene_qVal = C{3};
-eGene_qVal(eGene_qVal==-999) = NaN;
-tissueSample = C{4};
-SNPgene_pVal = C{5};
-SNPgene_pVal(SNPgene_pVal==-999) = NaN;
-eQTLTable = table(eQTL,SNP,eGene_qVal,tissueSample,SNPgene_pVal);
-isMissing = strcmp(eQTL,'0');
-fprintf(1,'%u eQTLs assigned ''0'' -- no hgnc gene symbol -- removed\n',sum(isMissing));
-eQTLTable = eQTLTable(~isMissing,:);
-fprintf(1,'%u eQTL annotations loaded\n',height(eQTLTable));
-isEGene = ~isnan(eQTLTable.eGene_qVal);
-fprintf(1,'%u eGene annotations\n',sum(isEGene));
-isSNPGene = ~isnan(eQTLTable.SNPgene_pVal);
-fprintf(1,'%u SNPgene annotations\n',sum(isSNPGene));
+% Get cis-eQTL data:
+[eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
 %-------------------------------------------------------------------------------
 % Infer the LD gene (i.e., the gene causing the annotation) for LD annotations
 % in SNPAnnotationTable
 %-------------------------------------------------------------------------------
-
 % For LD SNPs, we can annotate the SNP that caused the annotation
 % LDGene = cell(numAnnotations,1);
 % for i = 1:numAnnotations
@@ -241,13 +164,18 @@ for i = 1:numUniqueGenes
     numLDeGeneseQTL(i) = length(unique(vertcat(eQTLSNPs_egene{:})));
     numLDSNPGeneseQTL(i) = length(unique(vertcat(eQTLSNPs_SNPgene{:})));
 
+    %-------------------------------------------------------------------------------
+    % PPIN
+    %-------------------------------------------------------------------------------
 
 end
 
 % Now make a table
 gene = allUniqueGenes;
-results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD);
-results = sortrows(results,{'numGWASMapped','numLDSNPs','numEGenes','numSNPGenes'},'descend');
+results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes,...
+                numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL);
+results = sortrows(results,{'numGWASMapped','numLDSNPs','numEGenes','numSNPGenes',...
+        'numEGenes_LD','numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
 fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs > 0 & results.numGWASMapped > 0));
 fprintf(1,'%u genes have mapped but no LD\n',sum(results.numLDSNPs==0 & results.numGWASMapped > 0));
 fprintf(1,'%u genes have LD but no mapped\n',sum(results.numLDSNPs > 0 & results.numGWASMapped==0));
@@ -255,3 +183,5 @@ fprintf(1,'%u genes have eGene annotations\n',sum(results.numEGenes > 0));
 fprintf(1,'%u genes have SNPgene annotations\n',sum(results.numSNPGenes > 0));
 fprintf(1,'%u genes have eGene-LD annotations\n',sum(results.numEGenes_LD > 0));
 fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(results.numSNPGenes_LD > 0));
+fprintf(1,'%u genes have LD-eGene annotations\n',sum(results.numEGenes_LD > 0));
+fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(results.numSNPGenes_LD > 0));
