@@ -20,8 +20,6 @@ SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBI
 
 numAnnotations = height(SNPAnnotationTable);
 fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,sum(isGWAS),sum(isLD));
-fprintf(1,'%u/%u genes with drug targets have annotations\n',...
-                sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
 
 hasGeneName = cellfun(@(x)~isempty(x),mappedGene);
 fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnnotations);

@@ -10,13 +10,15 @@ PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
 % List of all genes with drug targets in Drugbank are in **gene_ATC_matrix.csv**
 [geneDrugTable,allUniqueGenes] = DrugGeneImport();
 numUniqueGenes = length(allUniqueGenes);
-numUniqueDrugs = length(unique(geneDrug.drugName));
+numUniqueDrugs = length(unique(geneDrugTable.drugName));
 
 % Import drug classification
 drugClassTable = DrugClassImport();
 
 % SNP, gene, disease, GWAS, LD annotations:
-[SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport()
+[SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport();
+fprintf(1,'%u/%u genes with drug targets have annotations\n',...
+                sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
 
 % Load the LD relationship data:
 LDRelateTable = LDImport();
@@ -25,14 +27,14 @@ LDRelateTable = LDImport();
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
 % Get PPIN data:
-fileName = sprintf('PPIN_processed_th%u.mat',PPINevidenceThreshold);
-try
-    fprintf(1,'Loading PPIN data for evidence threshold of %u\n',PPINevidenceThreshold);
-    load(fileName,'AdjPPI','geneNames','PPIN');
-catch
-    warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',PPINevidenceThreshold)
-    PPIN = PPINImport(PPINevidenceThreshold);
-end
+% fileName = sprintf('PPIN_processed_th%u.mat',PPINevidenceThreshold);
+% try
+%     fprintf(1,'Loading PPIN data for evidence threshold of %u\n',PPINevidenceThreshold);
+%     load(fileName,'AdjPPI','geneNames','PPIN');
+% catch
+%     warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',PPINevidenceThreshold)
+%     PPIN = PPINImport(PPINevidenceThreshold);
+% end
 
 %-------------------------------------------------------------------------------
 % Infer the LD gene (i.e., the gene causing the annotation) for LD annotations
@@ -88,7 +90,7 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % (I assume this can be comprehensive given the data provided??? Maybe not??)
     theLDgenes = GiveMeLDGenes(gene_i,SNPGeneMap,LDRelateTable,allDiseaseSNPs);
-    fprintf(1,'%u genes LD to the target\n',length(theLDgenes));
+    % fprintf(1,'%u genes LD to the target\n',length(theLDgenes));
 
     %-------------------------------------------------------------------------------
     % --numGWASMapped: the number of GWAS SNPs mapped directly to a gene
