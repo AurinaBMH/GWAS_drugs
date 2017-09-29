@@ -17,7 +17,7 @@ end
 numSNPs = length(theSNPs);
 theLDSNPs = cell(numSNPs,1);
 for i = 1:numSNPs
-    theLDSNPs{i} = GiveMeLDSNPs(theSNPs{i},LDRelateTable,allDiseaseSNPs)
+    theLDSNPs{i} = GiveMeLDSNPs(theSNPs{i},LDRelateTable,allDiseaseSNPs);
 end
 theLDSNPs = vertcat(theLDSNPs{:});
 if isempty(theLDSNPs)
