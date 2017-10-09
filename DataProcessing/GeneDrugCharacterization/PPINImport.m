@@ -19,6 +19,7 @@ fclose(fid);
 gene1 = C{1};
 gene2 = C{2};
 evidenceScore = C{3};
+clear('C');
 fprintf(1,' Done for %u interactions :-O',length(gene1));
 
 isGood = cellfun(@(x)~isempty(x),gene1) & cellfun(@(x)~isempty(x),gene2);
@@ -30,7 +31,8 @@ fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 clear('evidenceScore','gene1','gene2');
 
-save(fileNameSave,'PPIN');
+save(fileNameSave,'PPIN','-v7.3');
+fprintf(1,'Saved filtered data to %s\n',fileNameSave);
 
 %-------------------------------------------------------------------------------
 % All genes in the PPIN:
@@ -50,8 +52,8 @@ fprintf(1,['Constructing sparse symmetric adjacency matrix (%ux%u);',...
 ii = zeros(numInteractions,1);
 jj = zeros(numInteractions,1);
 for k = 1:numInteractions
-    ii(k) = strcmp(geneNames,PPIN{k,1});
-    jj(k) = strcmp(geneNames,PPIN{k,2});
+    ii(k) = find(strcmp(geneNames,PPIN{k,1}));
+    jj(k) = find(strcmp(geneNames,PPIN{k,2}));
     % AdjPPI(ii,jj) = 1;
 end
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
