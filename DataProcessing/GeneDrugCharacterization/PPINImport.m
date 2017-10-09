@@ -10,8 +10,10 @@ end
 % Save over two different files:
 fileNameSave1 = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
 fileNameSave1 = fullfile('DataOutput',fileNameSave1);
-fileNameSave2 = sprintf('PPI_Adj_th%u.mat',evidenceThreshold);
+fileNameSave2 = sprintf('PPI_geneLabels_th%u.mat',evidenceThreshold);
 fileNameSave2 = fullfile('DataOutput',fileNameSave2);
+fileNameSave3 = sprintf('PPI_Adj_th%u.mat',evidenceThreshold);
+fileNameSave3 = fullfile('DataOutput',fileNameSave3);
 
 % Read in data:
 fileName = '6_PPIN_STRINGv10.5.csv';
@@ -32,7 +34,7 @@ numInteractions = sum(keepEdge);
 fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
-clear('evidenceScore','gene1','gene2');
+clear('evidenceScore','gene1','gene2','keepEdge','isGood','highEvidence');
 
 % This may be too big for a .mat file...?
 % fprintf(1,'Saving filtered data to %s...',fileNameSave1);
@@ -54,20 +56,25 @@ fprintf(1,'(saved to %s)\n',fileNameSave2);
 % Convert gene names to indices:
 fprintf(1,['Constructing sparse symmetric adjacency matrix (%ux%u);',...
             ' %u edges for comparison...\n'],numGenes,numGenes,numInteractions);
-ii = zeros(numInteractions,1);
-jj = zeros(numInteractions,1);
-parfor k = 1:numInteractions
-    ii(k) = find(strcmp(geneNames,PPIN{k,1}));
-    jj(k) = find(strcmp(geneNames,PPIN{k,2}));
+indx1 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
+indx2 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
+for k = 1:numInteractions
+    % there can only be one match (since geneNames are unique)
+    indx1(k) = find(strcmp(geneNames,PPIN{k,1}),1);
+    indx2(k) = find(strcmp(geneNames,PPIN{k,2}),1);
 end
+save(fileNameSave3,'indx1','indx2','-v7.3');
+clear('PPIN');
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% Create the sparse matrix of the interactions:
+%-------------------------------------------------------------------------------
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
-AdjPPI = sparse(ii,jj,1,numGenes,numGenes);
+AdjPPI = sparse(indx(:,1),indx(:,2),1,numGenes,numGenes);
 fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
 fprintf(1,' Done.\n');
-
-%-------------------------------------------------------------------------------
-% Save to .mat file:
-save(fileNameSave2,'AdjPPI','-append');
+save(fileNameSave3,'AdjPPI','-append');
 
 end
