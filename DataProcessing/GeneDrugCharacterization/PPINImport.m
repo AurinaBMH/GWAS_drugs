@@ -6,6 +6,10 @@ if nargin < 1
     evidenceThreshold = 0;
 end
 
+% Set where to save to:
+fileNameSave = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
+fileNameSave = fullfile('Data',fileNameSave);
+
 % Read in data:
 fileName = '6_PPIN_STRINGv10.5.csv';
 fprintf(1,'Reading in data from %s...',fileName);
@@ -26,17 +30,23 @@ fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 clear('evidenceScore','gene1','gene2');
 
+save(fileNameSave,'PPIN');
+
 %-------------------------------------------------------------------------------
 % All genes in the PPIN:
 %-------------------------------------------------------------------------------
 fprintf(1,'Determining unique genes...\n');
-keyboard
-geneNames = unique(vertcat(PPIN{:,1},PPIN{:,2}));
+geneNames = unique(vertcat(PPIN(:,1),PPIN(:,2)));
 numGenes = length(geneNames);
 fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
+% Save:
+save(fileNameSave,'geneNames','-append');
+fprintf(1,'(saved to %s)\n',fileNameSave);
+
+fprintf(1,'Constructing sparse symmetric adjacency matrix (%ux%u); %u edges for comparison...\n',numGenes,numGenes,numInteractions);
 AdjPPI = sparse(numGenes,numGenes);
-for k = 1:numInteractions
+parfor k = 1:numInteractions
     ii = strcmp(geneNames,PPIN{k,1});
     jj = strcmp(geneNames,PPIN{k,2});
     AdjPPI(ii,jj) = 1;
@@ -45,7 +55,6 @@ AdjPPI = (AdjPPI | AdjPPI');
 
 %-------------------------------------------------------------------------------
 % Save to .mat file:
-fileName = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
-save(fullfile('Data',fileName),'AdjPPI','geneNames','PPIN');
+save(fileNameSave,'AdjPPI','-append');
 
 end
