@@ -7,8 +7,11 @@ if nargin < 1
 end
 
 % Set where to save to:
-fileNameSave = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
-fileNameSave = fullfile('DataOutput',fileNameSave);
+% Save over two different files:
+fileNameSave1 = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
+fileNameSave1 = fullfile('DataOutput',fileNameSave1);
+fileNameSave2 = sprintf('PPI_Adj_th%u.mat',evidenceThreshold);
+fileNameSave2 = fullfile('DataOutput',fileNameSave2);
 
 % Read in data:
 fileName = '6_PPIN_STRINGv10.5.csv';
@@ -31,9 +34,10 @@ fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 clear('evidenceScore','gene1','gene2');
 
-fprintf(1,'Saving filtered data to %s...',fileNameSave);
-save(fileNameSave,'PPIN','-v7.3');
-fprintf(1,' Saved.\n',fileNameSave);
+% This may be too big for a .mat file...?
+fprintf(1,'Saving filtered data to %s...',fileNameSave1);
+save(fileNameSave1,'PPIN','-v7.3');
+fprintf(1,' Saved.\n',fileNameSave1);
 
 %-------------------------------------------------------------------------------
 % All genes in the PPIN:
@@ -44,8 +48,8 @@ numGenes = length(geneNames);
 fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
 % Save:
-save(fileNameSave,'geneNames','-append');
-fprintf(1,'(saved to %s)\n',fileNameSave);
+save(fileNameSave2,'geneNames','-v7.3');
+fprintf(1,'(saved to %s)\n',fileNameSave2);
 
 % Convert gene names to indices:
 fprintf(1,['Constructing sparse symmetric adjacency matrix (%ux%u);',...
@@ -65,6 +69,6 @@ fprintf(1,' Done.\n');
 
 %-------------------------------------------------------------------------------
 % Save to .mat file:
-save(fileNameSave,'AdjPPI','-append');
+save(fileNameSave2,'AdjPPI','-append');
 
 end
