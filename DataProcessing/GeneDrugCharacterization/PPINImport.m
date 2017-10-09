@@ -6,23 +6,32 @@ if nargin < 1
     evidenceThreshold = 0;
 end
 
-fid = fopen('6_PPIN_STRINGv10.5.csv','r');
+% Read in data:
+fileName = '6_PPIN_STRINGv10.5.csv';
+fprintf(1,'Reading in data from %s...',fileName);
+fid = fopen(fileName,'r');
 C = textscan(fid,'%s%s%u','Delimiter',',','HeaderLines',1);
 fclose(fid);
 gene1 = C{1};
 gene2 = C{2};
 evidenceScore = C{3};
+fprintf(1,' Done for %u interactions :-O',length(gene1));
 
 isGood = cellfun(@(x)~isempty(x),gene1) & cellfun(@(x)~isempty(x),gene2);
 highEvidence = (evidenceScore>evidenceThreshold);
 keepEdge = (isGood & highEvidence);
 numInteractions = sum(keepEdge);
-fprintf(1,'%u PPIN edges\n',numInteractions);
+fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
+clear('evidenceScore','gene1','gene2');
 
+%-------------------------------------------------------------------------------
 % All genes in the PPIN:
-geneNames = unique([unique(PPIN(:,1));unique(PPIN(:,2))]);
+%-------------------------------------------------------------------------------
+fprintf(1,'Determining unique genes...\n');
+keyboard
+geneNames = unique(vertcat(PPIN{:,1},PPIN{:,2}));
 numGenes = length(geneNames);
 fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
