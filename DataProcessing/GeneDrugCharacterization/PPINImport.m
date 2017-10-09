@@ -8,7 +8,7 @@ end
 
 % Set where to save to:
 fileNameSave = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
-fileNameSave = fullfile('Data',fileNameSave);
+fileNameSave = fullfile('DataOutput',fileNameSave);
 
 % Read in data:
 fileName = '6_PPIN_STRINGv10.5.csv';
