@@ -20,7 +20,7 @@ gene1 = C{1};
 gene2 = C{2};
 evidenceScore = C{3};
 clear('C');
-fprintf(1,' Done for %u interactions :-O',length(gene1));
+fprintf(1,' Done for %u interactions :-O\n',length(gene1));
 
 isGood = cellfun(@(x)~isempty(x),gene1) & cellfun(@(x)~isempty(x),gene2);
 highEvidence = (evidenceScore>evidenceThreshold);
@@ -31,8 +31,9 @@ fprintf(1,'Filtered on evidence -> %u edges in the PPIN\n',numInteractions);
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 clear('evidenceScore','gene1','gene2');
 
+fprintf(1,'Saving filtered data to %s...',fileNameSave);
 save(fileNameSave,'PPIN','-v7.3');
-fprintf(1,'Saved filtered data to %s\n',fileNameSave);
+fprintf(1,' Saved.\n',fileNameSave);
 
 %-------------------------------------------------------------------------------
 % All genes in the PPIN:
