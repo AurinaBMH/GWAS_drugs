@@ -44,14 +44,21 @@ fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 save(fileNameSave,'geneNames','-append');
 fprintf(1,'(saved to %s)\n',fileNameSave);
 
-fprintf(1,'Constructing sparse symmetric adjacency matrix (%ux%u); %u edges for comparison...\n',numGenes,numGenes,numInteractions);
-AdjPPI = sparse(numGenes,numGenes);
+% Convert gene names to indices:
+fprintf(1,['Constructing sparse symmetric adjacency matrix (%ux%u);',...
+            ' %u edges for comparison...\n'],numGenes,numGenes,numInteractions);
+ii = zeros(numInteractions,1);
+jj = zeros(numInteractions,1);
 for k = 1:numInteractions
-    ii = strcmp(geneNames,PPIN{k,1});
-    jj = strcmp(geneNames,PPIN{k,2});
-    AdjPPI(ii,jj) = 1;
+    ii(k) = strcmp(geneNames,PPIN{k,1});
+    jj(k) = strcmp(geneNames,PPIN{k,2});
+    % AdjPPI(ii,jj) = 1;
 end
+fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
+AdjPPI = sparse(ii,jj,true,numGenes,numGenes);
+fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
+fprintf(1,' Done.\n');
 
 %-------------------------------------------------------------------------------
 % Save to .mat file:
