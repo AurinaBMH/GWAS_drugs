@@ -61,7 +61,7 @@ parfor k = 1:numInteractions
     jj(k) = find(strcmp(geneNames,PPIN{k,2}));
 end
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
-AdjPPI = sparse(ii,jj,true,numGenes,numGenes);
+AdjPPI = sparse(ii,jj,1,numGenes,numGenes);
 fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
 fprintf(1,' Done.\n');
