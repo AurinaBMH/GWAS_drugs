@@ -56,10 +56,9 @@ fprintf(1,['Constructing sparse symmetric adjacency matrix (%ux%u);',...
             ' %u edges for comparison...\n'],numGenes,numGenes,numInteractions);
 ii = zeros(numInteractions,1);
 jj = zeros(numInteractions,1);
-for k = 1:numInteractions
+parfor k = 1:numInteractions
     ii(k) = find(strcmp(geneNames,PPIN{k,1}));
     jj(k) = find(strcmp(geneNames,PPIN{k,2}));
-    % AdjPPI(ii,jj) = 1;
 end
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
 AdjPPI = sparse(ii,jj,true,numGenes,numGenes);

@@ -1,6 +1,11 @@
-function [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport()
+function [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease)
 % Import data on SNP-gene relationships, and disease, GWAS/LD annotations
 %-------------------------------------------------------------------------------
+
+if nargin < 1
+    whatDisease = 'all'; % don't filter
+end
+
 
 fid = fopen('2_1_SNP_identifier.csv','r');
 C = textscan(fid,'%s%u%u%u%u%u%s%u%u','Delimiter',',','HeaderLines',1);
@@ -18,6 +23,32 @@ isLD = logical(C{9});
 SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD);
 %-------------------------------------------------------------------------------
 
+%-------------------------------------------------------------------------------
+% Filter by disease:
+%-------------------------------------------------------------------------------
+sizePreFilter = height(SNPAnnotationTable);
+switch whatDisease
+case 'SCZ'
+    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isSZP,:);
+case 'ADHD'
+    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isADHD,:);
+case 'ASD'
+    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isASD,:);
+case 'BIP'
+    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isBIP,:);
+case 'MDD'
+    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isMDD,:);
+case 'all'
+    % ---Keep all---
+otherwise
+    error('Unknown disease: ''%s''',whatDisease);
+end
+sizePostFilter = height(SNPAnnotationTable);
+fprintf(1,'Filtering on %s reduced from %u -> %u annotations\n',sizePreFilter,sizePostFilter);
+
+%-------------------------------------------------------------------------------
+% Give outputs to screen:
+%-------------------------------------------------------------------------------
 numAnnotations = height(SNPAnnotationTable);
 fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,sum(isGWAS),sum(isLD));
 
