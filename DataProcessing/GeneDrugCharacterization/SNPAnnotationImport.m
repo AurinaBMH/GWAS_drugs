@@ -28,34 +28,41 @@ SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBI
 %-------------------------------------------------------------------------------
 sizePreFilter = height(SNPAnnotationTable);
 switch whatDisease
-case 'SCZ'
-    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isSZP,:);
+case 'SZP'
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isSZP,:);
 case 'ADHD'
-    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isADHD,:);
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isADHD,:);
 case 'ASD'
-    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isASD,:);
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isASD,:);
 case 'BIP'
-    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isBIP,:);
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isBIP,:);
 case 'MDD'
-    SNPAnnotationImport = SNPAnnotationImport(SNPAnnotationImport.isMDD,:);
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isMDD,:);
 case 'all'
     % ---Keep all---
 otherwise
     error('Unknown disease: ''%s''',whatDisease);
 end
-sizePostFilter = height(SNPAnnotationTable);
-fprintf(1,'Filtering on %s reduced from %u -> %u annotations\n',sizePreFilter,sizePostFilter);
+numAnnotations = height(SNPAnnotationTable);
+if strcmp(whatDisease,'all')
+    fprintf(1,'Keeping annotations from all diseases!\n');
+else
+    fprintf(1,'Filtering on %s reduced from %u -> %u annotations\n',...
+                            whatDisease,sizePreFilter,numAnnotations);
+end
 
 %-------------------------------------------------------------------------------
 % Give outputs to screen:
 %-------------------------------------------------------------------------------
-numAnnotations = height(SNPAnnotationTable);
-fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,sum(isGWAS),sum(isLD));
+fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,...
+                    sum(SNPAnnotationTable.isGWAS),sum(SNPAnnotationTable.isLD));
 
-hasGeneName = cellfun(@(x)~isempty(x),mappedGene);
+hasGeneName = cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
 fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnnotations);
-fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',sum(isGWAS & hasGeneName),sum(isGWAS));
-fprintf(1,'%u/%u LD annotations have gene names\n',sum(isLD & hasGeneName),sum(isLD));
+fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',...
+                sum(SNPAnnotationTable.isGWAS & hasGeneName),sum(SNPAnnotationTable.isGWAS));
+fprintf(1,'%u/%u LD annotations have gene names\n',...
+            sum(SNPAnnotationTable.isLD & hasGeneName),sum(SNPAnnotationTable.isLD));
 
 % Cell of all SNPs with a disease annotation (GWAS or LD):
 allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
