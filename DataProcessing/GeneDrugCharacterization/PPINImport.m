@@ -35,9 +35,9 @@ PPIN = [gene1(keepEdge),gene2(keepEdge)];
 clear('evidenceScore','gene1','gene2');
 
 % This may be too big for a .mat file...?
-fprintf(1,'Saving filtered data to %s...',fileNameSave1);
-save(fileNameSave1,'PPIN','-v7.3');
-fprintf(1,' Saved.\n',fileNameSave1);
+% fprintf(1,'Saving filtered data to %s...',fileNameSave1);
+% save(fileNameSave1,'PPIN','-v7.3');
+% fprintf(1,' Saved.\n',fileNameSave1);
 
 %-------------------------------------------------------------------------------
 % All genes in the PPIN:
