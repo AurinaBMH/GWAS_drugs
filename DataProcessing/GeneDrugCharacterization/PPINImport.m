@@ -64,6 +64,7 @@ for k = 1:numInteractions
     indx2(k) = find(strcmp(geneNames,PPIN{k,2}),1);
 end
 save(fileNameSave3,'indx1','indx2','-v7.3');
+fprintf(1,'Indices saved to %s\n',fileNameSave3);
 clear('PPIN');
 %-------------------------------------------------------------------------------
 
@@ -76,5 +77,6 @@ fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
 fprintf(1,' Done.\n');
 save(fileNameSave3,'AdjPPI','-append');
+fprintf(1,'Saved symmetrized Adj out to %s\n',fileNameSave3);
 
 end
