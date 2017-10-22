@@ -2,7 +2,7 @@
 
 % Parameters:
 PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
-whatDisease = 'all'; % pick a disease to filter on
+whatDisease = 'ASD'; % pick a disease to focus on
 
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
@@ -19,7 +19,12 @@ drugClassTable = DrugClassImport();
 % SNP, gene, disease, GWAS, LD annotations:
 [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
 fprintf(1,'%u/%u genes with drug targets have annotations\n',...
-                sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
+        sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
+
+isGWASAndNotEmpty = SNPAnnotationTable.isGWAS & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
+allDiseaseGenesMapped = unique(SNPAnnotationTable.mappedGene(isGWASAndNotEmpty));
+isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
+allDiseaseGenesLD = unique(SNPAnnotationTable.mappedGene(isLDAndNotEmpty));
 
 % Load the LD relationship data:
 LDRelateTable = LDImport();
@@ -28,14 +33,16 @@ LDRelateTable = LDImport();
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
 % Get PPIN data:
-% fileName = sprintf('PPIN_processed_th%u.mat',PPINevidenceThreshold);
-% try
-%     fprintf(1,'Loading PPIN data for evidence threshold of %u\n',PPINevidenceThreshold);
-%     load(fileName,'AdjPPI','geneNames','PPIN');
-% catch
-%     warning('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',PPINevidenceThreshold)
-%     PPIN = PPINImport(PPINevidenceThreshold);
-% end
+fileName = sprintf('PPI_Adj_th%u.mat',PPINevidenceThreshold);
+try
+    fprintf(1,'Loading PPIN data for evidence threshold of %u...',PPINevidenceThreshold);
+    PPIN = load(fileName,'AdjPPI','geneNames');
+    fprintf(1,' Loaded!\n');
+catch
+    error('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',...
+                    PPINevidenceThreshold)
+    % PPIN = PPINImport(PPINevidenceThreshold);
+end
 
 %-------------------------------------------------------------------------------
 % Now loop through genes to characterize...
@@ -47,6 +54,8 @@ numEGenes_LD = zeros(numUniqueGenes,1);
 numSNPGenes_LD = zeros(numUniqueGenes,1);
 numLDeGeneseQTL = zeros(numUniqueGenes,1);
 numLDSNPGeneseQTL = zeros(numUniqueGenes,1);
+numPPIneighborsDiseaseMapped = zeros(numUniqueGenes,1);
+numPPIneighborsDiseaseLD = zeros(numUniqueGenes,1);
 matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
@@ -61,7 +70,7 @@ for i = 1:numUniqueGenes
     % fprintf(1,'%u genes LD to the target\n',length(theLDgenes));
 
     %-------------------------------------------------------------------------------
-    % --numGWASMapped: the number of GWAS SNPs mapped directly to a gene
+    % --numGWASMapped: the number of GWAS SNPs mapped directly to the gene
     %-------------------------------------------------------------------------------
     isGeneAndMapped = strcmp(SNPAnnotationTable.mappedGene,gene_i) & SNPAnnotationTable.isGWAS;
     theMappedSNPs = unique(SNPAnnotationTable.SNP_id(isGeneAndMapped));
@@ -164,8 +173,15 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % PPIN
     %-------------------------------------------------------------------------------
-    % Genes are neighbors on PPI network:
-
+    % Genes that are neighbors on the PPI network:
+    PPI_index = strcmp(PPIN.geneNames,gene_i);
+    PPI_neighbors_index = PPIN.AdjPPI(PPI_index,:);
+    PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
+    % How many first degree neighbors are in the disease list (mapped/LD)?:
+    numPPIneighborsDiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
+    numPPIneighborsDiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
+    % What is the mean path length to genes on the disease list (mapped/LD)?:
+    
 
     %-------------------------------------------------------------------------------
     % Drugs, classes
@@ -181,10 +197,12 @@ end
 
 % Now make a table
 gene = allUniqueGenes;
-results = table(gene,numGWASMapped,numLDSNPs,numEGenes,numSNPGenes,...
-                numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
-results = sortrows(results,{'numGWASMapped','numLDSNPs','numEGenes','numSNPGenes',...
-        'numEGenes_LD','numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
+results = table(gene,numGWASMapped,numLDSNPs,numPPIneighborsDiseaseMapped,numPPIneighborsDiseaseLD,...
+                numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
+                numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
+results = sortrows(results,{'numGWASMapped','numLDSNPs','numPPIneighborsDiseaseMapped',...
+                'numPPIneighborsDiseaseLD','numEGenes','numSNPGenes','numEGenes_LD',...
+                'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
 fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs > 0 & results.numGWASMapped > 0));
 fprintf(1,'%u genes have mapped but no LD\n',sum(results.numLDSNPs==0 & results.numGWASMapped > 0));
 fprintf(1,'%u genes have LD but no mapped\n',sum(results.numLDSNPs > 0 & results.numGWASMapped==0));
