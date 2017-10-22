@@ -6,7 +6,7 @@ if nargin < 1
     whatDisease = 'all'; % don't filter
 end
 
-
+%-------------------------------------------------------------------------------
 fid = fopen('2_1_SNP_identifier.csv','r');
 C = textscan(fid,'%s%u%u%u%u%u%s%u%u','Delimiter',',','HeaderLines',1);
 fclose(fid);

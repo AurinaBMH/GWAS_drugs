@@ -11,11 +11,12 @@ load(fileNameLoad,'AdjPPI')
 
 %-------------------------------------------------------------------------------
 % Compute pairwise distances:
-fprintf(1,'Computing pairwise distances between %u genes\n',size(AdjPPI,1));
+fprintf(1,'Computing pairwise distances between %u genes...\n',size(AdjPPI,1));
 distMatrix = distance_bin(AdjPPI);
 
 %-------------------------------------------------------------------------------
 % Save out:
 save(fullfile('Data',fileNameSave),'distMatrix');
+fprintf(1,'Saved pairwise network distance data to %s\n',fileNameSave);
 
 end
