@@ -2,7 +2,7 @@
 
 % Parameters:
 PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
-whatDisease = 'ASD'; % pick a disease to focus on
+whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
 
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
@@ -43,6 +43,17 @@ catch
                     PPINevidenceThreshold)
     % PPIN = PPINImport(PPINevidenceThreshold);
 end
+% Load pairwise distances:
+fileName = sprintf('PPI_Dist_th%u.mat',PPINevidenceThreshold);
+try
+    PPIND = load(fileName,'distMatrix');
+    PPIN.distMatrix = PPIND.distMatrix;
+    clear('PPIND');
+catch
+    warning('No PPI shortest path information found');
+end
+% Get indices of mapped disease genes on PPI network:
+PPI_isDiseaseGeneMapped = cellfun(@(x)find(strcmp(x,PPIN.geneNames)),allDiseaseGenesMapped);
 
 %-------------------------------------------------------------------------------
 % Now loop through genes to characterize...
@@ -56,6 +67,7 @@ numLDeGeneseQTL = zeros(numUniqueGenes,1);
 numLDSNPGeneseQTL = zeros(numUniqueGenes,1);
 numPPIneighborsDiseaseMapped = zeros(numUniqueGenes,1);
 numPPIneighborsDiseaseLD = zeros(numUniqueGenes,1);
+meanPPIDistance = zeros(numUniqueGenes,1);
 matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
@@ -171,7 +183,7 @@ for i = 1:numUniqueGenes
     numLDSNPGeneseQTL(i) = length(unique(vertcat(eQTLSNPs_SNPgene{:})));
 
     %-------------------------------------------------------------------------------
-    % PPIN
+    % PPIN Neighbors
     %-------------------------------------------------------------------------------
     % Genes that are neighbors on the PPI network:
     PPI_index = strcmp(PPIN.geneNames,gene_i);
@@ -180,8 +192,15 @@ for i = 1:numUniqueGenes
     % How many first degree neighbors are in the disease list (mapped/LD)?:
     numPPIneighborsDiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
     numPPIneighborsDiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
+
+    %-------------------------------------------------------------------------------
+    % PPIN Distances
+    %-------------------------------------------------------------------------------
     % What is the mean path length to genes on the disease list (mapped/LD)?:
-    
+    if isfield(PPIN,'distMatrix')
+        allDistances = PPIN.distMatrix(PPI_index,PPI_isDiseaseGeneMapped);
+        meanPPIDistance(i) = mean(allDistances);
+    end
 
     %-------------------------------------------------------------------------------
     % Drugs, classes
@@ -198,10 +217,11 @@ end
 % Now make a table
 gene = allUniqueGenes;
 results = table(gene,numGWASMapped,numLDSNPs,numPPIneighborsDiseaseMapped,numPPIneighborsDiseaseLD,...
-                numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
+                meanPPIDistance,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
                 numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
+% Sort by column, then by column, etc. in ordered hierarchy:
 results = sortrows(results,{'numGWASMapped','numLDSNPs','numPPIneighborsDiseaseMapped',...
-                'numPPIneighborsDiseaseLD','numEGenes','numSNPGenes','numEGenes_LD',...
+                'numPPIneighborsDiseaseLD','meanPPIDistance','numEGenes','numSNPGenes','numEGenes_LD',...
                 'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
 fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs > 0 & results.numGWASMapped > 0));
 fprintf(1,'%u genes have mapped but no LD\n',sum(results.numLDSNPs==0 & results.numGWASMapped > 0));
