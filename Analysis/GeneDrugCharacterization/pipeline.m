@@ -1,8 +1,15 @@
+function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
 % Pipeline for producing table characterizing individual genes
 
-% Parameters:
-PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
-whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
+%-------------------------------------------------------------------------------
+% Parse inputs:
+%-------------------------------------------------------------------------------
+if nargin < 1
+    whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
+end
+if nargin < 2
+    PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
+end
 
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
@@ -69,8 +76,8 @@ numLDeGeneseQTL = zeros(numUniqueGenes,1);
 numLDSNPGeneseQTL = zeros(numUniqueGenes,1);
 numPPIneighbors1DiseaseMapped = zeros(numUniqueGenes,1);
 numPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
-propPPIneighbors1DiseaseMapped = zeros(numUniqueGenes,1);
-propPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
+percPPIneighbors1DiseaseMapped = zeros(numUniqueGenes,1);
+percPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
 meanPPIDistance = zeros(numUniqueGenes,1);
 matchingDrugsString = cell(numUniqueGenes,1);
 
@@ -190,16 +197,27 @@ for i = 1:numUniqueGenes
     % PPIN Neighbors
     %-------------------------------------------------------------------------------
     % Count disease genes that are 1-step neighbors on the PPI network:
-    PPI_index = strcmp(PPIN.geneNames,gene_i);
-    PPI_neighbors_index = PPIN.AdjPPI(PPI_index,:); % the 1-step neighbors
-    PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target
-    PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
-    % How many 1-step neighbors are in the disease list (mapped/LD)?:
-    numPPIneighbors1DiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
-    numPPIneighbors1DiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
-    % As a proportion of the number of neighbors (~penalizes genes with many neighbors):
-    propPPIneighbors1DiseaseMapped(i) = numPPIneighbors1DiseaseMapped(i)/length(PPI_neighbors_gene);
-    propPPIneighbors1DiseaseLD(i) = numPPIneighbors1DiseaseLD(i)/length(PPI_neighbors_gene);
+    PPI_index = find(strcmp(PPIN.geneNames,gene_i));
+    if isempty(PPI_index)
+        warning('%s not represented in the PPI network',gene_i)
+        % No match -- so cannot use any info from PPI network for this gene:
+        numPPIneighbors1DiseaseMapped(i) = NaN;
+        numPPIneighbors1DiseaseLD(i) = NaN;
+        percPPIneighbors1DiseaseMapped(i) = NaN;
+        percPPIneighbors1DiseaseLD(i) = NaN;
+    else
+        PPI_neighbors_index = find(PPIN.AdjPPI(PPI_index,:)); % the 1-step neighbors
+        PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target gene
+        PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
+
+        % How many 1-step neighbors are in the disease list (mapped/LD)?:
+        numPPIneighbors1DiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
+        numPPIneighbors1DiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
+
+        % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
+        percPPIneighbors1DiseaseMapped(i) = 100*numPPIneighbors1DiseaseMapped(i)/length(PPI_neighbors_gene);
+        percPPIneighbors1DiseaseLD(i) = 100*numPPIneighbors1DiseaseLD(i)/length(PPI_neighbors_gene);
+    end
 
     %===============================================================================
     % Genes that are 2-step neighbors on the PPI network -- doesn't make much sense (so many!):
@@ -236,22 +254,37 @@ end
 
 % Now make a table
 gene = allUniqueGenes;
-results = table(gene,numGWASMapped,numLDSNPs,numPPIneighbors1DiseaseMapped,numPPIneighbors1DiseaseLD,...
-                meanPPIDistance,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
+resultsTable = table(gene,numGWASMapped,numLDSNPs,numPPIneighbors1DiseaseMapped,numPPIneighbors1DiseaseLD,...
+                percPPIneighbors1DiseaseMapped,percPPIneighbors1DiseaseLD,... % meanPPIDistance,
+                numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
                 numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
 
 % Sort by column, then by column, etc. in ordered hierarchy:
-results = sortrows(results,{'numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',...
-                'numPPIneighbors1DiseaseLD','meanPPIDistance','numEGenes','numSNPGenes','numEGenes_LD',...
+resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
+                'percPPIneighbors1DiseaseLD','numPPIneighbors1DiseaseMapped',...
+                'numPPIneighbors1DiseaseLD','numEGenes','numSNPGenes','numEGenes_LD',...
                 'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
-fprintf(1,'%u genes have mapped and LD\n',sum(results.numLDSNPs > 0 & results.numGWASMapped > 0));
-fprintf(1,'%u genes have mapped but no LD\n',sum(results.numLDSNPs==0 & results.numGWASMapped > 0));
-fprintf(1,'%u genes have LD but no mapped\n',sum(results.numLDSNPs > 0 & results.numGWASMapped==0));
-fprintf(1,'%u genes have eGene annotations\n',sum(results.numEGenes > 0));
-fprintf(1,'%u genes have SNPgene annotations\n',sum(results.numSNPGenes > 0));
-fprintf(1,'%u genes have eGene-LD annotations\n',sum(results.numEGenes_LD > 0));
-fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(results.numSNPGenes_LD > 0));
-fprintf(1,'%u genes have LD-eGene annotations\n',sum(results.numEGenes_LD > 0));
-fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(results.numSNPGenes_LD > 0));
 
-display(results(1:60,:));
+% Some basic stats as user info to screen:
+fprintf(1,'%u genes have mapped and LD\n',sum(resultsTable.numLDSNPs > 0 & resultsTable.numGWASMapped > 0));
+fprintf(1,'%u genes have mapped but no LD\n',sum(resultsTable.numLDSNPs==0 & resultsTable.numGWASMapped > 0));
+fprintf(1,'%u genes have LD but no mapped\n',sum(resultsTable.numLDSNPs > 0 & resultsTable.numGWASMapped==0));
+fprintf(1,'%u genes have eGene annotations\n',sum(resultsTable.numEGenes > 0));
+fprintf(1,'%u genes have SNPgene annotations\n',sum(resultsTable.numSNPGenes > 0));
+fprintf(1,'%u genes have eGene-LD annotations\n',sum(resultsTable.numEGenes_LD > 0));
+fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(resultsTable.numSNPGenes_LD > 0));
+fprintf(1,'%u genes have LD-eGene annotations\n',sum(resultsTable.numEGenes_LD > 0));
+fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(resultsTable.numSNPGenes_LD > 0));
+
+%-------------------------------------------------------------------------------
+% Display full table:
+% display(resultsTable(1:60,:));
+
+%-------------------------------------------------------------------------------
+% Display just with custom columns
+customColumns = {'gene','numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
+                'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
+                'percPPIneighbors1DiseaseLD','matchingDrugsString'};
+display(resultsTable(1:60,ismember(resultsTable.Properties.VariableNames,customColumns)));
+
+end
