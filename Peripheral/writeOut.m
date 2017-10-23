@@ -1,5 +1,6 @@
 function writeOut(proteinNames,filter,fileName)
-
+% Writes a list of names (proteinNames) with a given filter applied (filter)
+%-------------------------------------------------------------------------------
 
 fid = fopen(fileName,'w');
 
