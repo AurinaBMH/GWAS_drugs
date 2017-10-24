@@ -275,11 +275,12 @@ for i = 1:numUniqueGenes
     AllenIndex = find(strcmp(AllenGeneInfo.GeneSymbol,gene_i));
     if isempty(AllenIndex)
         % This gene could not be matched to AHBA data
+        warning('%s could not be matched to the Allen expression data',gene_i)
         AllenMeanCoexp(i) = NaN;
     else
         % Compute the coexpression values of disease genes
         diseaseCoExpMapped = geneCoexp(AllenIndex,AllenIsDiseaseGeneMapped);
-        AllenMeanCoexp(i) = mean(diseaseCoExpMapped);
+        AllenMeanCoexp(i) = nanmean(diseaseCoExpMapped);
     end
 
     %-------------------------------------------------------------------------------
@@ -307,7 +308,8 @@ resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneighb
                 'numPPIneighbors1DiseaseLD',...
                 'AllenMeanCoexp',...
                 'numEGenes','numSNPGenes','numEGenes_LD',...
-                'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
+                'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend',...
+                'MissingPlacement','last');
 
 % Some basic stats as user info to screen:
 fprintf(1,'%u genes have mapped and LD\n',sum(resultsTable.numLDSNPs > 0 & resultsTable.numGWASMapped > 0));
@@ -326,9 +328,8 @@ fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(resultsTable.numSNPGenes_
 
 %-------------------------------------------------------------------------------
 % Display just with custom columns
-customColumns = {'gene','numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
-                'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
+customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',...
                 'percPPIneighbors1DiseaseLD','AllenMeanCoexp','matchingDrugsString'};
-display(resultsTable(1:60,ismember(resultsTable.Properties.VariableNames,customColumns)));
+display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
 end
