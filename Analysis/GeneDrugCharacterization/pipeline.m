@@ -39,6 +39,7 @@ LDRelateTable = LDImport();
 % Get cis-eQTL data:
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
+%-------------------------------------------------------------------------------
 % Get PPIN data:
 fileName = sprintf('PPI_Adj_th%u.mat',PPINevidenceThreshold);
 try
@@ -50,7 +51,18 @@ catch
                     PPINevidenceThreshold)
     % PPIN = PPINImport(PPINevidenceThreshold);
 end
-% Load pairwise distances:
+% Check which gene names (from DrugGene data) exist in the PPI data:
+isPPIGene = ismember(allUniqueGenes,PPIN.geneNames);
+fprintf(1,'%u/%u genes from DrugGene data are in the PPI network\n',...
+                        sum(isPPIGene),length(isPPIGene));
+% list the bad ones:
+% noGood = find(~isPPIGene);
+% for i = 1:length(noGood)
+%     fprintf(1,'%s\n',allUniqueGenes{noGood(i)});
+% end
+
+%-------------------------------------------------------------------------------
+% Load pairwise distances on the PPI network:
 fileName = sprintf('PPI_Dist_th%u.mat',PPINevidenceThreshold);
 try
     PPIND = load(fileName,'distMatrix');
@@ -61,10 +73,25 @@ catch
 end
 % Get indices of mapped disease genes on PPI network:
 PPI_isDiseaseGeneMapped = ismember(PPIN.geneNames,allDiseaseGenesMapped);
-fprintf(1,'%u/%u disease genes are in the PPI network\n',sum(PPI_isDiseaseGeneMapped),...
-                                                        length(allDiseaseGenesMapped));
+fprintf(1,'%u/%u GWAS %s disease genes are in the PPI network\n',sum(PPI_isDiseaseGeneMapped),...
+                                    length(allDiseaseGenesMapped),whatDisease);
+PPI_isDrugGene = ismember(PPIN.geneNames,allUniqueGenes);
+fprintf(1,'%u/%u drug-target genes could be matched to PPI network data\n',sum(PPI_isDrugGene),...
+                                        length(allUniqueGenes));
 
 %-------------------------------------------------------------------------------
+% Get gene coexpression information processed from the Allen Human Brain Atlas:
+[geneCoexp,AllenGeneInfo] = LoadCoexpression();
+AllenIsDiseaseGeneMapped = ismember(AllenGeneInfo.GeneSymbol,allDiseaseGenesMapped);
+fprintf(1,'%u/%u GWAS %s disease genes could be matched to Allen data\n',sum(AllenIsDiseaseGeneMapped),...
+                                    length(allDiseaseGenesMapped),whatDisease);
+AllenIsDrugGene = ismember(AllenGeneInfo.GeneSymbol,allUniqueGenes);
+fprintf(1,'%u/%u drug-target genes could be matched to Allen data\n',sum(AllenIsDrugGene),...
+                                        length(allUniqueGenes));
+
+%===============================================================================
+%=================================ALL==LOADED===================================
+%===============================================================================
 % Now loop through genes to characterize...
 numGWASMapped = zeros(numUniqueGenes,1);
 numLDSNPs = zeros(numUniqueGenes,1);
@@ -79,6 +106,7 @@ numPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
 percPPIneighbors1DiseaseMapped = zeros(numUniqueGenes,1);
 percPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
 meanPPIDistance = zeros(numUniqueGenes,1);
+AllenMeanCoexp = zeros(numUniqueGenes,1);
 matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
@@ -241,6 +269,20 @@ for i = 1:numUniqueGenes
     end
 
     %-------------------------------------------------------------------------------
+    % Human gene coexpression (AHBA)
+    %-------------------------------------------------------------------------------
+    % Look at the distribution of coexpression values for disease genes
+    AllenIndex = find(strcmp(AllenGeneInfo.GeneSymbol,gene_i));
+    if isempty(AllenIndex)
+        % This gene could not be matched to AHBA data
+        AllenMeanCoexp(i) = NaN;
+    else
+        % Compute the coexpression values of disease genes
+        diseaseCoExpMapped = geneCoexp(AllenIndex,AllenIsDiseaseGeneMapped);
+        AllenMeanCoexp(i) = mean(diseaseCoExpMapped);
+    end
+
+    %-------------------------------------------------------------------------------
     % Drugs, classes
     %-------------------------------------------------------------------------------
     % Match to drugs using geneDrugTable
@@ -256,13 +298,15 @@ end
 gene = allUniqueGenes;
 resultsTable = table(gene,numGWASMapped,numLDSNPs,numPPIneighbors1DiseaseMapped,numPPIneighbors1DiseaseLD,...
                 percPPIneighbors1DiseaseMapped,percPPIneighbors1DiseaseLD,... % meanPPIDistance,
-                numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
+                AllenMeanCoexp,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
                 numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
 
 % Sort by column, then by column, etc. in ordered hierarchy:
 resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
                 'percPPIneighbors1DiseaseLD','numPPIneighbors1DiseaseMapped',...
-                'numPPIneighbors1DiseaseLD','numEGenes','numSNPGenes','numEGenes_LD',...
+                'numPPIneighbors1DiseaseLD',...
+                'AllenMeanCoexp',...
+                'numEGenes','numSNPGenes','numEGenes_LD',...
                 'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'},'descend');
 
 % Some basic stats as user info to screen:
@@ -284,7 +328,7 @@ fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(resultsTable.numSNPGenes_
 % Display just with custom columns
 customColumns = {'gene','numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
                 'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
-                'percPPIneighbors1DiseaseLD','matchingDrugsString'};
+                'percPPIneighbors1DiseaseLD','AllenMeanCoexp','matchingDrugsString'};
 display(resultsTable(1:60,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
 end

@@ -3,7 +3,7 @@ function [geneDrugTable,allUniqueGenes] = DrugGeneImport()
 %-------------------------------------------------------------------------------
 
 fid = fopen('8_1_drug_gene.csv','r');
-C = textscan(fid,'%s%s','Delimiter',',');
+C = textscan(fid,'%s%s','Delimiter',',','HeaderLines',1);
 fclose(fid);
 geneName = C{1};
 drugName = C{2};
