@@ -1,7 +1,7 @@
 % Computes results tables across a range of diseases (iteratively):
 %-------------------------------------------------------------------------------
 diseaseList = {'all','SZP','ASD','ADHD','BIP','MDD'};
-PPINevidenceThreshold = 4;
+PPINevidenceThreshold = 0.4;
 numDiseases = length(diseaseList);
 
 resultsTable = struct();
@@ -21,5 +21,5 @@ fprintf(1,'Saved all results tables to %s\n',fileNameSave);
 whatDisease = 'SZP';
 % Display just with custom columns
 customColumns = {'gene','numGWASMapped','numLDSNPs',... %,'meanPPIDistance'
-                'percPPIneighbors1DiseaseLD','matchingDrugsString'};
+                'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseLD','matchingDrugsString'};
 display(resultsTable.(whatDisease)(1:60,ismember(resultsTable.(whatDisease).Properties.VariableNames,customColumns)));
