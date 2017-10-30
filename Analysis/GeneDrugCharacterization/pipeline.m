@@ -8,8 +8,7 @@ if nargin < 1
     whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
 end
 if nargin < 2
-    PPINevidenceThreshold = 4; % evidence threshold for including PPI interactions
-                                % (4 means 0.4)
+    PPINevidenceThreshold = 0.4; % evidence threshold for including PPI interactions
 end
 
 %===============================================================================
@@ -42,27 +41,22 @@ LDRelateTable = LDImport();
 
 %-------------------------------------------------------------------------------
 % Get PPIN data:
-fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold);
-fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold);
-keyboard
+fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold*10);
+fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold*10);
 try
     fprintf(1,'Loading PPIN data for evidence threshold of 0.%u...',PPINevidenceThreshold);
     load(fileNameAdj,'AdjPPI');
     load(fileNameGeneLabels,'geneNames');
     PPIN = struct();
     PPIN.AdjPPI = AdjPPI;
-    PPIN.geneNames = geneNames;
+    PPIN.geneNames = geneNames; % (actually protein names)
     clear('AdjPPI','geneNames');
     fprintf(1,' Loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
 catch
-    error('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',...
-                    PPINevidenceThreshold)
+    error('No precomputed data for evidence threshold of 0.%u... RECOMPUTING!!!',...
+                    PPINevidenceThreshold*10)
     % PPIN = PPINImport(PPINevidenceThreshold);
 end
-% Check which gene names (from DrugGene data) exist in the PPI data:
-isPPIGene = ismember(allUniqueGenes,PPIN.geneNames);
-fprintf(1,'%u/%u genes from DrugGene data are in the PPI network\n',...
-                        sum(isPPIGene),length(isPPIGene));
 % list the bad ones:
 % noGood = find(~isPPIGene);
 % for i = 1:length(noGood)
@@ -70,8 +64,49 @@ fprintf(1,'%u/%u genes from DrugGene data are in the PPI network\n',...
 % end
 
 %-------------------------------------------------------------------------------
+% Match genes to their proteins to help matching to PPIN names?:
+% (Janette provided the file: 'HGNCgene_to_UniprotProtein.txt')
+fileNameProtein = 'HGNCgene_to_UniprotProtein-UTF8.csv';
+fprintf(1,'Reading gene->protein mappings from %s\n',fileNameProtein);
+fid = fopen(fileNameProtein,'r');
+S = textscan(fid,'%s%s%s','HeaderLines',1);
+fclose(fid);
+geneNameHGNC = S{1};
+proteinNameUniprot = S{3};
+fprintf(1,'Done.\n');
+
+allUniqueProteins = cell(length(allUniqueGenes),1);
+for i = 1:length(allUniqueGenes)
+    theMatch = strcmp(geneNameHGNC,allUniqueGenes{i});
+    if sum(theMatch)==1
+        allUniqueProteins{i} = proteinNameUniprot{theMatch};
+    else
+        warning('No protein name found for %s',allUniqueGenes{i});
+        allUniqueProteins{i} = '';
+    end
+end
+
+% Check which gene names (from DrugGene data) exist in the PPI data:
+isPPIProtein = ismember(allUniqueProteins,PPIN.geneNames);
+isPPIGene = ismember(allUniqueGenes,PPIN.geneNames);
+isPPIGeneOrProtein = (isPPIProtein | isPPIGene);
+fprintf(1,'%u/%u genes (%u/%u from proteins, +%u) from DrugGene data are in the PPI network\n',...
+            sum(isPPIGene),length(isPPIGene),sum(isPPIProtein),length(isPPIProtein),...
+            sum(isPPIGeneOrProtein)-sum(isPPIGene));
+
+noMatch = find(~isPPIGeneOrProtein);
+for i = 1:length(noMatch)
+    matchingProtein = allUniqueProteins{noMatch(i)};
+    if isempty(matchingProtein)
+        matchingProtein = '<no-match>';
+    end
+    fprintf(1,'No match in PPIN for %s [protein: %s]\n',...
+                    allUniqueGenes{noMatch(i)},matchingProtein);
+end
+
+%-------------------------------------------------------------------------------
 % Load pairwise distances on the PPI network:
-fileName = sprintf('PPI_Dist_th%u.mat',PPINevidenceThreshold);
+fileName = sprintf('PPI_Dist_th0%u.mat',PPINevidenceThreshold*10);
 try
     PPIND = load(fileName,'distMatrix');
     PPIN.distMatrix = PPIND.distMatrix;
