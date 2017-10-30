@@ -72,7 +72,7 @@ clear('PPIN');
 % Create the sparse matrix of the interactions:
 %-------------------------------------------------------------------------------
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
-AdjPPI = sparse(indx(:,1),indx(:,2),1,numGenes,numGenes);
+AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
 fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
 fprintf(1,' Done.\n');
