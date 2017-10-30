@@ -3,16 +3,16 @@ function [AdjPPI,geneNames,PPIN] = PPINImport(evidenceThreshold)
 %-------------------------------------------------------------------------------
 
 if nargin < 1
-    evidenceThreshold = 0;
+    evidenceThreshold = 0.4;
 end
 
 % Set where to save to:
 % Save over two different files:
-fileNameSave1 = sprintf('PPIN_processed_th%u.mat',evidenceThreshold);
+fileNameSave1 = sprintf('PPIN_processed_th0%u.mat',evidenceThreshold*10);
 fileNameSave1 = fullfile('DataOutput',fileNameSave1);
-fileNameSave2 = sprintf('PPI_geneLabels_th%u.mat',evidenceThreshold);
+fileNameSave2 = sprintf('PPI_geneLabels_th0%u.mat',evidenceThreshold*10);
 fileNameSave2 = fullfile('DataOutput',fileNameSave2);
-fileNameSave3 = sprintf('PPI_Adj_th%u.mat',evidenceThreshold);
+fileNameSave3 = sprintf('PPI_Adj_th0%u.mat',evidenceThreshold*10);
 fileNameSave3 = fullfile('DataOutput',fileNameSave3);
 
 % Read in data:
@@ -77,6 +77,6 @@ fprintf(1,'Symmetrizing the sparse matrix...');
 AdjPPI = (AdjPPI | AdjPPI');
 fprintf(1,' Done.\n');
 save(fileNameSave3,'AdjPPI','-append');
-fprintf(1,'Saved symmetrized Adj out to %s\n',fileNameSave3);
+fprintf(1,'Saved symmetrized (sparse) Adj to %s\n',fileNameSave3);
 
 end

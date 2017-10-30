@@ -8,7 +8,8 @@ if nargin < 1
     whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
 end
 if nargin < 2
-    PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
+    PPINevidenceThreshold = 4; % evidence threshold for including PPI interactions
+                                % (4 means 0.4)
 end
 
 %===============================================================================
@@ -41,11 +42,18 @@ LDRelateTable = LDImport();
 
 %-------------------------------------------------------------------------------
 % Get PPIN data:
-fileName = sprintf('PPI_Adj_th%u.mat',PPINevidenceThreshold);
+fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold);
+fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold);
+keyboard
 try
-    fprintf(1,'Loading PPIN data for evidence threshold of %u...',PPINevidenceThreshold);
-    PPIN = load(fileName,'AdjPPI','geneNames');
-    fprintf(1,' Loaded!\n');
+    fprintf(1,'Loading PPIN data for evidence threshold of 0.%u...',PPINevidenceThreshold);
+    load(fileNameAdj,'AdjPPI');
+    load(fileNameGeneLabels,'geneNames');
+    PPIN = struct();
+    PPIN.AdjPPI = AdjPPI;
+    PPIN.geneNames = geneNames;
+    clear('AdjPPI','geneNames');
+    fprintf(1,' Loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
 catch
     error('No precomputed data for evidence threshold of %u... RECOMPUTING!!!',...
                     PPINevidenceThreshold)
