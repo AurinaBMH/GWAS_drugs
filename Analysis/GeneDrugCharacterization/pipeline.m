@@ -40,7 +40,7 @@ LDRelateTable = LDImport();
 [eQTLTable,isEGene,isSNPGene] = eQTLImport();
 
 %-------------------------------------------------------------------------------
-% Get PPIN data:
+% Get PPIN data (precomputed using PPINImport):
 fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold*10);
 fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold*10);
 try
@@ -66,43 +66,7 @@ end
 %-------------------------------------------------------------------------------
 % Match genes to their proteins to help matching to PPIN names?:
 % (Janette provided the file: 'HGNCgene_to_UniprotProtein.txt')
-fileNameProtein = 'HGNCgene_to_UniprotProtein-UTF8.csv';
-fprintf(1,'Reading gene->protein mappings from %s\n',fileNameProtein);
-fid = fopen(fileNameProtein,'r');
-S = textscan(fid,'%s%s%s','HeaderLines',1);
-fclose(fid);
-geneNameHGNC = S{1};
-proteinNameUniprot = S{3};
-fprintf(1,'Done.\n');
-
-allUniqueProteins = cell(length(allUniqueGenes),1);
-for i = 1:length(allUniqueGenes)
-    theMatch = strcmp(geneNameHGNC,allUniqueGenes{i});
-    if sum(theMatch)==1
-        allUniqueProteins{i} = proteinNameUniprot{theMatch};
-    else
-        warning('No protein name found for %s',allUniqueGenes{i});
-        allUniqueProteins{i} = '';
-    end
-end
-
-% Check which gene names (from DrugGene data) exist in the PPI data:
-isPPIProtein = ismember(allUniqueProteins,PPIN.geneNames);
-isPPIGene = ismember(allUniqueGenes,PPIN.geneNames);
-isPPIGeneOrProtein = (isPPIProtein | isPPIGene);
-fprintf(1,'%u/%u genes (%u/%u from proteins, +%u) from DrugGene data are in the PPI network\n',...
-            sum(isPPIGene),length(isPPIGene),sum(isPPIProtein),length(isPPIProtein),...
-            sum(isPPIGeneOrProtein)-sum(isPPIGene));
-
-noMatch = find(~isPPIGeneOrProtein);
-for i = 1:length(noMatch)
-    matchingProtein = allUniqueProteins{noMatch(i)};
-    if isempty(matchingProtein)
-        matchingProtein = '<no-match>';
-    end
-    fprintf(1,'No match in PPIN for %s [protein: %s]\n',...
-                    allUniqueGenes{noMatch(i)},matchingProtein);
-end
+[geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPIN.geneNames);
 
 %-------------------------------------------------------------------------------
 % Load pairwise distances on the PPI network:

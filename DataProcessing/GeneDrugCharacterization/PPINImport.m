@@ -6,8 +6,9 @@ if nargin < 1
     evidenceThreshold = 0.4;
 end
 
+%-------------------------------------------------------------------------------
 % Set where to save to:
-% Save over two different files:
+% Save outputs across 3 different files:
 fileNameSave1 = sprintf('PPIN_processed_th0%u.mat',evidenceThreshold*10);
 fileNameSave1 = fullfile('DataOutput',fileNameSave1);
 fileNameSave2 = sprintf('PPI_geneLabels_th0%u.mat',evidenceThreshold*10);
@@ -15,6 +16,7 @@ fileNameSave2 = fullfile('DataOutput',fileNameSave2);
 fileNameSave3 = sprintf('PPI_Adj_th0%u.mat',evidenceThreshold*10);
 fileNameSave3 = fullfile('DataOutput',fileNameSave3);
 
+%-------------------------------------------------------------------------------
 % Read in data:
 fileName = '6_PPIN_STRINGv10.5.csv';
 fprintf(1,'Reading in data from %s...',fileName);
