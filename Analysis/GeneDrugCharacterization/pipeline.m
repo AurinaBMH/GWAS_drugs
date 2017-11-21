@@ -64,9 +64,15 @@ end
 % end
 
 %-------------------------------------------------------------------------------
-% Match genes to their proteins to help matching to PPIN names?:
-% (Janette provided the file: 'HGNCgene_to_UniprotProtein.txt')
-[geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPIN.geneNames);
+% mapHow = 'UniProt'; % original method (no good)
+mapHow = 'HGNC'; % Janette's new method for mapping... :)
+switch mapHow
+case 'UniProt'
+    fprintf(1,'Mapping gene names to UniProt protein names. This doesn''t really help\n');
+    [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPIN.geneNames);
+case 'HGNC'
+    [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportProteinGeneMapping(allUniqueGenes,PPIN.geneNames);
+end
 
 %-------------------------------------------------------------------------------
 % Load pairwise distances on the PPI network:

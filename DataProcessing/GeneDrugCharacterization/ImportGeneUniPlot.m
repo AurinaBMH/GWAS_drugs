@@ -1,4 +1,8 @@
 function [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPINGeneNames)
+%-------------------------------------------------------------------------------
+% Match genes to their proteins to help matching to PPIN names?:
+% (Janette provided the file: 'HGNCgene_to_UniprotProtein.txt')
+%-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
 % Read in the data:
