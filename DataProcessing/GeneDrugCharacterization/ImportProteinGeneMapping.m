@@ -1,4 +1,4 @@
-function dataTable = ImportProteinGeneMapping(allUniqueGenes,PPINGeneNames)
+function allUniqueProteins = ImportProteinGeneMapping(allUniqueGenes,PPINGeneNames)
 %-------------------------------------------------------------------------------
 % Idea is to match HGNC gene names to names given in the PPIN network
 %-------------------------------------------------------------------------------

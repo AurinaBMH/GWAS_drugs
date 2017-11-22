@@ -1,15 +1,15 @@
-% function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
+function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
 % Pipeline for producing table characterizing individual genes
 
 %-------------------------------------------------------------------------------
 % Parse inputs:
 %-------------------------------------------------------------------------------
-% if nargin < 1
+if nargin < 1
     whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
-% end
-% if nargin < 2
+end
+if nargin < 2
     PPINevidenceThreshold = 0.4; % evidence threshold for including PPI interactions
-% end
+end
 
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
@@ -64,14 +64,20 @@ end
 % end
 
 %-------------------------------------------------------------------------------
+% We need to map gene names (HGNC) -> names that match in the PPIN
+% I've distinguished these as allUniqueGenes -> allUniqueProteins
+%-------------------------------------------------------------------------------
 % mapHow = 'UniProt'; % original method (no good)
 mapHow = 'HGNC'; % Janette's new method for mapping... :)
 switch mapHow
 case 'UniProt'
-    fprintf(1,'Mapping gene names to UniProt protein names. This doesn''t really help\n');
+    fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPIN.geneNames);
 case 'HGNC'
-    dataTable = ImportProteinGeneMapping(allUniqueGenes,PPIN.geneNames);
+    fprintf(1,'Mapping gene names to PPIN names. This only minimally helps...\n');
+    allUniqueProteins = ImportProteinGeneMapping(allUniqueGenes,PPIN.geneNames);
+case 'exact'
+    allUniqueProteins = allUniqueGenes;
 end
 
 %-------------------------------------------------------------------------------
@@ -124,7 +130,8 @@ matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
     gene_i = allUniqueGenes{i};
-    fprintf(1,'[%u/%u]: %s\n',i,numUniqueGenes,gene_i);
+    protein_i = allUniqueProteins{i};
+    fprintf(1,'[%u/%u]: %s (%s)\n',i,numUniqueGenes,gene_i,protein_i);
 
     %-------------------------------------------------------------------------------
     % Preliminaries:
@@ -238,9 +245,10 @@ for i = 1:numUniqueGenes
     % PPIN Neighbors
     %-------------------------------------------------------------------------------
     % Count disease genes that are 1-step neighbors on the PPI network:
-    PPI_index = find(strcmp(PPIN.geneNames,gene_i));
+    % Match using "protein" nomenclature, mapped during processing steps above
+    PPI_index = find(strcmp(PPIN.geneNames,protein_i));
     if isempty(PPI_index)
-        warning('%s not represented in the PPI network',gene_i)
+        warning('%s->%s not represented in the PPI network',gene_i,protein_i)
         % No match -- so cannot use any info from PPI network for this gene:
         numPPIneighbors1DiseaseMapped(i) = NaN;
         numPPIneighbors1DiseaseLD(i) = NaN;
@@ -345,4 +353,4 @@ customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMap
                 'percPPIneighbors1DiseaseLD','AllenMeanCoexp','matchingDrugsString'};
 display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
-% end
+end
