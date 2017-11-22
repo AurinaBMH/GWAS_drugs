@@ -1,15 +1,15 @@
-function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
+% function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
 % Pipeline for producing table characterizing individual genes
 
 %-------------------------------------------------------------------------------
 % Parse inputs:
 %-------------------------------------------------------------------------------
-if nargin < 1
+% if nargin < 1
     whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
-end
-if nargin < 2
+% end
+% if nargin < 2
     PPINevidenceThreshold = 0.4; % evidence threshold for including PPI interactions
-end
+% end
 
 %===============================================================================
 % LOAD AND PROCESS DATA from .csv files:
@@ -71,7 +71,7 @@ case 'UniProt'
     fprintf(1,'Mapping gene names to UniProt protein names. This doesn''t really help\n');
     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(allUniqueGenes,PPIN.geneNames);
 case 'HGNC'
-    [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportProteinGeneMapping(allUniqueGenes,PPIN.geneNames);
+    dataTable = ImportProteinGeneMapping(allUniqueGenes,PPIN.geneNames);
 end
 
 %-------------------------------------------------------------------------------
@@ -345,4 +345,4 @@ customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMap
                 'percPPIneighbors1DiseaseLD','AllenMeanCoexp','matchingDrugsString'};
 display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
-end
+% end

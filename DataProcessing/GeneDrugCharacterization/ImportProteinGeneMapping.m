@@ -4,8 +4,10 @@ function dataTable = ImportProteinGeneMapping(allUniqueGenes,PPINGeneNames)
 %-------------------------------------------------------------------------------
 
 % Preliminaries:
-numGenes = length(allUniqueGenes,1);
+numGenes = length(allUniqueGenes);
 fprintf(1,'%u genes to match\n',numGenes);
+onlyShowSuccess = true; % only give feedback when works
+% keyboard
 
 %-------------------------------------------------------------------------------
 %% Import data from text file.
@@ -31,15 +33,18 @@ for i = 1:numGenes
     matchMe = strcmp(geneName,PPINGeneNames);
     numMatches = sum(matchMe);
     if numMatches==0
-        fprintf(1,'No direct PPIN match for %s\n',geneName);
+        if ~onlyShowSuccess
+            fprintf(1,'No direct PPIN match for %s\n',geneName);
+        end
         % Look for matches in the dataTable
         matchWhat = 0;
-        for i = 1:16
-            colName = sprintf('HGNC_%u',i);
-            matchMeHGNC = strcmp(whatGeneName,dataTable.(colName));
-            numMatchesHGNC = sum(matchMe);
+        for j = 1:16
+            colName = sprintf('HGNC_%u',j);
+            matchMeHGNC = strcmp(geneName,dataTable.(colName));
+            numMatchesHGNC = sum(matchMeHGNC);
             if numMatchesHGNC > 0
                 matchWhat = find(matchMeHGNC);
+                % fprintf(1,'No direct match for %s but matched to %s!\n',geneName,dataTable.(colName){matchWhat});
                 break
             end
         end
@@ -49,17 +54,23 @@ for i = 1:numGenes
             theSynonyms = GiveMeSynonyms(dataTable,matchWhat);
             matchPPIN = ismember(theSynonyms,PPINGeneNames);
             if any(matchPPIN)
-                fprintf(1,'OMG it actually happened! We got a match after looking at synonyms!\n');
+                fprintf(1,'~~~OMG it actually happened! We got a match after looking at synonyms!\n');
                 fprintf(1,'Using %s (matches) instead of %s (doesn''t match)\n',...
                                 theSynonyms{matchPPIN},geneName);
                 allUniqueProteins{i} = theSynonyms{matchPPIN};
+            else
+                if ~onlyShowSuccess
+                    fprintf(1,'No HGNC synonyms match :/\n');
+                end
             end
         else
-            fprintf(1,'No matches for %s in HGNC ID-matching table\n',geneName);
+            if ~onlyShowSuccess
+                fprintf(1,'%s not found in HGNC ID-matching table...??\n',geneName);
+            end
         end
 
     elseif numMatches==1
-        fprintf(1,'Too easy boyz -- %s matches already aight\n',geneName);
+        % fprintf(1,'Too easy boyz -- %s matches already aight\n',geneName);
         allUniqueProteins{i} = geneName;
     end
 end
@@ -68,13 +79,13 @@ end
 function theSynonyms = GiveMeSynonyms(dataTable,indx)
     % Return a string at indx
     theSynonyms = cell(1,1);
-    for i = 1:16
-        colName = sprintf('HGNC_%u',i);
+    for j = 1:16
+        colName = sprintf('HGNC_%u',j);
         tableValue = dataTable.(colName){indx};
         if strcmp(tableValue,'NA')
             break
         else
-            theSynonyms{i} = tableValue;
+            theSynonyms{j} = tableValue;
         end
     end
 end
