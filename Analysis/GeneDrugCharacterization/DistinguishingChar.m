@@ -14,7 +14,12 @@ drugTable = ImportDrugsTreatment();
 
 switch whatDisease
 case 'SZP'
-    theGenesTreat = unique(drugTable.Protein_DrugIDs(isSchiz));
+    fprintf(1,'Using drugs labeled for Schizophrenia\n');
+    theGenesTreat = unique(drugTable.Protein_DrugIDs(drugTable.isSchiz));
+    % fprintf(1,'Using drugs labeled for N05A: Antipsychotics\n');
+    % theGenesTreat = unique(drugTable.Protein_DrugIDs(drugTable.N05A_Antipsychotics));
+case 'ADHD'
+    theGenesTreat = unique(drugTable.Protein_DrugIDs(drugTable.isADHD));
 end
 numGenesTreat = length(theGenesTreat);
 fprintf(1,'%u genes are targeted by existing drugs for %s:\n',numGenesTreat,whatDisease);
