@@ -1,10 +1,13 @@
 function DistinguishingChar(whatDisease,resultsTable)
 % What features distinguish actual drugs being used?
 %-------------------------------------------------------------------------------
-whatDisease = 'SZP';
+if nargin < 1
+    whatDisease = 'SZP';
+end
 
 % Load data:
 if nargin < 2 || isempty(resultsTable)
+    % Uses default PPIN threshold:
     resultsTable = pipeline(whatDisease);
 end
 
@@ -49,7 +52,8 @@ for i = 1:numProps
     dataCell{2} = dataVector(~isTreated);
     [ff,xx] = BF_JitteredParallelScatter(dataCell,true,true,false);
     ax.XTick = 1:2;
-    ax.XTickLabels = {'treatment','not-treatment'};
+    ax.XTickLabels = {sprintf('%streatment (%u)',whatDisease,sum(isTreated)),...
+                    sprintf('not-treatment (%u)',sum(~isTreated))};
     title(propsToCompare{i});
 end
 

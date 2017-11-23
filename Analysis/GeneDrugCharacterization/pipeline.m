@@ -8,7 +8,7 @@ if nargin < 1
     whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
 end
 if nargin < 2
-    PPINevidenceThreshold = 0.4; % evidence threshold for including PPI interactions
+    PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
 end
 
 %===============================================================================
@@ -44,7 +44,7 @@ LDRelateTable = LDImport();
 fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold*10);
 fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold*10);
 try
-    fprintf(1,'Loading PPIN data for evidence threshold of 0.%u...',PPINevidenceThreshold);
+    fprintf(1,'Loading PPIN data for evidence threshold of %.2f...',PPINevidenceThreshold);
     load(fileNameAdj,'AdjPPI');
     load(fileNameGeneLabels,'geneNames');
     PPIN = struct();
@@ -53,8 +53,8 @@ try
     clear('AdjPPI','geneNames');
     fprintf(1,' Loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
 catch
-    error('No precomputed data for evidence threshold of 0.%u... RECOMPUTING!!!',...
-                    PPINevidenceThreshold*10)
+    error('No precomputed data for evidence threshold of %.1f...!!!',...
+                    PPINevidenceThreshold)
     % PPIN = PPINImport(PPINevidenceThreshold);
 end
 % list the bad ones:
@@ -256,16 +256,27 @@ for i = 1:numUniqueGenes
         percPPIneighbors1DiseaseLD(i) = NaN;
     else
         PPI_neighbors_index = find(PPIN.AdjPPI(PPI_index,:)); % the 1-step neighbors
-        PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target gene
-        PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
+        numNeighbors = length(PPI_neighbors_index);
+        if numNeighbors==0
+            numPPIneighbors1DiseaseMapped(i) = 0;
+            numPPIneighbors1DiseaseLD(i) = 0;
+            percPPIneighbors1DiseaseMapped(i) = NaN;
+            percPPIneighbors1DiseaseLD(i) = NaN;
+        else
+            % PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target gene
+            PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
+            % How many 1-step neighbors are in the disease list (mapped/LD)?:
+            numPPIneighbors1DiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
+            numPPIneighbors1DiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
 
-        % How many 1-step neighbors are in the disease list (mapped/LD)?:
-        numPPIneighbors1DiseaseMapped(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesMapped));
-        numPPIneighbors1DiseaseLD(i) = sum(ismember(PPI_neighbors_gene,allDiseaseGenesLD));
+            % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
+            percPPIneighbors1DiseaseMapped(i) = 100*numPPIneighbors1DiseaseMapped(i)/length(PPI_neighbors_index);
+            percPPIneighbors1DiseaseLD(i) = 100*numPPIneighbors1DiseaseLD(i)/length(PPI_neighbors_index);
 
-        % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
-        percPPIneighbors1DiseaseMapped(i) = 100*numPPIneighbors1DiseaseMapped(i)/length(PPI_neighbors_gene);
-        percPPIneighbors1DiseaseLD(i) = 100*numPPIneighbors1DiseaseLD(i)/length(PPI_neighbors_gene);
+            fprintf(1,'%s: %u/%u disease neighbors; %u/%u LD-disease neighbors\n',protein_i,...
+                        numPPIneighbors1DiseaseMapped(i),numNeighbors,...
+                        numPPIneighbors1DiseaseLD(i),numNeighbors);
+        end
     end
 
     %===============================================================================
