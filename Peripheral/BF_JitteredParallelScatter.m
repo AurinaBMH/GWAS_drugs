@@ -62,7 +62,6 @@ end
 
 % ------------------------------------------------------------------------------
 % Set extra parameters
-
 numGroups = length(dataCell);
 
 % Custom marker for points within the distribution:
@@ -89,11 +88,11 @@ end
 
 % Custom colormap
 if ~isfield(extraParams,'theColors')
-    if numGroups <= 3
-        theColors = BF_getcmap('set1',numGroups,1);
-    else
-        theColors = BF_getcmap('spectral',numGroups,1);
-    end
+    % if numGroups <= 3
+    theColors = BF_getcmap('set1',numGroups,1);
+    % else
+    %     theColors = BF_getcmap('spectral',numGroups,1);
+    % end
     if length(theColors) < numGroups
         theColors = arrayfun(@(x)zeros(3,1),1:numGroups,'UniformOutput',0);
     end

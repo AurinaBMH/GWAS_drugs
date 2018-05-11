@@ -5,7 +5,8 @@ function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
 % Parse inputs:
 %-------------------------------------------------------------------------------
 if nargin < 1
-    whatDisease = 'all'; % pick a disease to focus on: 'all','SZP','ASD','ADHD','BIP','MDD'
+    % GWAS hits from which disease?: 'all','SZP','ASD','ADHD','BIP','MDD'
+    whatDisease = 'all';
 end
 if nargin < 2
     PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
@@ -16,12 +17,12 @@ end
 %===============================================================================
 
 % List of all genes with drug targets in Drugbank are in **gene_ATC_matrix.csv**
-[geneDrugTable,allUniqueGenes] = DrugGeneImport();
-numUniqueGenes = length(allUniqueGenes);
-numUniqueDrugs = length(unique(geneDrugTable.drugName));
-
+% [geneDrugTable,allUniqueGenes] = DrugGeneImport();
 % Import drug classification
-drugClassTable = DrugClassImport();
+% drugClassTable = DrugClassImport();
+indicatorTable = ImportTreatmentLists();
+allUniqueGenes = indicatorTable.Properties.RowNames;
+numUniqueGenes = length(allUniqueGenes);
 
 % SNP, gene, disease, GWAS, LD annotations:
 [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
@@ -57,6 +58,23 @@ catch
                     PPINevidenceThreshold)
     % PPIN = PPINImport(PPINevidenceThreshold);
 end
+% Get indices of mapped disease genes on PPI network:
+PPI_isDiseaseGeneMapped = ismember(PPIN.geneNames,allDiseaseGenesMapped);
+fprintf(1,'%u/%u GWAS %s disease genes are in the PPI network\n',sum(PPI_isDiseaseGeneMapped),...
+                                    length(allDiseaseGenesMapped),whatDisease);
+PPI_isDrugGene = ismember(PPIN.geneNames,allUniqueGenes);
+fprintf(1,'%u/%u drug-target genes could be matched to PPI network data\n',sum(PPI_isDrugGene),...
+                                        length(allUniqueGenes));
+%-------------------------------------------------------------------------------
+% Load shortest path distances on the PPI network:
+fileNamePDist = sprintf('PPI_Dist_th0%u.mat',PPINevidenceThreshold*10);
+try
+    PPIND = load(fileNamePDist,'distMatrix');
+    PPIN.distMatrix = PPIND.distMatrix;
+    clear('PPIND');
+catch
+    warning('No PPI shortest path information found');
+end
 % list the bad ones:
 % noGood = find(~isPPIGene);
 % for i = 1:length(noGood)
@@ -79,24 +97,6 @@ case 'HGNC'
 case 'exact'
     allUniqueProteins = allUniqueGenes;
 end
-
-%-------------------------------------------------------------------------------
-% Load pairwise distances on the PPI network:
-fileName = sprintf('PPI_Dist_th0%u.mat',PPINevidenceThreshold*10);
-try
-    PPIND = load(fileName,'distMatrix');
-    PPIN.distMatrix = PPIND.distMatrix;
-    clear('PPIND');
-catch
-    warning('No PPI shortest path information found');
-end
-% Get indices of mapped disease genes on PPI network:
-PPI_isDiseaseGeneMapped = ismember(PPIN.geneNames,allDiseaseGenesMapped);
-fprintf(1,'%u/%u GWAS %s disease genes are in the PPI network\n',sum(PPI_isDiseaseGeneMapped),...
-                                    length(allDiseaseGenesMapped),whatDisease);
-PPI_isDrugGene = ismember(PPIN.geneNames,allUniqueGenes);
-fprintf(1,'%u/%u drug-target genes could be matched to PPI network data\n',sum(PPI_isDrugGene),...
-                                        length(allUniqueGenes));
 
 %-------------------------------------------------------------------------------
 % Get gene coexpression information processed from the Allen Human Brain Atlas:
@@ -126,7 +126,7 @@ percPPIneighbors1DiseaseMapped = zeros(numUniqueGenes,1);
 percPPIneighbors1DiseaseLD = zeros(numUniqueGenes,1);
 meanPPIDistance = zeros(numUniqueGenes,1);
 AllenMeanCoexp = zeros(numUniqueGenes,1);
-matchingDrugsString = cell(numUniqueGenes,1);
+% matchingDrugsString = cell(numUniqueGenes,1);
 
 for i = 1:numUniqueGenes
     gene_i = allUniqueGenes{i};
@@ -320,11 +320,11 @@ for i = 1:numUniqueGenes
     %-------------------------------------------------------------------------------
     % Match to drugs using geneDrugTable
     % assign class using drugClassTable
-    matchingDrugs = geneDrugTable.drugName(strcmp(geneDrugTable.geneName,gene_i));
-    assignClass = @(druggy)drugClassTable.whatClass(strcmp(drugClassTable.drugName,druggy));
-    matchingDrugsClass = cellfun(@(x)sprintf('%s(%s)',x,char(assignClass(x))),...
-                        matchingDrugs,'UniformOutput',false);
-    matchingDrugsString{i} = BF_cat(matchingDrugsClass);
+    % matchingDrugs = geneDrugTable.drugName(strcmp(geneDrugTable.geneName,gene_i));
+    % assignClass = @(druggy)drugClassTable.whatClass(strcmp(drugClassTable.drugName,druggy));
+    % matchingDrugsClass = cellfun(@(x)sprintf('%s(%s)',x,char(assignClass(x))),...
+    %                     matchingDrugs,'UniformOutput',false);
+    % matchingDrugsString{i} = BF_cat(matchingDrugsClass);
 end
 
 % Now make a table
@@ -332,7 +332,7 @@ gene = allUniqueGenes;
 resultsTable = table(gene,numGWASMapped,numLDSNPs,numPPIneighbors1DiseaseMapped,numPPIneighbors1DiseaseLD,...
                 percPPIneighbors1DiseaseMapped,percPPIneighbors1DiseaseLD,... % meanPPIDistance,
                 AllenMeanCoexp,numEGenes,numSNPGenes,numEGenes_LD,numSNPGenes_LD,...
-                numLDeGeneseQTL,numLDSNPGeneseQTL,matchingDrugsString);
+                numLDeGeneseQTL,numLDSNPGeneseQTL); % matchingDrugsString
 
 % Sort by column, then by column, etc. in ordered hierarchy:
 resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',... %,'meanPPIDistance'
@@ -361,7 +361,7 @@ fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(resultsTable.numSNPGenes_
 %-------------------------------------------------------------------------------
 % Display just with custom columns
 customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',...
-                'percPPIneighbors1DiseaseLD','AllenMeanCoexp','matchingDrugsString'};
+                'percPPIneighbors1DiseaseLD','AllenMeanCoexp'}; % ,'matchingDrugsString'
 display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
 end
