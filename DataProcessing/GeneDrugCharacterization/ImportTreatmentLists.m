@@ -164,6 +164,15 @@ for j = 1:numDiseases
 end
 meanRow = mean(propMatrix,2);
 
+% Normalize the indicator matrix:
+if normalizeWithinDrugs
+    % Normalize so each disease gets the same total weight to distribute:
+    for k = 1:numDiseases
+        indicatorMatrix(:,k) = indicatorMatrix(:,k)/sum(indicatorMatrix(:,k));
+    end
+    fprintf(1,'Normalizing indicator matrix\n');
+end
+
 % Make a table:
 indicatorTable = array2table(indicatorMatrix,'RowNames',allGenes,...
                                     'VariableNames',whatDiseases);

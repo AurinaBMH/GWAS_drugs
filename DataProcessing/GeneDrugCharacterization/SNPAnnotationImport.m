@@ -7,8 +7,10 @@ if nargin < 1
 end
 
 %-------------------------------------------------------------------------------
-fid = fopen('2_1_SNP_identifier.csv','r');
-C = textscan(fid,'%s%u%u%u%u%u%s%u%u','Delimiter',',','HeaderLines',1);
+% fid = fopen('2_1_SNP_identifier.csv','r');
+fid = fopen('2_1_SNP_identifier_v2.csv','r');
+warning('Using new file generated Jul-2018')
+C = textscan(fid,'%s%u%u%u%u%u%s%u%u%u','Delimiter',',','HeaderLines',1);
 fclose(fid);
 SNP_id = C{1};
 isSZP = logical(C{2});
@@ -20,7 +22,8 @@ mappedGene = C{7};
 mappedGene(strcmp(mappedGene,'0')) = {''}; % remove '0' -> empty
 isGWAS = logical(C{8});
 isLD = logical(C{9});
-SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD);
+isDiabetes = logical(C{10});
+SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
@@ -38,6 +41,8 @@ case 'BIP'
     SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isBIP,:);
 case 'MDD'
     SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isMDD,:);
+case 'diabetes'
+    SNPAnnotationTable = SNPAnnotationTable(SNPAnnotationTable.isDiabetes,:);
 case 'all'
     % ---Keep all---
 otherwise

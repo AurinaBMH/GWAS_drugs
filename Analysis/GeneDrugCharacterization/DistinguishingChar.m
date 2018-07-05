@@ -7,13 +7,14 @@ end
 
 % Load data:
 if nargin < 2 || isempty(resultsTable)
-    % Uses default PPIN threshold:
-    resultsTable = pipeline(whatDisease);
+    % Uses default PPIN threshold (0.0):
+    fileName = sprintf('resultsTable_%s-0.4.mat',whatDisease);
+    load(fileName,'resultsTable');
+    % resultsTable = pipeline(whatDisease);
 end
 
 % Need to define a set of properties to compare
-propsToCompare = {'numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',...
-            'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
+propsToCompare = {'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',...
             'percPPIneighbors1DiseaseLD','AllenMeanCoexp'};
 
 %-------------------------------------------------------------------------------
@@ -38,13 +39,14 @@ propsToCompare = {'numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',..
 
 %-------------------------------------------------------------------------------
 % Get genes for drugs for all diseases of interest:
-whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro'};
+whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
+normalizeWithinDrugs = true; % weight genes lower if they occur in drugs with large numbers of gene targets
 numDiseases = length(whatDiseases);
 theGenesTreat = cell(numDiseases,1);
-indicatorTable = ImportTreatmentLists();
+[indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs);
 
 %-------------------------------------------------------------------------------
-% Reorder by resultsTable:
+% Reorder by resultsTable (so both are matched on gene):
 [~,ia,ib] = intersect(resultsTable.gene,indicatorTable.Properties.RowNames,'stable');
 indicatorTable = indicatorTable(ib,:);
 resultsTable = resultsTable(ia,:);
@@ -54,15 +56,17 @@ resultsTable = resultsTable(ia,:);
 numProps = length(propsToCompare);
 f = figure('color','w');
 for i = 1:numProps
-    ax = subplot(2,4,i);
+    ax = subplot(2,3,i);
     dataVector = resultsTable.(propsToCompare{i});
     dataCell = cell(numDiseases,1);
     for k = 1:numDiseases
-        isDrugTreatment = indicatorTable.(whatDiseases{k});
-        dataCell{k} = dataVector(isDrugTreatment);
+        geneWeights = indicatorTable.(whatDiseases{k});
+        dataCell{k} = dataVector.*geneWeights;
+        % IGNORE any NaNs:
+        dataCell{k} = dataCell{k}(~isnan(dataCell{k}));
     end
     % Reorder by mean:
-    means = cellfun(@nanmean,dataCell);
+    means = cellfun(@mean,dataCell);
     [~,ix] = sort(means,'descend');
     extraParams = struct();
     extraParams.theColors = BF_getcmap('set2',numDiseases,1);
