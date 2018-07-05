@@ -11,6 +11,11 @@ if nargin < 2 || isempty(resultsTable)
     resultsTable = pipeline(whatDisease);
 end
 
+% Need to define a set of properties to compare
+propsToCompare = {'numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',...
+            'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
+            'percPPIneighbors1DiseaseLD','AllenMeanCoexp'};
+
 %-------------------------------------------------------------------------------
 % Ok, so now we load information on drugs already used to treat the disorder:
 % drugTable = ImportDrugsTreatment();
@@ -46,9 +51,6 @@ resultsTable = resultsTable(ia,:);
 
 %-------------------------------------------------------------------------------
 % Compare columns in resultsTable
-propsToCompare = {'numGWASMapped','numLDSNPs','numPPIneighbors1DiseaseMapped',...
-            'numPPIneighbors1DiseaseLD','percPPIneighbors1DiseaseMapped',...
-            'percPPIneighbors1DiseaseLD','AllenMeanCoexp'};
 numProps = length(propsToCompare);
 f = figure('color','w');
 for i = 1:numProps

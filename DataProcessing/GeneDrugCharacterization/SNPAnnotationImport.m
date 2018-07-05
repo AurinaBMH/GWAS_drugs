@@ -64,7 +64,7 @@ fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',...
 fprintf(1,'%u/%u LD annotations have gene names\n',...
             sum(SNPAnnotationTable.isLD & hasGeneName),sum(SNPAnnotationTable.isLD));
 
-% Cell of all SNPs with a disease annotation (GWAS or LD):
+% All SNPs with a disease annotation (GWAS or LD):
 allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
 
 %-------------------------------------------------------------------------------
