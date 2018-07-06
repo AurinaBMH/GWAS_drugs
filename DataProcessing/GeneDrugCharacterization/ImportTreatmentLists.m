@@ -122,7 +122,7 @@ for k = 1:numDiseases
     else
         % Just count how many times it appears in the agglomerated list
         % (i.e., how many drugs a gene appears in)
-        counts{k} = [frequencyTable{ix,2}];
+        counts{k} = [frequencyTable{:,2}];
     end
 
     % Sort by counts:

@@ -39,11 +39,11 @@ propsToCompare = {'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',.
 
 %-------------------------------------------------------------------------------
 % Get genes for drugs for all diseases of interest:
-whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
 normalizeWithinDrugs = true; % weight genes lower if they occur in drugs with large numbers of gene targets
-numDiseases = length(whatDiseases);
-theGenesTreat = cell(numDiseases,1);
 [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs);
+
+whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
+numDiseases = length(whatDiseases);
 
 %-------------------------------------------------------------------------------
 % Reorder by resultsTable (so both are matched on gene):

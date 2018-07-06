@@ -3,7 +3,7 @@ function [AdjPPI,geneNames,PPIN] = PPINImport(evidenceThreshold)
 %-------------------------------------------------------------------------------
 
 if nargin < 1
-    evidenceThreshold = 0.4;
+    evidenceThreshold = 0.0;
 end
 
 %-------------------------------------------------------------------------------
