@@ -34,7 +34,7 @@ case 'UniProt'
     fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(genesChar,PPIN.geneNames);
 case 'HGNC'
-    fprintf(1,'Mapping gene names to PPIN names. This only minimally helps...\n');
+    fprintf(1,'Mapping gene names to PPIN names (this only minimally helps)...\n');
     allUniqueProteins = ImportProteinGeneMapping(genesChar,PPIN.geneNames);
 case 'exact'
     allUniqueProteins = genesChar;
@@ -42,15 +42,16 @@ end
 
 %-------------------------------------------------------------------------------
 % Get indices of mapped disease genes on PPI network:
-PPI_isDiseaseGeneMapped = ismember(PPIN.geneNames,contextGenes);
-fprintf(1,'%u/%u GWAS disease genes are in the PPI network\n',...
-            sum(PPI_isDiseaseGeneMapped),length(contextGenes));
-PPI_isDrugGene = ismember(PPIN.geneNames,genesChar);
-fprintf(1,'%u/%u drug-target genes could be matched to PPI network data\n',sum(PPI_isDrugGene),...
-                                        length(genesChar));
+%-------------------------------------------------------------------------------
+PPI_isInContext = ismember(PPIN.geneNames,contextGenes);
+fprintf(1,'%u/%u context genes are in the PPI network\n',sum(PPI_isInContext),length(contextGenes));
+fprintf(1,'%u/%u genes to be characterized could be matched to PPI network data\n',...
+                    sum(ismember(PPIN.geneNames,genesChar)),length(genesChar));
 
 %-------------------------------------------------------------------------------
 % Load shortest path distances on the PPI network:
+% (cf. ComputePPIDist)
+%-------------------------------------------------------------------------------
 fileNamePDist = sprintf('PPI_Dist_th0%u.mat',PPINevidenceThreshold*10);
 try
     PPIND = load(fileNamePDist,'distMatrix');
@@ -84,7 +85,7 @@ for i = 1:numGenesChar
 
     %-------------------------------------------------------------------------------
     if isempty(PPI_index)
-        warning('%s->%s not represented in the PPI network',gene_i,protein_i)
+        fprintf('%s -> %s is not represented in the PPI network\n',gene_i,protein_i)
         % No match -- so cannot use any info from PPI network for this gene:
         continue;
     end
@@ -93,10 +94,8 @@ for i = 1:numGenesChar
     PPI_neighbors_index = find(PPIN.AdjPPI(PPI_index,:));
     numNeighbors = length(PPI_neighbors_index);
     if numNeighbors==0
-        numPPIneighbors1DiseaseMapped(i) = 0;
-        numPPIneighbors1DiseaseLD(i) = 0;
-        percPPIneighbors1DiseaseMapped(i) = NaN;
-        percPPIneighbors1DiseaseLD(i) = NaN;
+        numPPIneighbors1(i) = 0;
+        percPPIneighbors1(i) = NaN;
     else
         % PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target gene
         PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
@@ -113,7 +112,7 @@ for i = 1:numGenesChar
     % PPIN Distance:
     % What is the mean path length to genes on the disease list (mapped/LD)?:
     if isfield(PPIN,'distMatrix')
-        allDistances = PPIN.distMatrix(PPI_index,PPI_isDiseaseGeneMapped);
+        allDistances = PPIN.distMatrix(PPI_index,PPI_isInContext);
         meanPPIDistance(i) = mean(allDistances);
     end
 end

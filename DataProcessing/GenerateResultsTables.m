@@ -3,7 +3,7 @@
 
 % Diseases with SNP info, etc.:
 whatDiseases = {'ADHD','BIP','SZP','MDD','diabetes'};
-PPINevidenceThreshold = 0.4;
+PPINevidenceThreshold = 0.0;
 
 %-------------------------------------------------------------------------------
 numDiseases = length(whatDiseases);

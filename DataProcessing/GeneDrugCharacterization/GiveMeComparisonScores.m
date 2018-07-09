@@ -7,7 +7,7 @@ if nargin < 1
     whatDiseaseGWAS = 'SZP';
 end
 if nargin < 2
-    whatProperty = 'percPPIneighbors1DiseaseLD';
+    whatProperty = 'percPPIneigh1LD';
 end
 if nargin < 3
     whatDiseaseDrug = 'SZP';
