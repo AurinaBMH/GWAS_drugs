@@ -5,14 +5,15 @@ function theLDGenes = GiveMeLDGenes(myGene,SNPGeneMap,LDRelateTable,allDiseaseSN
 % 3. Match LD SNPs to genes -> output
 %-------------------------------------------------------------------------------
 
+%-------------------------------------------------------------------------------
 % --1-- Get SNPs for the gene:
 theSNPs = SNPGeneMap.SNP_id(strcmp(SNPGeneMap.mappedGene,myGene));
-
 if isempty(theSNPs)
     theLDGenes = {};
     return
 end
 
+%-------------------------------------------------------------------------------
 % --2-- Get SNPs LD to these SNPs (that have a relevant disease annotation):
 numSNPs = length(theSNPs);
 theLDSNPs = cell(numSNPs,1);
@@ -25,6 +26,7 @@ if isempty(theLDSNPs)
     return
 end
 
+%-------------------------------------------------------------------------------
 % --3-- Map SNPs to genes
 theLDSNPs = unique(theLDSNPs);
 theLDGenes = cellfun(@(x)SNPGeneMap.mappedGene(strcmp(SNPGeneMap.SNP_id,x)),theLDSNPs,'UniformOutput',false);
