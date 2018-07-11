@@ -33,12 +33,15 @@ numUniqueGenes = length(allUniqueGenes);
 %-------------------------------------------------------------------------------
 [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
 
-% Group different rows based on properties:
+% Use only GWAS-mapped genes:
 isGWASAndNotEmpty = SNPAnnotationTable.isGWAS & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-% Lists of genes:
 allDiseaseGenesMapped = unique(SNPAnnotationTable.mappedGene(isGWASAndNotEmpty));
-allDiseaseGenesLD = unique(SNPAnnotationTable.mappedGene(isLDAndNotEmpty));
+
+% Get LD-genes:
+% isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
+% allDiseaseGenesLD = unique(SNPAnnotationTable.mappedGene(isLDAndNotEmpty));
+
+
 
 % fprintf(1,'%u/%u genes with drug targets have annotations\n',...
 %         sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);

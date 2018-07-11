@@ -1,6 +1,6 @@
 function [numGWASMapped,numLDSNPs] = TellMeDNADistance(genesChar,SNPAnnotationTable)
 % Looks at direct mappings and LD-vicinity of a set of genes of interest (genesChar)
-% to gene information from SNPAnnotationTable
+% using gene information from SNPAnnotationTable
 %-------------------------------------------------------------------------------
 
 numGenesChar = length(genesChar);

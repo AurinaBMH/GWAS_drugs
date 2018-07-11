@@ -7,15 +7,29 @@ function geneList = SQL_genesForSNPs(SNPlist)
 dbc = SQL_ConnectToLD();
 
 % Put the query:
-% Write comma-delimited set of SNPids
-SNP_list_string = BF_cat(SNPlist,',','''');
-selectText = sprintf(['SELECT geneName FROM SNPtogene WHERE SNPname IN (%s)'],SNP_list_string);
-geneList = mysql_dbquery(dbc,selectText);
-geneList = unique(geneList);
+if iscell(SNPlist)
+    % Write comma-delimited set of SNPids
+    SNP_list_string = BF_cat(SNPlist,',','''');
+    selectText = sprintf(['SELECT geneName FROM SNPtogene WHERE SNPname IN (%s)'],SNP_list_string);
+else
+    selectText = sprintf(['SELECT geneName FROM SNPtogene WHERE SNPname = ''%s'''],SNPlist);
+end
+
+[geneList,~,~,emsg] = mysql_dbquery(dbc,selectText);
+
+if ~isempty(emsg)
+    keyboard
+end
 
 % Check if empty (no matches):
 if isempty(geneList)
     warning('No genes found for any of the %u input SNPs',length(SNPlist))
+else
+    geneList = unique(geneList);
+end
+
+if length(geneList)==1
+    geneList = geneList{1};
 end
 
 % Close the database connection:

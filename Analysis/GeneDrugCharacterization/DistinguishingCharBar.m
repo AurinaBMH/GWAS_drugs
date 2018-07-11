@@ -60,7 +60,7 @@ for i = 1:numDiseases_GWAS
             r = ~isnan(geneWeights_treatment) & ~isnan(geneWeights_GWAS);
             rhos(k) = sum(geneWeights_treatment(r).*geneWeights_GWAS(r));
         end
-        % Generate nulls:
+        % Generate (pooled) nulls [could be done individually for each particular weighting if needed]:
         numNulls = 2000;
         nullScores = zeros(numNulls,1);
         for k = 1:numNulls
