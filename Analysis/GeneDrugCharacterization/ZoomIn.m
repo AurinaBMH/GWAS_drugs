@@ -3,7 +3,7 @@
 %-------------------------------------------------------------------------------
 
 whatDiseaseGWAS = 'SZP';
-whatProperty = 'percPPIneighbors1DiseaseLD';
+whatProperty = 'percPPIneigh1Mapped';
 whatDiseaseDrug = 'SZP';
 
 %-------------------------------------------------------------------------------
@@ -23,7 +23,6 @@ indicatorTable = indicatorTable(ib,:);
 resultsTable = resultsTable(ia,:);
 
 %-------------------------------------------------------------------------------
-f = figure('color','w');
 % Get the property of interest from the GWAS-hit-similarity table:
 geneWeights_GWAS = resultsTable.(whatProperty);
 % Get weights of each gene onto treatment targets:
@@ -31,30 +30,57 @@ geneWeights_treatment = indicatorTable.(whatDiseaseDrug);
 
 % Keep only non-NaN values and rescale both to unit interval:
 bothGood = (~isnan(geneWeights_GWAS) & ~isnan(geneWeights_treatment));
-f_unit = @(x)BF_NormalizeMatrix(x,'mixedSigmoid'); %/sum(x);
-geneWeights_GWAS = f_unit(geneWeights_GWAS(bothGood));
-geneWeights_treatment = f_unit(geneWeights_treatment(bothGood));
+geneWeights_GWAS = geneWeights_GWAS(bothGood);
+geneWeights_treatment = geneWeights_treatment(bothGood);
 geneNames = resultsTable.gene(bothGood);
 
-% Compute dot-product similarity:
-simScore = (geneWeights_GWAS+geneWeights_treatment);
+%-------------------------------------------------------------------------------
+% Compute combined similarity score for each gene:
+f_unit = @(x)BF_NormalizeMatrix(x,'mixedSigmoid'); %/sum(x);
+simScore = (f_unit(geneWeights_GWAS)+f_unit(geneWeights_treatment));
 % simScoreNonZero = simScore(simScore > 0);
 % geneNamesNonZero = resultsTable.gene(simScore > 0);
-[~,ix] = sort(simScore,'descend');
+% [~,ix] = sort(simScore,'descend');
 
 %-------------------------------------------------------------------------------
 % Scatter plot:
 f = figure('color','w'); hold on
 plot(geneWeights_GWAS,geneWeights_treatment,'ok')
-xlabel(sprintf('gene score—-%sGWAS-%s',whatDiseaseGWAS,whatProperty))
-ylabel(sprintf('gene score—-%sdrugs',whatDiseaseDrug))
-[rho,p] = corr(geneWeights_GWAS,geneWeights_treatment,'type','Spearman');
-title(sprintf('rho = %.2f (p = %.3g)\n',rho,p));
 
-for j = 1:20
-    ep = 0.01;
-    text(ep+geneWeights_GWAS(ix(j)),ep+geneWeights_treatment(ix(j)),geneNames{ix(j)});
+% Annotations:
+usedInTreatment_ind = find(geneWeights_treatment > 0);
+for k = 1:length(usedInTreatment_ind)
+    ind_k = usedInTreatment_ind(k);
+    % Annotate lines:
+    plot(ones(2,1)*geneWeights_GWAS(ind_k),[0,geneWeights_treatment(ind_k)],'-k')
+    % Annotate text labels:
+    ep = 0.01*max(geneWeights_treatment);
+    text(ep+geneWeights_GWAS(ind_k),ep+geneWeights_treatment(ind_k),geneNames{ind_k});
 end
+
+[~,highGWAS_ind] = sort(geneWeights_GWAS,'descend');
+for k = 1:20
+    ind_k = highGWAS_ind(k);
+    % Annotate text labels:
+    if geneWeights_treatment(ind_k)==0
+        ep = 0.01*max(geneWeights_treatment);
+        text(ep+geneWeights_GWAS(ind_k),ep+geneWeights_treatment(ind_k),geneNames{ind_k},...
+                    'color','r','rotation',90);
+    end
+end
+
+% Add a distribution density underneath:
+[f,x] = ksdensity(geneWeights_GWAS,'npoints',500);
+plot(x,-f/max(f)*max(geneWeights_treatment)*0.5);
+ax = gca;
+ax.YLim = [-max(geneWeights_treatment)*0.5,max(geneWeights_treatment)];
+ax.XLim = [min(geneWeights_GWAS),max(geneWeights_GWAS)];
+
+% Labels and title:
+xlabel(sprintf('gene score-%sGWAS-%s',whatDiseaseGWAS,whatProperty))
+ylabel(sprintf('gene score-%sdrugs',whatDiseaseDrug))
+[rho,p] = corr(geneWeights_GWAS,geneWeights_treatment,'type','Kendall');
+title(sprintf('Kendall-tau = %.2f (p = %.3g)\n',rho,p));
 
 %-------------------------------------------------------------------------------
 % Plot distribution, labeled by genes:
@@ -72,7 +98,7 @@ for j = 1:length(simScore)
     end
 end
 ylabel(sprintf('%s-GWAS (%s), %s-drug similarity score',whatDiseaseGWAS,whatProperty,whatDiseaseDrug))
-title(sprintf('%s-%s (%s drugs)',whatDiseaseGWAS,whatProperty,whatDiseaseDrug))
+title(sprintf('%s-%s (%s drugs); %u genes',whatDiseaseGWAS,whatProperty,whatDiseaseDrug,sum(bothGood)))
 ax = gca();
 % ax.YLim = [0,ax.YLim(2)];
 

@@ -8,5 +8,7 @@ for j = 1:length(paths)
 end
 
 %-------------------------------------------------------------------------------
-
 % load('processedData.mat');
+%-------------------------------------------------------------------------------
+fprintf(1,'Adding path to MatlabmySQL toolbox\n');
+addpath('/Users/benfulcher/DropboxSydneyUni/CodeToolboxes/MatlabmySQL/')
