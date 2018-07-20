@@ -29,11 +29,14 @@ SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBI
 [uniqueSNPs,ia] = unique(SNP_id);
 mappedGene_compare = mappedGene(ia);
 numUniqueSNPs = length(uniqueSNPs);
-fprintf(1,'We have %u unique SNPS\n',length(uniqueSNPs));
+fprintf(1,'We have %u unique SNPs that have been implicated in one or more diseases\n',length(uniqueSNPs));
 
-numUniqueSNPs = 10;
+% Subset for testing:
+% numUniqueSNPs = 500;
 mappedGenes = cell(numUniqueSNPs,1);
+LD_SNPs = cell(numUniqueSNPs,1);
 LDgenes = cell(numUniqueSNPs,1);
+noMatches = zeros(numUniqueSNPs,1);
 for i = 1:numUniqueSNPs
     theSNP = uniqueSNPs{i};
 
@@ -41,14 +44,25 @@ for i = 1:numUniqueSNPs
     mappedGenes{i} = SQL_genesForSNPs(theSNP);
 
     % Get LD SNPs:
-    LD_SNPs = SQL_SNP_LD_SNP(theSNP,LDthreshold);
+    LD_SNPs{i} = SQL_SNP_LD_SNP(theSNP,LDthreshold);
 
     % Map each SNP to its set of LD genes
-    if isempty(LD_SNPs)
+    if isempty(LD_SNPs{i})
         LDgenes{i} = '';
     else
-        LDgenes{i} = SQL_genesForSNPs(LD_SNPs);
+        LDgenes{i} = SQL_genesForSNPs(LD_SNPs{i});
+    end
+    if isempty(mappedGenes{i}) & isempty(LD_SNPs{i})
+        noMatches(i) = true;
     end
 end
 
-SNPgeneTable = table(SNP_id,mappedGene);
+SNPgeneTable = table(uniqueSNPs,mappedGenes,LD_SNPs,LDgenes);
+% Remove those with no matches to anything:
+SNPgeneTable = SNPgeneTable(~noMatches,:);
+
+%-------------------------------------------------------------------------------
+% Save to a .mat file
+fileName = fullfile('DataOutput',sprintf('SNP_gene_map_%u.mat',LDthreshold*100));
+save(fileName,'SNPgeneTable','LDthreshold');
+fprintf(1,'Saved SNP/LD/Gene mapping to %s\n',fileName);

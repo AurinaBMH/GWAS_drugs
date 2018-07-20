@@ -33,7 +33,7 @@ end
 
 % Check if empty (no matches):
 if isempty(LD_SNPs)
-    warning('No matching SNPs found for %s',mySNP)
+    warning('No other SNPs are within-threshold LD with %s',mySNP)
 end
 
 SQL_closedatabase(dbc);
