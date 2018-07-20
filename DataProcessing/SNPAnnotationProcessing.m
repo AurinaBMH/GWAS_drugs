@@ -1,6 +1,9 @@
+% function [SNPAnnotationTable,SNPgeneTable] = SNPAnnotationProcessing(LDthreshold)
 % Idea is to make a nicer version of the SNPAnnotationTable
 
-LDthreshold = 0.5;
+% if nargin < 1
+    LDthreshold = 0.5;
+% end
 
 %-------------------------------------------------------------------------------
 % IMPORT GWAS-BASED INFORMATION:
@@ -15,30 +18,71 @@ isADHD = logical(C{3});
 isASD = logical(C{4});
 isBIP = logical(C{5});
 isMDD = logical(C{6});
+isDiabetes = logical(C{10});
 mappedGene = C{7};
 mappedGene(strcmp(mappedGene,'0')) = {''}; % remove '0' -> empty
 isGWAS = logical(C{8});
 isLD = logical(C{9});
-isDiabetes = logical(C{10});
-SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
+% SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
 %-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% We first want a table relating each SNP to a gene
+% ONLY INCLUDING GWAS:
+%-------------------------------------------------------------------------------
+mappedGeneJanette = mappedGene;
+SNPAnnotationTableAll = table(SNP_id,isSZP,isADHD,isASD,isBIP,...
+                                    isMDD,isDiabetes,mappedGeneJanette);
+
+%-------------------------------------------------------------------------------
+% Filter to list only GWAS-annotated SNPs:
+SNPAnnotationTableAll = SNPAnnotationTableAll(isGWAS,:);
+
+%-------------------------------------------------------------------------------
+% Filter to unique SNPs--—SNPAnnotationTable
+[SNP,ia] = unique(SNPAnnotationTableAll.SNP_id);
+numUniqueSNPs = length(SNP);
+fprintf(1,'%u unique GWAS SNPs have been implicated in disease\n',numUniqueSNPs);
+isSZP = false(numUniqueSNPs,1);
+isADHD = false(numUniqueSNPs,1);
+isASD = false(numUniqueSNPs,1);
+isBIP = false(numUniqueSNPs,1);
+isMDD = false(numUniqueSNPs,1);
+isDiabetes = false(numUniqueSNPs,1);
+for i = 1:numUniqueSNPs
+    theSNP = SNP{i};
+    tableSNP = SNPAnnotationTableAll(strcmp(SNPAnnotationTableAll.SNP_id,theSNP),:);
+    if any(tableSNP.isSZP)
+        isSZP(i) = true;
+    end
+    if any(tableSNP.isADHD)
+        isADHD(i) = true;
+    end
+    if any(tableSNP.isASD)
+        isASD(i) = true;
+    end
+    if any(tableSNP.isBIP)
+        isBIP(i) = true;
+    end
+    if any(tableSNP.isMDD)
+        isMDD(i) = true;
+    end
+    if any(tableSNP.isDiabetes)
+        isDiabetes(i) = true;
+    end
+end
+SNPAnnotationTable = table(SNP,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
 
 %-------------------------------------------------------------------------------
 % For all unique SNPs, we want a column: LDgenes
 %-------------------------------------------------------------------------------
-[uniqueSNPs,ia] = unique(SNP_id);
-mappedGene_compare = mappedGene(ia);
-numUniqueSNPs = length(uniqueSNPs);
-fprintf(1,'We have %u unique SNPs that have been implicated in one or more diseases\n',length(uniqueSNPs));
-
-% Subset for testing:
-% numUniqueSNPs = 500;
+% Initialize:
 mappedGenes = cell(numUniqueSNPs,1);
 LD_SNPs = cell(numUniqueSNPs,1);
 LDgenes = cell(numUniqueSNPs,1);
-noMatches = zeros(numUniqueSNPs,1);
 for i = 1:numUniqueSNPs
-    theSNP = uniqueSNPs{i};
+    theSNP = SNP{i};
+    fprintf(1,'%u/%u: %s\n',i,numUniqueSNPs,theSNP);
 
     % Get the mapped gene for this SNP:
     mappedGenes{i} = SQL_genesForSNPs(theSNP);
@@ -46,23 +90,45 @@ for i = 1:numUniqueSNPs
     % Get LD SNPs:
     LD_SNPs{i} = SQL_SNP_LD_SNP(theSNP,LDthreshold);
 
-    % Map each SNP to its set of LD genes
-    if isempty(LD_SNPs{i})
-        LDgenes{i} = '';
-    else
+    % Map each SNP to its set of LD genes (if there are any to match):
+    if ~isempty(LD_SNPs{i})
         LDgenes{i} = SQL_genesForSNPs(LD_SNPs{i});
     end
-    if isempty(mappedGenes{i}) & isempty(LD_SNPs{i})
-        noMatches(i) = true;
-    end
 end
-
-SNPgeneTable = table(uniqueSNPs,mappedGenes,LD_SNPs,LDgenes);
-% Remove those with no matches to anything:
-SNPgeneTable = SNPgeneTable(~noMatches,:);
+SNPgeneTable = table(SNP,mappedGenes,LD_SNPs,LDgenes);
 
 %-------------------------------------------------------------------------------
 % Save to a .mat file
 fileName = fullfile('DataOutput',sprintf('SNP_gene_map_%u.mat',LDthreshold*100));
 save(fileName,'SNPgeneTable','LDthreshold');
 fprintf(1,'Saved SNP/LD/Gene mapping to %s\n',fileName);
+
+%-------------------------------------------------------------------------------
+% Match and integrate:
+SNPAnnotationTable.mappedGenes = mappedGenes;
+SNPAnnotationTable.LDgenes = LDgenes;
+
+% noMatches = cellfun(@isempty,SNPAnnotationTable.mappedGenes) & cellfun(@isempty,SNPAnnotationTable.LDgenes);
+% SNPAnnotationTable = SNPAnnotationTable(~noMatches,:);
+
+% numEntries = height(SNPAnnotationTable);
+% mappedGene = cell(numEntries,1);
+% LDgenes = cell(numEntries,1);
+% for i = 1:numEntries
+%     theSNP = SNPAnnotationTable.SNP{i};
+%     ind = find(strcmp(SNPgeneTable.SNP,theSNP));
+%     if ~isempty(ind)
+%         mappedGene{i} = SNPgeneTable.mappedGenes{ind};
+%         LDgenes{i} = SNPgeneTable.LDgenes{ind};
+%     end
+% end
+% SNPAnnotationTable.mappedGene = mappedGene;
+% SNPAnnotationTable.LDgenes = LDgenes;
+
+%-------------------------------------------------------------------------------
+% Save to a .mat file
+fileName = fullfile('DataOutput',sprintf('SNPAnnotationTable_%u.mat',LDthreshold*100));
+save(fileName,'SNPAnnotationTable');
+fprintf(1,'Saved SNP annotation table to %s\n',fileName);
+
+% end

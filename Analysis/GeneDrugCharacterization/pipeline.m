@@ -1,4 +1,4 @@
-function resultsTable = pipeline(whatDisease,PPINevidenceThreshold)
+function resultsTable = pipeline(whatDisease,PPINevidenceThreshold,LDThreshold)
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -11,6 +11,9 @@ if nargin < 1
 end
 if nargin < 2
     PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
+end
+if nargin < 3
+    LDThreshold = 0.5;
 end
 
 %===============================================================================
@@ -31,17 +34,16 @@ numUniqueGenes = length(allUniqueGenes);
 %-------------------------------------------------------------------------------
 % Import SNP, gene, disease, GWAS, LD annotations for a given GWAS study:
 %-------------------------------------------------------------------------------
-[SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
+% [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
+fileName = sprintf('SNPAnnotationTable_%u.mat',LDthreshold*100);
+load(fileName,'SNPAnnotationTable');
 
-% Use only GWAS-mapped genes:
-isGWASAndNotEmpty = SNPAnnotationTable.isGWAS & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-allDiseaseGenesMapped = unique(SNPAnnotationTable.mappedGene(isGWASAndNotEmpty));
+% Combine all mapped genes:
+allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
 
 % Get LD-genes:
 % isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
 % allDiseaseGenesLD = unique(SNPAnnotationTable.mappedGene(isLDAndNotEmpty));
-
-
 
 % fprintf(1,'%u/%u genes with drug targets have annotations\n',...
 %         sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);

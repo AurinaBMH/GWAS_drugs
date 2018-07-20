@@ -13,6 +13,9 @@ if threshold==0
     % Put the query:
     selectText = sprintf(['SELECT SNP2 FROM LD_rel WHERE SNP1=''%s'''],mySNP);
     [LD_SNPs,~,~,emsg] = mysql_dbquery(dbc,selectText);
+    % % The other way around:
+    % selectText = sprintf(['SELECT SNP1 FROM LD_rel WHERE SNP2=''%s'''],mySNP);
+    % [LD_SNPs_2,~,~,emsg] = mysql_dbquery(dbc,selectText);
 else
     % Put the query:
     selectText = sprintf(['SELECT SNP2,r2 FROM LD_rel WHERE SNP1=''%s'''],mySNP);

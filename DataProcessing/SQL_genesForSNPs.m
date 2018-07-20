@@ -23,6 +23,7 @@ end
 
 % Check if empty (no matches):
 if isempty(geneList)
+    geneList = {};
     warning('No genes found for any of the %u input SNPs',length(SNPlist))
 else
     geneList = unique(geneList);

@@ -7,6 +7,6 @@ connSettings.hostname = 'localhost';
 connSettings.dbname = 'geneLD';
 connSettings.username = 'root';
 connSettings.password = 'ben1234';
-dbc = SQL_opendatabase(connSettings);
+dbc = SQL_opendatabase(connSettings,false);
 
 end
