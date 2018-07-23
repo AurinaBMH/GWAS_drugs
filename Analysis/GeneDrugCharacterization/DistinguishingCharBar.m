@@ -5,9 +5,13 @@ if nargin < 1
     % 'numGWASMapped','numLDSNPs','percPPIneigh1Mapped','percPPIneigh1LD','AllenMeanCoexpMapped','AllenMeanCoexpLD'
 end
 
-whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 whatDiseases_GWAS = {'ADHD','BIP','SZP','MDD','diabetes'};
 whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
+
+%-------------------------------------------------------------------------------
+% Load in default parameters:
+params = SetDefaultParams();
+whatScore = params.whatScore;
 
 %-------------------------------------------------------------------------------
 numDiseases_Treatment = length(whatDiseases_Treatment);
@@ -60,6 +64,7 @@ for i = 1:numDiseases_GWAS
             r = ~isnan(geneWeights_treatment) & ~isnan(geneWeights_GWAS);
             rhos(k) = sum(geneWeights_treatment(r).*geneWeights_GWAS(r));
         end
+
         % Generate (pooled) nulls [could be done individually for each particular weighting if needed]:
         numNulls = 2000;
         nullScores = zeros(numNulls,1);

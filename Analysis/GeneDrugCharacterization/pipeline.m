@@ -1,4 +1,4 @@
-function resultsTable = pipeline(whatDisease,PPINevidenceThreshold,LDthreshold)
+function resultsTable = pipeline(whatDisease)
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -9,12 +9,14 @@ if nargin < 1
     % GWAS hits from which disease?: 'all','SZP','ASD','ADHD','BIP','MDD'
     whatDisease = 'all';
 end
-if nargin < 2
-    PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
-end
-if nargin < 3
-    LDthreshold = 0.5;
-end
+
+%-------------------------------------------------------------------------------
+% Load in default parameters:
+%-------------------------------------------------------------------------------
+params = SetDefaultParams();
+doWeighted = params.doWeighted;
+PPINevidenceThreshold = params.PPINevidenceThreshold;
+LDthreshold = params.LDthreshold;
 
 %===============================================================================
 % LOAD DATA
@@ -24,9 +26,6 @@ end
 % Restrict our characterization to genes associated with (any) drug-treatment:
 %-------------------------------------------------------------------------------
 % List of all genes with drug targets in Drugbank are in **gene_ATC_matrix.csv**
-% [geneDrugTable,allUniqueGenes] = DrugGeneImport();
-% Import drug classification
-% drugClassTable = DrugClassImport();
 indicatorTable = ImportTreatmentLists(false);
 allUniqueGenes = indicatorTable.Properties.RowNames;
 numUniqueGenes = length(allUniqueGenes);
@@ -39,14 +38,9 @@ SNPAnnotationTable = SNPAnnotationImport(whatDisease,LDthreshold);
 % Combine all mapped genes:
 allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
 
-% Get LD-genes:
-% isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-allLDDiseaseGenes = unique(vertcat(SNPAnnotationTable.LDgenes{:}));
-% Combine with mapped:
-allLDDiseaseGenes = union(allMappedDiseaseGenes,allLDDiseaseGenes);
-
-% fprintf(1,'%u/%u genes with drug targets have annotations\n',...
-%         sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
+% Add LD-genes:
+onlyLDDiseaseGenes = unique(vertcat(SNPAnnotationTable.LDgenes{:}));
+allLDDiseaseGenes = union(allMappedDiseaseGenes,onlyLDDiseaseGenes);
 
 %===============================================================================
 %======================CHARACTERIZATION MODULES=================================
@@ -58,18 +52,12 @@ allLDDiseaseGenes = union(allMappedDiseaseGenes,allLDDiseaseGenes);
 
 %-------------------------------------------------------------------------------
 % eQTL Characterization:
+%-------------------------------------------------------------------------------
 % eQTL_info = TellMeQTL(allDiseaseGenesMapped,allUniqueGenes);
-% numEGenes = eQTL_info.numEGenes;
-% numSNPGenes = eQTL_info.numSNPGenes;
-% numEGenes_LD = eQTL_info.numEGenes_LD;
-% numSNPGenes_LD = eQTL_info.numSNPGenes_LD;
-% numLDeGeneseQTL = eQTL_info.numLDeGeneseQTL;
-% numLDSNPGeneseQTL = eQTL_info.numLDSNPGeneseQTL;
 
 %-------------------------------------------------------------------------------
 % PPIN characterization:
 %-------------------------------------------------------------------------------
-
 % Just mapped disease genes (genes with a GWAS SNP in them):
 [numPPIneigh1Mapped,percPPIneigh1Mapped,meanPPIDistMapped] = TellMePPIInfo(PPINevidenceThreshold,allMappedDiseaseGenes,allUniqueGenes);
 
@@ -98,10 +86,6 @@ resultsTable = table(gene,numGWASMapped,numLDSNPs,percPPIneigh1Mapped,...
 resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneigh1Mapped',... %,'meanPPIDistance'
                 'percPPIneigh1LD','AllenMeanCoexpMapped',...
                 'AllenMeanCoexpLD'},'descend','MissingPlacement','last');
-                % 'AllenMeanCoexp',...
-                % 'numEGenes','numSNPGenes','numEGenes_LD',...
-                % 'numSNPGenes_LD','numLDeGeneseQTL','numLDSNPGeneseQTL'}
-
 
 %-------------------------------------------------------------------------------
 % Display just with custom columns

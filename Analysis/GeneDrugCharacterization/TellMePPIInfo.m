@@ -1,26 +1,39 @@
-function [numPPIneighbors1,percPPIneighbors1,meanPPIDistance] = TellMePPIInfo(PPINevidenceThreshold,contextGenes,genesChar)
+function [numPPIneighbors1,percPPIneighbors1,meanPPIDistance] = TellMePPIInfo(PPINevidenceThreshold,contextGenes,genesChar,doWeighted)
 % Characterize each gene in the list genesChar in terms of its nearness to the
 % set of context genes in contextGenes
 %-------------------------------------------------------------------------------
 
+if nargin < 4
+    doWeighted = true;
+end
+
+%-------------------------------------------------------------------------------
+% Filenames:
+if doWeighted
+    extraText = '_w';
+    fprintf(1,'Loading weighted PPIN data...\n');
+else
+    extraText = sprintf('_th0%u',PPINevidenceThreshold*10);
+    fprintf(1,'Loading PPIN data for evidence threshold of %.2f...\n',PPINevidenceThreshold);
+end
+fileNameAdj = sprintf('PPI_Adj%s.mat',extraText);
+fileNameGeneLabels = sprintf('PPI_geneLabels%s.mat',extraText);
+fileNamePDist = sprintf('PPI_Dist%s.mat',extraText);
+
 %-------------------------------------------------------------------------------
 % LOAD PPIN DATA (precomputed from PPINImport):
 %-------------------------------------------------------------------------------
-fileNameAdj = sprintf('PPI_Adj_th0%u.mat',PPINevidenceThreshold*10);
-fileNameGeneLabels = sprintf('PPI_geneLabels_th0%u.mat',PPINevidenceThreshold*10);
 try
-    fprintf(1,'Loading PPIN data for evidence threshold of %.2f...',PPINevidenceThreshold);
     load(fileNameAdj,'AdjPPI');
     load(fileNameGeneLabels,'geneNames');
     PPIN = struct();
     PPIN.AdjPPI = AdjPPI;
     PPIN.geneNames = geneNames; % (actually protein names)
     clear('AdjPPI','geneNames');
-    fprintf(1,' Loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
+    fprintf(1,'Data loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
 catch
     error('No precomputed data for evidence threshold of %.1f...!!!',...
                     PPINevidenceThreshold)
-    % PPIN = PPINImport(PPINevidenceThreshold);
 end
 
 %-------------------------------------------------------------------------------
@@ -52,7 +65,6 @@ fprintf(1,'%u/%u genes to be characterized could be matched to PPI network data\
 % Load shortest path distances on the PPI network:
 % (cf. ComputePPIDist)
 %-------------------------------------------------------------------------------
-fileNamePDist = sprintf('PPI_Dist_th0%u.mat',PPINevidenceThreshold*10);
 try
     PPIND = load(fileNamePDist,'distMatrix');
     PPIN.distMatrix = PPIND.distMatrix;
@@ -60,11 +72,6 @@ try
 catch
     warning('No PPI shortest path information found');
 end
-% list the bad ones:
-% noGood = find(~isPPIGene);
-% for i = 1:length(noGood)
-%     fprintf(1,'%s\n',genesChar{noGood(i)});
-% end
 
 %-------------------------------------------------------------------------------
 % Initialize variables:
@@ -90,23 +97,38 @@ for i = 1:numGenesChar
         continue;
     end
 
+    %---------------------------------------------------------------------------
     % Get the 1-step neighbors
     PPI_neighbors_index = find(PPIN.AdjPPI(PPI_index,:));
+
+    % Don't allow self-matches:
+    PPI_neighbors_index(PPI_index) = 0;
+
+    % Count neighbors:
     numNeighbors = length(PPI_neighbors_index);
+
     if numNeighbors==0
         numPPIneighbors1(i) = 0;
         percPPIneighbors1(i) = NaN;
     else
         % PPI_neighbors_index = union(PPI_neighbors_index,PPI_index); % include the target gene
         PPI_neighbors_gene = PPIN.geneNames(PPI_neighbors_index);
-
         % How many 1-step neighbors are in the disease list (mapped/LD)?:
-        numPPIneighbors1(i) = sum(ismember(PPI_neighbors_gene,contextGenes));
+        isInContext = ismember(PPI_neighbors_gene,contextGenes);
+        numPPIneighbors1(i) = sum(isInContext);
+        meanPPIneighbors1(i) = mean(isInContext);
 
-        % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
-        percPPIneighbors1(i) = 100*numPPIneighbors1(i)/length(PPI_neighbors_index);
-
-        fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
+        if doWeighted
+            % What aggregrate evidence weight spread across 1-step neighbors are on the context list?:
+            % (expressed as a proportion of total evidence weight):
+            evidenceWeightContext = sum(PPIN.AdjPPI(PPI_index,isInContext));
+            evidenceWeightTotal = sum(PPIN.AdjPPI(PPI_index,PPI_neighbors_index));
+            percPPIneighbors1(i) = evidenceWeightContext/evidenceWeightTotal;
+        else
+            % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
+            percPPIneighbors1(i) = 100*meanPPIneighbors1;
+            % fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
+        end
     end
     %-------------------------------------------------------------------------------
     % PPIN Distance:
