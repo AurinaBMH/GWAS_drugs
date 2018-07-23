@@ -17,21 +17,22 @@ end
 
 [geneList,~,~,emsg] = mysql_dbquery(dbc,selectText);
 
-if ~isempty(emsg)
-    keyboard
-end
+% if ~isempty(emsg)
+%     keyboard
+% end
 
 % Check if empty (no matches):
+% disp(length(geneList))
 if isempty(geneList)
     geneList = {};
-    warning('No genes found for any of the %u input SNPs',length(SNPlist))
+    % warning('No genes found for any of the %u input SNPs',length(SNPlist))
 else
     geneList = unique(geneList);
 end
 
-if length(geneList)==1
-    geneList = geneList{1};
-end
+% if length(geneList)==1
+%     geneList = geneList{1};
+% end
 
 % Close the database connection:
 SQL_closedatabase(dbc);

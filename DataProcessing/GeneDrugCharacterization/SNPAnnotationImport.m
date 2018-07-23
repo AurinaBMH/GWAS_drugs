@@ -1,4 +1,4 @@
-function [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease,LDthreshold)
+function SNPAnnotationTable = SNPAnnotationImport(whatDisease,LDthreshold)
 % Import data on SNP-gene relationships, and disease, GWAS/LD annotations
 %-------------------------------------------------------------------------------
 
@@ -30,8 +30,9 @@ end
 % %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
-% Load from SNPAnnotationProcessing.m
-load('SNPAnnotationTable.mat','SNPAnnotationTable');
+% Generate this file using: SNPAnnotationProcessing
+fileName = sprintf('SNPAnnotationTable_%u.mat',LDthreshold*100);
+load(fileName,'SNPAnnotationTable');
 
 %-------------------------------------------------------------------------------
 % Filter by disease:
@@ -63,41 +64,43 @@ else
                             whatDisease,sizePreFilter,numAnnotations);
 end
 
-%-------------------------------------------------------------------------------
-% Match SNPs to mapped and LD-mapped genes using precomputed matching:
-%-------------------------------------------------------------------------------
-fileName = sprintf('SNP_gene_map_%u.mat',LDthreshold*100);
-load(fileName,'SNPgeneTable');
-% Match:
-[~,ia,ib] = intersect(SNPAnnotationTable.SNP_id,SNPgeneTable.uniqueSNPs);
-SNPAnnotationTable = SNPAnnotationTable(ia,:);
-SNPAnnotationTable.mappedGenes = SNPgeneTable.mappedGenes(ib);
-SNPAnnotationTable.LDgenes = SNPgeneTable.LDgenes(ib);
 
-%-------------------------------------------------------------------------------
-% Give outputs to screen:
-%-------------------------------------------------------------------------------
-fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,...
-                    sum(SNPAnnotationTable.isGWAS),sum(SNPAnnotationTable.isLD));
 
-hasGeneName = cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnnotations);
-fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',...
-                sum(SNPAnnotationTable.isGWAS & hasGeneName),sum(SNPAnnotationTable.isGWAS));
-fprintf(1,'%u/%u LD annotations have gene names\n',...
-            sum(SNPAnnotationTable.isLD & hasGeneName),sum(SNPAnnotationTable.isLD));
-
-% All SNPs with a disease annotation (GWAS or LD):
-allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
-
-%-------------------------------------------------------------------------------
-% Generate a SNP -> Gene map
-%-------------------------------------------------------------------------------
-SNPGeneMap = SNPAnnotationTable(cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene),1:2);
-% Make unique:
-[~,ix] = unique(SNPGeneMap.SNP_id);
-SNPGeneMap = SNPGeneMap(ix,:);
-fprintf(1,'%u/%u SNPs have a matching gene name (%u genes)\n',height(SNPGeneMap),...
-        length(unique(SNPAnnotationTable.SNP_id)),length(unique(SNPGeneMap.mappedGene)));
+% %-------------------------------------------------------------------------------
+% % Match SNPs to mapped and LD-mapped genes using precomputed matching:
+% %-------------------------------------------------------------------------------
+% fileName = sprintf('SNP_gene_map_%u.mat',LDthreshold*100);
+% load(fileName,'SNPgeneTable');
+% % Match:
+% [~,ia,ib] = intersect(SNPAnnotationTable.SNP_id,SNPgeneTable.uniqueSNPs);
+% SNPAnnotationTable = SNPAnnotationTable(ia,:);
+% SNPAnnotationTable.mappedGenes = SNPgeneTable.mappedGenes(ib);
+% SNPAnnotationTable.LDgenes = SNPgeneTable.LDgenes(ib);
+%
+% %-------------------------------------------------------------------------------
+% % Give outputs to screen:
+% %-------------------------------------------------------------------------------
+% fprintf(1,'%u annotations for %u GWAS mapped and %u LD\n',numAnnotations,...
+%                     sum(SNPAnnotationTable.isGWAS),sum(SNPAnnotationTable.isLD));
+%
+% hasGeneName = cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
+% fprintf(1,'%u/%u annotations are mapped to gene names\n',sum(hasGeneName),numAnnotations);
+% fprintf(1,'%u/%u GWAS-mapped annotations have gene names\n',...
+%                 sum(SNPAnnotationTable.isGWAS & hasGeneName),sum(SNPAnnotationTable.isGWAS));
+% fprintf(1,'%u/%u LD annotations have gene names\n',...
+%             sum(SNPAnnotationTable.isLD & hasGeneName),sum(SNPAnnotationTable.isLD));
+%
+% % All SNPs with a disease annotation (GWAS or LD):
+% allDiseaseSNPs = unique(SNPAnnotationTable.SNP_id);
+%
+% %-------------------------------------------------------------------------------
+% % Generate a SNP -> Gene map
+% %-------------------------------------------------------------------------------
+% SNPGeneMap = SNPAnnotationTable(cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene),1:2);
+% % Make unique:
+% [~,ix] = unique(SNPGeneMap.SNP_id);
+% SNPGeneMap = SNPGeneMap(ix,:);
+% fprintf(1,'%u/%u SNPs have a matching gene name (%u genes)\n',height(SNPGeneMap),...
+%         length(unique(SNPAnnotationTable.SNP_id)),length(unique(SNPGeneMap.mappedGene)));
 
 end

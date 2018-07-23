@@ -1,3 +1,4 @@
+% GenerateResultsTables
 % Idea is to run through pipeline for each disease, and save results tables
 % for each:
 

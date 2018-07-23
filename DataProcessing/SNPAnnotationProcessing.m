@@ -2,8 +2,12 @@
 % Idea is to make a nicer version of the SNPAnnotationTable
 
 % if nargin < 1
-    LDthreshold = 0.5;
+LDthreshold = 0.5;
 % end
+
+% Whether to look twice for LD–SNPs (SNP1 and SNP2)
+% (preliminary checks suggest this doesn't make a difference, as it shouldn't)
+lookTwice = false;
 
 %-------------------------------------------------------------------------------
 % IMPORT GWAS-BASED INFORMATION:
@@ -31,8 +35,7 @@ isLD = logical(C{9});
 % ONLY INCLUDING GWAS:
 %-------------------------------------------------------------------------------
 mappedGeneJanette = mappedGene;
-SNPAnnotationTableAll = table(SNP_id,isSZP,isADHD,isASD,isBIP,...
-                                    isMDD,isDiabetes,mappedGeneJanette);
+SNPAnnotationTableAll = table(SNP_id,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes,mappedGeneJanette);
 
 %-------------------------------------------------------------------------------
 % Filter to list only GWAS-annotated SNPs:
@@ -88,11 +91,34 @@ for i = 1:numUniqueSNPs
     mappedGenes{i} = SQL_genesForSNPs(theSNP);
 
     % Get LD SNPs:
-    LD_SNPs{i} = SQL_SNP_LD_SNP(theSNP,LDthreshold);
+    LD_SNPs{i} = SQL_SNP_LD_SNP(theSNP,LDthreshold,lookTwice);
 
     % Map each SNP to its set of LD genes (if there are any to match):
     if ~isempty(LD_SNPs{i})
         LDgenes{i} = SQL_genesForSNPs(LD_SNPs{i});
+
+        % Don't allow overlap with mapped genes:
+        if ~iscell(mappedGenes{i})
+            if ~iscell(LDgenes{i})
+                if strcmp(LDgenes{i},mappedGenes{i})
+                    LDgenes{i} = {};
+                end
+            else
+                isMapped = ismember(LDgenes{i},mappedGenes{i});
+                LDgenes{i} = LDgenes{i}(~isMapped);
+            end
+        else % multiple mapped genes:
+            if ~iscell(LDgenes{i}) % single LD gene
+                if ismember(LDgenes{i},mappedGenes{i});
+                    LDgenes{i} = {};
+                end
+            else % multiple LD and mapped genes
+                isMapped = ismember(LDgenes{i},mappedGenes{i});
+                LDgenes{i} = LDgenes{i}(~isMapped);
+            end
+        end
+    else
+        LDgenes{i} = {};
     end
 end
 SNPgeneTable = table(SNP,mappedGenes,LD_SNPs,LDgenes);
@@ -107,6 +133,10 @@ fprintf(1,'Saved SNP/LD/Gene mapping to %s\n',fileName);
 % Match and integrate:
 SNPAnnotationTable.mappedGenes = mappedGenes;
 SNPAnnotationTable.LDgenes = LDgenes;
+% Sort by num matches:
+numMatches = cellfun(@length,SNPAnnotationTable.mappedGenes) + cellfun(@length,SNPAnnotationTable.LDgenes);
+[~,ix] = sort(numMatches,'descend');
+SNPAnnotationTable = SNPAnnotationTable(ix,:);
 
 % noMatches = cellfun(@isempty,SNPAnnotationTable.mappedGenes) & cellfun(@isempty,SNPAnnotationTable.LDgenes);
 % SNPAnnotationTable = SNPAnnotationTable(~noMatches,:);

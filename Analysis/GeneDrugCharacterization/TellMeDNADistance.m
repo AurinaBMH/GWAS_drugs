@@ -15,33 +15,49 @@ numGenesChar = length(genesChar);
 numGWASMapped = zeros(numGenesChar,1);
 numLDSNPs = zeros(numGenesChar,1);
 
+fprintf(1,'Computing number of SNPs LD to SNPs in %u genes\n',numGenesChar);
 for i = 1:numGenesChar
     gene_i = genesChar{i};
+    fprintf(1,'%u/%u: %s',i,numGenesChar,gene_i);
 
     %---------------------------------------------------------------------------
     % --numGWASMapped: the number of GWAS SNPs mapped directly to the gene
     %---------------------------------------------------------------------------
-    isMappedGene = cellfun(@(x)f_isin(gene_i,x),SNPAnnotationTable.mappedGenes);
+    isMappedGene = cellfun(@(x)ismember(gene_i,x),SNPAnnotationTable.mappedGenes);
     theMappedSNPs = unique(SNPAnnotationTable.SNP(isMappedGene));
     numGWASMapped(i) = length(theMappedSNPs);
 
     %---------------------------------------------------------------------------
-    % --numLD: the number of GWAS SNPs LD to a gene
+    % --numLD: the number of GWAS SNPs LD to this gene
     %---------------------------------------------------------------------------
-    % (i) find SNPs for this gene:
-    SNP_list = SQL_SNPsForGene(gene_i);
-    numSNPs = length(SNP_list);
+    isLDGene = cellfun(@(x)ismember(gene_i,x),SNPAnnotationTable.LDgenes);
+    theLDSNPs = unique(SNPAnnotationTable.SNP(isLDGene));
+    numLDSNPs(i) = length(theLDSNPs);
 
-    % (ii) Get a list of all unique SNPs that are LD to these SNPs:
-    LD_SNPs = cell(numSNPs,1);
-    for j = 1:numSNPs
-        mySNP = SNP_list{j};
-        LD_SNPs{j} = SQL_SNP_LD_SNP(mySNP,LDthreshold);
-    end
-    all_LD_SNPs = unique(vertcat(LD_SNPs{:}));
+    %---------------------------------------------------------------------------
+    % --numLD_2: the number of GWAS SNPs LD to a gene
+    %---------------------------------------------------------------------------
+    % % (i) find SNPs for this gene:
+    % SNP_list = SQL_SNPsForGene(gene_i);
+    % numSNPs = length(SNP_list);
+    %
+    % % (ii) Get a list of all unique SNPs that are LD to these SNPs:
+    % LD_SNPs = cell(numSNPs,1);
+    % for j = 1:numSNPs
+    %     mySNP = SNP_list{j};
+    %     LD_SNPs{j} = SQL_SNP_LD_SNP(mySNP,LDthreshold);
+    % end
+    % all_LD_SNPs = unique(vertcat(LD_SNPs{:}));
+    %
+    % isMappedSNP = ismember(all_LD_SNPs,theMappedSNPs);
+    % all_LD_SNPs = all_LD_SNPs(~isMappedSNP);
+    %
+    % % (iii) Count how many match the list of disease-related SNPs:
+    % % Probably want to exclude SNPs used above
+    % numLDSNPs(i) = sum(ismember(all_LD_SNPs,SNPAnnotationTable.SNP));
+    % %
+    fprintf(1,' (%u,%u)\n',numGWASMapped(i),numLDSNPs(i));
 
-    % (iii) Count how many match the list of disease-related SNPs:
-    numLDSNPs = sum(ismember(all_LD_SNPs,SNPAnnotationTable.SNP));
 
     % If I want to count the number of SNPs that are LD to a given gene, I need to:
     % (i) Check every SNP in that gene (?? Using SNP_identifier.csv??)
@@ -62,11 +78,11 @@ for i = 1:numGenesChar
     % end
 end
 
-    function out = f_isin(A,B)
-        if iscell(B)
-            out = ismember(A,B);
-        else
-            out = strcmp(A,B);
-        end
-    end
+    % function out = f_isin(A,B)
+    %     if iscell(B)
+    %         out = ismember(A,B);
+    %     else
+    %         out = strcmp(A,B);
+    %     end
+    % end
 end

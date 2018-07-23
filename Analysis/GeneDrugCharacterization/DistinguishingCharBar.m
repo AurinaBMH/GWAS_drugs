@@ -89,7 +89,7 @@ for i = 1:numDiseases_GWAS
         plot(ones(2,1)*(numDiseases_Treatment+1)-f,x,'k');
         ax.XTick = 1:numDiseases_Treatment+1;
         ax.XTickLabel = {whatDiseases_Treatment{ix},'null'};
-        ax.YLim = [min(rhos),max(rhos)*1.1];
+        ax.YLim = [min(rhos)*0.9,max(rhos)*1.1];
     else
         ax.XTick = 1:numDiseases_Treatment;
         ax.XTickLabel = whatDiseases_Treatment(ix);

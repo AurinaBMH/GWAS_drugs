@@ -1,4 +1,4 @@
-function resultsTable = pipeline(whatDisease,PPINevidenceThreshold,LDThreshold)
+function resultsTable = pipeline(whatDisease,PPINevidenceThreshold,LDthreshold)
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ if nargin < 2
     PPINevidenceThreshold = 0; % evidence threshold for including PPI interactions
 end
 if nargin < 3
-    LDThreshold = 0.5;
+    LDthreshold = 0.5;
 end
 
 %===============================================================================
@@ -34,16 +34,16 @@ numUniqueGenes = length(allUniqueGenes);
 %-------------------------------------------------------------------------------
 % Import SNP, gene, disease, GWAS, LD annotations for a given GWAS study:
 %-------------------------------------------------------------------------------
-% [SNPAnnotationTable,SNPGeneMap,allDiseaseSNPs] = SNPAnnotationImport(whatDisease);
-fileName = sprintf('SNPAnnotationTable_%u.mat',LDthreshold*100);
-load(fileName,'SNPAnnotationTable');
+SNPAnnotationTable = SNPAnnotationImport(whatDisease,LDthreshold);
 
 % Combine all mapped genes:
 allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
 
 % Get LD-genes:
 % isLDAndNotEmpty = SNPAnnotationTable.isLD & cellfun(@(x)~isempty(x),SNPAnnotationTable.mappedGene);
-% allDiseaseGenesLD = unique(SNPAnnotationTable.mappedGene(isLDAndNotEmpty));
+allLDDiseaseGenes = unique(vertcat(SNPAnnotationTable.LDgenes{:}));
+% Combine with mapped:
+allLDDiseaseGenes = union(allMappedDiseaseGenes,allLDDiseaseGenes);
 
 % fprintf(1,'%u/%u genes with drug targets have annotations\n',...
 %         sum(ismember(allUniqueGenes,SNPAnnotationTable.mappedGene)),numUniqueGenes);
@@ -71,19 +71,19 @@ allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
 %-------------------------------------------------------------------------------
 
 % Just mapped disease genes (genes with a GWAS SNP in them):
-[numPPIneigh1Mapped,percPPIneigh1Mapped,meanPPIDistMapped] = TellMePPIInfo(PPINevidenceThreshold,allDiseaseGenesMapped,allUniqueGenes);
+[numPPIneigh1Mapped,percPPIneigh1Mapped,meanPPIDistMapped] = TellMePPIInfo(PPINevidenceThreshold,allMappedDiseaseGenes,allUniqueGenes);
 
 % Just genes LD to GWAS SNPs:
-[numPPIneigh1LD,percPPIneigh1LD,meanPPIDistLD] = TellMePPIInfo(PPINevidenceThreshold,allDiseaseGenesLD,allUniqueGenes);
+[numPPIneigh1LD,percPPIneigh1LD,meanPPIDistLD] = TellMePPIInfo(PPINevidenceThreshold,allLDDiseaseGenes,allUniqueGenes);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
 %-------------------------------------------------------------------------------
 % For mapped SNPs:
-AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allDiseaseGenesMapped);
+AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
 
 % For LD SNPs:
-AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allDiseaseGenesLD);
+AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
 
 %===============================================================================
 % Assimilate results

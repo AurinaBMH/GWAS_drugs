@@ -52,7 +52,7 @@ numGenes = length(geneNames);
 fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
 % Save:
-save(fileNameSave2,'geneNames','-v7.3');
+save(fileNameSave2,'geneNames');
 fprintf(1,'(saved to %s)\n',fileNameSave2);
 
 % Convert gene names to indices:
@@ -65,7 +65,7 @@ for k = 1:numInteractions
     indx1(k) = find(strcmp(geneNames,PPIN{k,1}),1);
     indx2(k) = find(strcmp(geneNames,PPIN{k,2}),1);
 end
-save(fileNameSave3,'indx1','indx2','-v7.3');
+save(fileNameSave3,'indx1','indx2');
 fprintf(1,'Indices saved to %s\n',fileNameSave3);
 clear('PPIN');
 %-------------------------------------------------------------------------------
