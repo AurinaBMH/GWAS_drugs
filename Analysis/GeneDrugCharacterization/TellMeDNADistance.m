@@ -1,4 +1,4 @@
-function [numGWASMapped,numLDSNPs] = TellMeDNADistance(genesChar,SNPAnnotationTable,LDthreshold)
+function DNAStats = TellMeDNADistance(genesChar,SNPAnnotationTable,LDthreshold)
 % Looks at direct mappings and LD-vicinity of a set of genes of interest (genesChar)
 % using gene information from SNPAnnotationTable
 %-------------------------------------------------------------------------------
@@ -10,10 +10,14 @@ end
 %-------------------------------------------------------------------------------
 
 numGenesChar = length(genesChar);
+
 %-------------------------------------------------------------------------------
 % Initialize:
-numGWASMapped = zeros(numGenesChar,1);
-numLDSNPs = zeros(numGenesChar,1);
+numSNPs = zeros(numGenesChar,1);
+numGWAS = zeros(numGenesChar,1);
+numLD = zeros(numGenesChar,1);
+percGWAS = zeros(numGenesChar,1);
+percLD = zeros(numGenesChar,1);
 
 fprintf(1,'Computing number of SNPs LD to SNPs in %u genes\n',numGenesChar);
 for i = 1:numGenesChar
@@ -21,18 +25,30 @@ for i = 1:numGenesChar
     fprintf(1,'%u/%u: %s',i,numGenesChar,gene_i);
 
     %---------------------------------------------------------------------------
+    % --numSNPs: the number of SNPs annotated to the gene (how big it is?)
+    %---------------------------------------------------------------------------
+    SNP_list = SQL_SNPsForGene(gene_i);
+    numSNPs(i) = length(SNP_list);
+
+    %---------------------------------------------------------------------------
     % --numGWASMapped: the number of GWAS SNPs mapped directly to the gene
     %---------------------------------------------------------------------------
     isMappedGene = cellfun(@(x)ismember(gene_i,x),SNPAnnotationTable.mappedGenes);
     theMappedSNPs = unique(SNPAnnotationTable.SNP(isMappedGene));
-    numGWASMapped(i) = length(theMappedSNPs);
+    numGWAS(i) = length(theMappedSNPs);
 
     %---------------------------------------------------------------------------
     % --numLD: the number of GWAS SNPs LD to this gene
     %---------------------------------------------------------------------------
     isLDGene = cellfun(@(x)ismember(gene_i,x),SNPAnnotationTable.LDgenes);
     theLDSNPs = unique(SNPAnnotationTable.SNP(isLDGene));
-    numLDSNPs(i) = length(theLDSNPs);
+    numLD(i) = length(theLDSNPs);
+
+    %---------------------------------------------------------------------------
+    % Normalize:
+    %---------------------------------------------------------------------------
+    percGWAS(i) = numGWAS(i)/numSNPs(i);
+    percLD(i) = numLD(i)/numSNPs(i);
 
     %---------------------------------------------------------------------------
     % --numLD_2: the number of GWAS SNPs LD to a gene
@@ -56,8 +72,7 @@ for i = 1:numGenesChar
     % % Probably want to exclude SNPs used above
     % numLDSNPs(i) = sum(ismember(all_LD_SNPs,SNPAnnotationTable.SNP));
     % %
-    fprintf(1,' (%u,%u)\n',numGWASMapped(i),numLDSNPs(i));
-
+    fprintf(1,' (%u,%u / %u)\n',numGWAS(i),numLD(i),numSNPs(i));
 
     % If I want to count the number of SNPs that are LD to a given gene, I need to:
     % (i) Check every SNP in that gene (?? Using SNP_identifier.csv??)
@@ -77,6 +92,15 @@ for i = 1:numGenesChar
     %     numLDSNPs(i) = length(theLDSNPs) - length(inBoth);
     % end
 end
+
+%-------------------------------------------------------------------------------
+% Output structure
+DNAStats = struct();
+DNAStats.numSNPs = numSNPs;
+DNAStats.numGWAS = numGWAS;
+DNAStats.percGWAS = percGWAS;
+DNAStats.numLD = numLD;
+DNAStats.percLD = percLD;
 
     % function out = f_isin(A,B)
     %     if iscell(B)

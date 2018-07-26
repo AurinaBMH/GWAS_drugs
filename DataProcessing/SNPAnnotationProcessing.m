@@ -1,9 +1,10 @@
-% function [SNPAnnotationTable,SNPgeneTable] = SNPAnnotationProcessing(LDthreshold)
-% Idea is to make a nicer version of the SNPAnnotationTable
+function SNPAnnotationProcessing()
+% Idea is to make a nice version of the SNPAnnotationTable
+% (deriving relationships directly from raw data)
+%-------------------------------------------------------------------------------
 
-% if nargin < 1
-LDthreshold = 0.5;
-% end
+params = SetDefaultParams();
+LDthreshold = params.LDthreshold;
 
 % Whether to look twice for LD–SNPs (SNP1 and SNP2)
 % (preliminary checks suggest this doesn't make a difference, as it shouldn't)
@@ -12,29 +13,32 @@ lookTwice = false;
 %-------------------------------------------------------------------------------
 % IMPORT GWAS-BASED INFORMATION:
 %-------------------------------------------------------------------------------
-fid = fopen('2_1_SNP_identifier_v2.csv','r');
-fprintf(1,'Using new file generated Jul-2018\n')
-C = textscan(fid,'%s%u%u%u%u%u%s%u%u%u','Delimiter',',','HeaderLines',1);
+% fid = fopen('2_1_SNP_identifier_v2.csv','r');
+% fprintf(1,'Using new file generated early Jul-2018\n')
+fid = fopen('2_1_SNP_identifier_v3.csv','r');
+fprintf(1,'Using new file generated 26-Jul-2018\n')
+C = textscan(fid,'%s%u%u%u%u%u%s%u%u%u%u','Delimiter',',','HeaderLines',1);
 fclose(fid);
 SNP_id = C{1};
 isSZP = logical(C{2});
 isADHD = logical(C{3});
 isASD = logical(C{4});
 isBIP = logical(C{5});
-isMDD = logical(C{6});
+isMDD_old = logical(C{6});
 isDiabetes = logical(C{10});
-mappedGene = C{7};
-mappedGene(strcmp(mappedGene,'0')) = {''}; % remove '0' -> empty
+isMDD = logical(C{11}); % isMDD2
+mappedGeneJanette = C{7};
+mappedGeneJanette(strcmp(mappedGeneJanette,'0')) = {''}; % remove '0' -> empty
 isGWAS = logical(C{8});
 isLD = logical(C{9});
 % SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
 %-------------------------------------------------------------------------------
+isMDD = (isMDD | isMDD2);
 
 %-------------------------------------------------------------------------------
 % We first want a table relating each SNP to a gene
 % ONLY INCLUDING GWAS:
 %-------------------------------------------------------------------------------
-mappedGeneJanette = mappedGene;
 SNPAnnotationTableAll = table(SNP_id,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes,mappedGeneJanette);
 
 %-------------------------------------------------------------------------------
@@ -161,4 +165,4 @@ fileName = fullfile('DataOutput',sprintf('SNPAnnotationTable_%u.mat',LDthreshold
 save(fileName,'SNPAnnotationTable');
 fprintf(1,'Saved SNP annotation table to %s\n',fileName);
 
-% end
+end

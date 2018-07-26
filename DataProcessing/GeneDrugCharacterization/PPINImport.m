@@ -1,32 +1,47 @@
-function [AdjPPI,geneNames,PPIN] = PPINImport(evidenceThreshold,doWeighted)
+function [AdjPPI,geneNames,PPIN] = PPINImport(doWeighted,evidenceThreshold,doProteins)
 % Import PPIN data from STRING
 %-------------------------------------------------------------------------------
 
 if nargin < 1
-    evidenceThreshold = 0.0;
+    doWeighted = true;
 end
 if nargin < 2
-    doWeighted = true;
+    evidenceThreshold = 0;
+end
+if nargin < 3
+    doProteins = true;
 end
 
 %-------------------------------------------------------------------------------
-% Set where to save to:
-% Save outputs across 3 different files:
+% Where to save processed data:
+%-------------------------------------------------------------------------------
 if doWeighted
     extraText = '_w';
 else
-    extraText = sprintf('_th0%u',evidenceThreshold*10);
+    extraText = sprintf('_th%u',evidenceThreshold);
 end
-fileNameSave1 = sprintf('PPIN_processed%s.mat',extraText);
-fileNameSave1 = fullfile('DataOutput',fileNameSave1);
-fileNameSave2 = sprintf('PPI_geneLabels%s.mat',extraText);
-fileNameSave2 = fullfile('DataOutput',fileNameSave2);
-fileNameSave3 = sprintf('PPI_Adj%s.mat',extraText);
-fileNameSave3 = fullfile('DataOutput',fileNameSave3);
+if doProteins
+    preText = 'PPI_protein';
+else
+    preText = 'PPI_gene';
+end
+fileNameSave = cell(3,1);
+fileNameSave{1} = sprintf('%s_processed%s.mat',preText,extraText);
+fileNameSave{2} = sprintf('%s_geneLabels%s.mat',preText,extraText);
+fileNameSave{3} = sprintf('%s_Adj%s.mat',preText,extraText);
+for i = 1:3
+    fileNameSave{i} = fullfile('DataOutput',fileNameSave{i});
+end
 
 %-------------------------------------------------------------------------------
 % Read in data:
-fileName = '6_PPIN_STRINGv10.5.csv';
+if doProteins
+    fileName = '9606.protein.links.v10.5.txt';
+    fprintf(1,'Constructing on protein-protein interactions using ''9606.protein.links.v10.5.txt''\n');
+else
+    fileName = '6_PPIN_STRINGv10.5.csv';
+    fprintf(1,'Constructing on gene-gene interactions using ''6_PPIN_STRINGv10.5.csv''\n');
+end
 fprintf(1,'Reading in data from %s...',fileName);
 fid = fopen(fileName,'r');
 C = textscan(fid,'%s%s%u','Delimiter',',','HeaderLines',1);
@@ -70,7 +85,7 @@ fprintf(1,['Constructing sparse list of edges (%ux%u);',...
             ' as indices across %u edges...\n'],numGenes,numGenes,numInteractions);
 indx1 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
 indx2 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
-parfor k = 1:numInteractions
+for k = 1:numInteractions
     % there can only be one match (since geneNames are unique)
     indx1(k) = find(strcmp(geneNames,PPIN{k,1}),1);
     indx2(k) = find(strcmp(geneNames,PPIN{k,2}),1);

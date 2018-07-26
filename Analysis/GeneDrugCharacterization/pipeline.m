@@ -1,4 +1,4 @@
-function resultsTable = pipeline(whatDisease)
+function geneScores = pipeline(whatDisease)
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -15,7 +15,6 @@ end
 %-------------------------------------------------------------------------------
 params = SetDefaultParams();
 doWeighted = params.doWeighted;
-PPINevidenceThreshold = params.PPINevidenceThreshold;
 LDthreshold = params.LDthreshold;
 
 %===============================================================================
@@ -45,10 +44,16 @@ allLDDiseaseGenes = union(allMappedDiseaseGenes,onlyLDDiseaseGenes);
 %===============================================================================
 %======================CHARACTERIZATION MODULES=================================
 %===============================================================================
-
 % Now get different characterizations of each gene of interest to closeness
-% to different data types:
-[numGWASMapped,numLDSNPs] = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
+% to different data types.
+%-------------------------------------------------------------------------------
+geneScores = struct();
+geneScores.params = params;
+
+%-------------------------------------------------------------------------------
+% SNP->gene distance on DNA (mapped SNP, or LD SNP to a gene)
+%-------------------------------------------------------------------------------
+geneScores.DNA = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
 
 %-------------------------------------------------------------------------------
 % eQTL Characterization:
@@ -58,40 +63,52 @@ allLDDiseaseGenes = union(allMappedDiseaseGenes,onlyLDDiseaseGenes);
 %-------------------------------------------------------------------------------
 % PPIN characterization:
 %-------------------------------------------------------------------------------
-% Just mapped disease genes (genes with a GWAS SNP in them):
-[numPPIneigh1Mapped,percPPIneigh1Mapped,meanPPIDistMapped] = TellMePPIInfo(PPINevidenceThreshold,allMappedDiseaseGenes,allUniqueGenes);
 
-% Just genes LD to GWAS SNPs:
-[numPPIneigh1LD,percPPIneigh1LD,meanPPIDistLD] = TellMePPIInfo(PPINevidenceThreshold,allLDDiseaseGenes,allUniqueGenes);
+% (i) weighted:
+% Just mapped disease genes (genes with a GWAS SNP in them):
+geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true);
+% Include genes LD to GWAS SNPs:
+geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true);
+
+% (ii) binarized at zero evidence threshold:
+geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0);
+geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0);
+
+% (iii) binarized at an evidence threshold of 0.4:
+geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400);
+geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
 %-------------------------------------------------------------------------------
 % For mapped SNPs:
-AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
+geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
+% Including LD SNPs:
+geneScores.AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
 
-% For LD SNPs:
-AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
 
 %===============================================================================
 % Assimilate results
 %===============================================================================
-% Now make a table
-gene = allUniqueGenes;
-resultsTable = table(gene,numGWASMapped,numLDSNPs,percPPIneigh1Mapped,...
-                        percPPIneigh1LD,AllenMeanCoexpMapped,AllenMeanCoexpLD);
-                % ,numSNPGenes,numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL); % matchingDrugsString
 
-% Sort by column, then by column, etc. in ordered hierarchy:
-resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneigh1Mapped',... %,'meanPPIDistance'
-                'percPPIneigh1LD','AllenMeanCoexpMapped',...
-                'AllenMeanCoexpLD'},'descend','MissingPlacement','last');
+% Now make a table
+geneScores.gene = allUniqueGenes;
+gene = allUniqueGenes;
+% resultsTable = table(gene,geneScores.PPI_mapped_weighted,numGWASMapped,numLDSNPs,percPPIneigh1Mapped,...
+%                         percPPIneigh1LD,AllenMeanCoexpMapped,AllenMeanCoexpLD);
+% % ,numSNPGenes,numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL); % matchingDrugsString
+%
+% % Sort by column, then by column, etc. in ordered hierarchy:
+% resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneigh1Mapped',...
+%                 'percPPIneigh1LD','AllenMeanCoexpMapped',...
+%                 'AllenMeanCoexpLD'},'descend','MissingPlacement','last');
+
 
 %-------------------------------------------------------------------------------
 % Display just with custom columns
-customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneigh1Mapped',...
-                'percPPIneigh1LD','AllenMeanCoexpMapped'}; % ,'matchingDrugsString'
-display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
+% customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneigh1Mapped',...
+%                 'percPPIneigh1LD','AllenMeanCoexpMapped'}; % ,'matchingDrugsString'
+% display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
 
 %===============================================================================
 % for i = 1:numUniqueGenes

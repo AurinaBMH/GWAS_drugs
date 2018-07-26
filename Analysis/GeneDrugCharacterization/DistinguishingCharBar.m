@@ -26,21 +26,32 @@ normalizeWithinDrugs = true; % weight genes lower if they occur in drugs with la
 %===============================================================================
 f = figure('color','w');
 for i = 1:numDiseases_GWAS
-    %-------------------------------------------------------------------------------
     % Load data:
-    %-------------------------------------------------------------------------------
-    % (1) Similarity of each gene to GWAS hits for this disorder:
-    fileName = sprintf('resultsTable_%s-0.0.mat',whatDiseases_GWAS{i});
-    load(fileName,'resultsTable');
-    geneWeights_GWAS = resultsTable.(whatProperty);
+    fileName = sprintf('resultsTable_%s.mat',whatDiseases_GWAS{i});
+    load(fileName,'geneScores');
+    switch whatProperty
+    case 'numGWASMapped'
+        geneWeights_GWAS = geneScores.DNA.numGWAS;
+    case 'percGWASMapped'
+        geneWeights_GWAS = geneScores.DNA.percGWAS;
+    case 'PPIMappedWeighted_percNeigh1'
+        geneWeights_GWAS = geneScores.PPI_mapped_weighted.percPPIneighbors1;
+    case 'PPI_mapped_th0_percNeigh1'
+        geneWeights_GWAS = geneScores.PPI_mapped_th0.percPPIneighbors1;
+    case 'PPI_mapped_th400_percNeigh1'
+        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors1;
+    otherwise
+        error('Unknown property: ''%s''',whatProperty);
+    end
 
     % Combine two datasets on overlap:
-    [~,ia,ib] = intersect(resultsTable.gene,indicatorTable.Properties.RowNames,'stable');
+    [~,ia,ib] = intersect(geneScores.gene,indicatorTable.Properties.RowNames,'stable');
+    geneWeights_GWAS = geneWeights_GWAS(ia);
     indicatorTable = indicatorTable(ib,:);
-    resultsTable = resultsTable(ia,:);
+    % resultsTable = resultsTable(ia,:);
 
     fprintf(1,'%u matching (/%u %s GWAS); (/%u with treatment weights)\n',...
-            length(ia),height(resultsTable),whatDiseases_GWAS{i},height(indicatorTable));
+        length(ia),length(geneWeights_GWAS),whatDiseases_GWAS{i},height(indicatorTable));
 
     %-------------------------------------------------------------------------------
     % Get scores for the property of interest:
@@ -94,7 +105,9 @@ for i = 1:numDiseases_GWAS
         plot(ones(2,1)*(numDiseases_Treatment+1)-f,x,'k');
         ax.XTick = 1:numDiseases_Treatment+1;
         ax.XTickLabel = {whatDiseases_Treatment{ix},'null'};
-        ax.YLim = [min(rhos)*0.9,max(rhos)*1.1];
+        if min(rhos) < max(rhos)
+            ax.YLim = [min(rhos)*0.9,max(rhos)*1.1];
+        end
     else
         ax.XTick = 1:numDiseases_Treatment;
         ax.XTickLabel = whatDiseases_Treatment(ix);
@@ -102,7 +115,7 @@ for i = 1:numDiseases_GWAS
     ax.XTickLabelRotation = 45;
     xlabel('Disease treatment')
     ylabel(whatScore)
-    title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty))
+    title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
     cMapGeneric = BF_getcmap('set2',numDiseases_Treatment,false);
     for k = find(~isSig)'
         cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.8);

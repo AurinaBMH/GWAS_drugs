@@ -1,13 +1,12 @@
-function allUniqueProteins = ImportProteinGeneMapping(allUniqueGenes,PPINGeneNames)
+function allUniqueProteins = ImportProteinGeneMapping(geneNames,PPINGeneNames)
 %-------------------------------------------------------------------------------
 % Idea is to match HGNC gene names to names given in the PPIN network
 %-------------------------------------------------------------------------------
 
 % Preliminaries:
-numGenes = length(allUniqueGenes);
+numGenes = length(geneNames);
 fprintf(1,'%u genes to match\n',numGenes);
 onlyShowSuccess = true; % only give feedback when works
-% keyboard
 
 %-------------------------------------------------------------------------------
 %% Import data from text file.
@@ -28,7 +27,7 @@ dataTable = table(dataArray{1:end-1}, 'VariableNames', {'STRINGids','HGNC_1','HG
 % Now we can try to match:
 allUniqueProteins = cell(numGenes,1);
 for i = 1:numGenes
-    geneName = allUniqueGenes{i};
+    geneName = geneNames{i};
     % Try to match this gene
     matchMe = strcmp(geneName,PPINGeneNames);
     numMatches = sum(matchMe);
