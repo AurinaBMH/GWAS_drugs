@@ -2,21 +2,17 @@ function distMatrix = ComputePPIDist(evidenceThreshold,doWeighted)
 % Compute pairwise distances on the PPI interaction network (from STRING)
 %-------------------------------------------------------------------------------
 if nargin < 1
-    evidenceThreshold = 0;
+    evidenceThreshold = 400;
 end
 if nargin < 2
-    doWeighted = true;
+    doWeighted = false;
 end
 
 %-------------------------------------------------------------------------------
 % Load in PPI data:
-if doWeighted
-    extraText = '_w';
-else
-    extraText = sprintf('_th0%u',evidenceThreshold*10);
-end
-fileNameLoad = sprintf('PPI_Adj%s.mat',extraText);
-fileNameSave = sprintf('PPI_Dist%s.mat',extraText);
+fileNames = PPIFileNames(doWeighted,evidenceThreshold,'HGNCmatch');
+fileNameLoad = fileNames{3};
+fileNameSave = fileNames{4};
 load(fileNameLoad,'AdjPPI')
 %-------------------------------------------------------------------------------
 
@@ -33,7 +29,7 @@ end
 
 %-------------------------------------------------------------------------------
 % Save out:
-save(fullfile('Data',fileNameSave),'distMatrix');
+save(fileNameSave,'distMatrix');
 fprintf(1,'Saved pairwise network distance data to %s\n',fileNameSave);
 
 end

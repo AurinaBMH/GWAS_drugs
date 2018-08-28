@@ -175,13 +175,9 @@ end
 % Package up output nicely:
 geneStats = struct();
 for k = 1:numSteps
-    geneStats.sprintf('numPPIneighbors%u',k) = numPPIneighbors{k};
-    geneStats.sprintf('percPPIneighbors%u',k) = percPPIneighbors{k};
+    geneStats.(sprintf('numPPIneighbors%u',k)) = numPPIneighbors{k};
+    geneStats.(sprintf('percPPIneighbors%u',k)) = percPPIneighbors{k};
 end
 geneStats.meanPPIDistance = meanPPIDistance;
-if numSteps > 1
-    geneStats.numPPIneighbors2 = numPPIneighbors2;
-    geneStats.percPPIneighbors2 = percPPIneighbors2;
-end
 
 end

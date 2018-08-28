@@ -14,28 +14,8 @@ if nargin < 3
 end
 
 %-------------------------------------------------------------------------------
-% Where to save processed data:
-%-------------------------------------------------------------------------------
-if doWeighted
-    extraText = '_w';
-else
-    extraText = sprintf('_th%u',evidenceThreshold);
-end
-switch whatInput
-case 'HGNCmatch'
-    preText = 'PPI_HGNC';
-case 'proteins'
-    preText = 'PPI_protein';
-case 'original'
-    preText = 'PPI_gene';
-end
-fileNameSave = cell(3,1);
-fileNameSave{1} = sprintf('%s_processed%s.mat',preText,extraText);
-fileNameSave{2} = sprintf('%s_geneLabels%s.mat',preText,extraText);
-fileNameSave{3} = sprintf('%s_Adj%s.mat',preText,extraText);
-for i = 1:3
-    fileNameSave{i} = fullfile('DataOutput',fileNameSave{i});
-end
+% Filenames to save processed data to:
+fileNameSave = PPIFileNames(doWeighted,evidenceThreshold,whatInput);
 
 %-------------------------------------------------------------------------------
 % Read in data:
@@ -44,8 +24,10 @@ case 'HGNCmatch'
     % Latest matching to HGNC genes by Janette (July 2018):
     fileName = 'PPI_conversionToGenes.csv';
 case 'proteins'
+    % Mapping to proteins:
     fileName = '9606.protein.links.v10.5.txt';
 case 'original'
+    % Original STRING nomenclature:
     fileName = '6_PPIN_STRINGv10.5.csv';
 end
 fprintf(1,'Constructing protein-protein interactions using %s input: ''%s''\n',whatInput,fileName);

@@ -44,6 +44,10 @@ for i = 1:numDiseases_GWAS
         geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors2;
     case 'PPI_mapped_th400_numNeigh2'
         geneWeights_GWAS = geneScores.PPI_mapped_th400.numPPIneighbors2;
+    case 'PPI_mapped_th400_percNeigh3'
+        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors3;
+    case 'PPI_mapped_th400_percNeigh4'
+        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors4;
     otherwise
         error('Unknown property: ''%s''',whatProperty);
     end

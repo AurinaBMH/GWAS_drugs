@@ -64,21 +64,22 @@ geneScores.DNA = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
 % PPIN characterization:
 %-------------------------------------------------------------------------------
 
-% (i) weighted:
-% Just mapped disease genes (genes with a GWAS SNP in them):
-% geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true);
-% Include genes LD to GWAS SNPs:
-% geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true);
+% (i) binarized at zero evidence threshold:
+numSteps = 3;
+geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0);
+geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0);
 
-% (ii) binarized at zero evidence threshold:
-% numSteps = 2;
-% geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0);
-% geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0);
-
-% (iii) binarized at an evidence threshold of 0.4:
+% (ii) binarized at an evidence threshold of 0.4:
 numSteps = 4;
 geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
 geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400,numSteps);
+
+% (iii) weighted:
+% numSteps = 4;
+% % Just mapped disease genes (genes with a GWAS SNP in them):
+% geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
+% % Include genes LD to GWAS SNPs:
+% geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true,numSteps);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
