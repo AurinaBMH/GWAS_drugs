@@ -7,7 +7,7 @@ function geneScores = pipeline(whatDisease)
 %-------------------------------------------------------------------------------
 if nargin < 1
     % GWAS hits from which disease?: 'all','SZP','ASD','ADHD','BIP','MDD'
-    whatDisease = 'all';
+    whatDisease = 'MDD';
 end
 
 %-------------------------------------------------------------------------------
@@ -66,17 +66,19 @@ geneScores.DNA = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
 
 % (i) weighted:
 % Just mapped disease genes (genes with a GWAS SNP in them):
-geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true);
+% geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true);
 % Include genes LD to GWAS SNPs:
-geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true);
+% geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true);
 
 % (ii) binarized at zero evidence threshold:
-geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0);
-geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0);
+% numSteps = 2;
+% geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0);
+% geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0);
 
 % (iii) binarized at an evidence threshold of 0.4:
-geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400);
-geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400);
+numSteps = 4;
+geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
+geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400,numSteps);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
@@ -85,7 +87,6 @@ geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,4
 geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
 % Including LD SNPs:
 geneScores.AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
-
 
 %===============================================================================
 % Assimilate results
