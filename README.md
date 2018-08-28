@@ -5,13 +5,16 @@
 #### Set default parameters
 All default parameters to be used repeatedly are to be set in `SetDefaultParams`.
 
-#### PPI network data
-Process PPI network data, save to processed sparse matrix:
+#### PPI network data processing using `PPINImport`
+Process PPI network data, save to processed sparse matrix.
+
+Generate a weighted PPI network with evidence thresholds as weights:
+```matlab
+PPINImport(true);
 ```
-    % Generate a weighted PPI network with evidence thresholds as weights
-    PPINImport(true);
-    % Generate a binary PPI network thresholded at evidence threshold of 0.4
-    PPINImport(false,400);
+Generate a binary PPI network thresholded at evidence threshold of 0.4, using data where proteins have been matched to HGNC symbols:
+```matlab
+[AdjPPI,geneNames,PPIN] = PPINImport(false,400,'HGNCmatch');
 ```
 
 ### Analysis
@@ -20,14 +23,14 @@ Process PPI network data, save to processed sparse matrix:
 
 Reads in information about SNPs from GWAS hits, computes LD neighbor information
 from a mySQL database, saves output to `SNPAnnotationTable_X` for a given LD threshold X:
-```
-    SNPAnnotationProcessing;
+```matlab
+SNPAnnotationProcessing;
 ```
 
 #### Characterize drugs used for each disorder with respect to GWAS hits
 Run:
-```
-    GenerateResultsTables
+```matlab
+GenerateResultsTables
 ```
 Saves `resultsTable_X.mat` for each disorder, X.
 These `.mat` files contain a structure with diverse information about how each
