@@ -57,10 +57,22 @@ end
 %-------------------------------------------------------------------------------
 % Get indices of mapped disease genes on PPI network:
 %-------------------------------------------------------------------------------
-PPI_isInContext = ismember(PPIN.geneNames,contextGenes);
+PPI_isInContext = ismember(contextGenes,PPIN.geneNames);
+PPI_isInChar = ismember(genesChar,PPIN.geneNames);
+missingContext = find(~PPI_isInContext);
+missingChar = find(~PPI_isInChar);
 fprintf(1,'%u/%u context genes are in the PPI network\n',sum(PPI_isInContext),numContextGenes);
 fprintf(1,'%u/%u genes to be characterized could be matched to PPI network data\n',...
-                    sum(ismember(PPIN.geneNames,genesChar)),length(genesChar));
+                    sum(PPI_isInChar),length(genesChar));
+
+for i = 1:length(missingContext)
+    fprintf(1,'[%u/%u context]: %s missing in PPIN\n',i,length(missingContext),...
+                                contextGenes{missingContext(i)});
+end
+for i = 1:length(missingChar)
+    fprintf(1,'[%u/%u characterize]: %s missing in PPIN\n',i,length(missingChar),...
+                                genesChar{missingChar(i)});
+end
 
 %-------------------------------------------------------------------------------
 % Load shortest path distances on the PPI network:
@@ -85,14 +97,22 @@ meanPPIDistance = nan(numGenesChar,1);
 
 % Initialize and precompute longer (binary) paths
 for k = 1:numSteps
+    fprintf(1,'Computing PPIN paths of length %u\n',k);
     numPPIneighbors{k} = nan(numGenesChar,1);
     percPPIneighbors{k} = nan(numGenesChar,1);
     if k==1
-        hasPath{1} = PPIN.AdjPPI;
+        hasPath{1} = double(PPIN.AdjPPI);
     else
-        hasPath{k} = double(hasPath{1})^k; % matrix power
+        hasPath{k} = hasPath{k-1}*hasPath{1}; % matrix power
     end
+end
+for k = 1:numSteps
+    % Removing self-connections
     hasPath{k}(logical(eye(size(hasPath{k})))) = 0;
+    % Longer paths include union of shorter paths:
+    if k > 1
+        hasPath{k} = hasPath{k} | hasPath{k-1};
+    end
 end
 
 %-------------------------------------------------------------------------------
@@ -100,6 +120,8 @@ end
 %-------------------------------------------------------------------------------
 % Count disease genes that are 1-step neighbors on the PPI network:
 % Match using "protein" nomenclature, mapped during processing steps above
+fprintf(1,'Characterizing the properties of %u difference genes in the context of %u genes\n',...
+                        numGenesChar,numContextGenes);
 for i = 1:numGenesChar
     gene_i = genesChar{i};
     protein_i = allUniqueProteins{i};

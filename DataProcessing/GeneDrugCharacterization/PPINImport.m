@@ -52,7 +52,7 @@ if strcmp(whatInput,'HGNCmatch')
     % Remove 'uncharacterised' entries:
     isUncharacterised = strcmp(gene1,'uncharacterised') | strcmp(gene2,'uncharacterised');
     isGood(isUncharacterised) = false;
-    fprintf(1,'%u uncharacterised entries\n',sum(isUncharacterised));
+    fprintf(1,'%u ''uncharacterised'' entries filtered out\n',sum(isUncharacterised));
 end
 if doWeighted
     keepEdge = isGood;
@@ -90,7 +90,7 @@ fprintf(1,['Constructing sparse list of edges (%ux%u);',...
 indx1 = zeros(numInteractions,1,'uint16');
 indx2 = zeros(numInteractions,1,'uint16');
 if length(geneNames) > 2^16
-    error('There will be a problem storing indices as unsigned int16 data');
+    error('Problem storing indices as unsigned int16 data');
 end
 parfor k = 1:numInteractions
     % There can only be one match (since geneNames contains unique entries)
@@ -100,7 +100,6 @@ end
 save(fileNameSave{3},'indx1','indx2');
 fprintf(1,'Indices saved to %s\n',fileNameSave{3});
 clear('PPIN');
-%-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
 % Create a sparse matrix containing all interactions:
