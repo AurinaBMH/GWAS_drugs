@@ -1,13 +1,5 @@
 function [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs)
-%IMPORTFILE Import numeric data from a text file as a matrix.
-%   TREATMENTLISTSZ4THMAY2018 = IMPORTFILE(FILENAME) Reads data from text
-%   file FILENAME for the default selection.
-%
-%   TREATMENTLISTSZ4THMAY2018 = IMPORTFILE(FILENAME, STARTROW, ENDROW)
-%   Reads data from rows STARTROW through ENDROW of text file FILENAME.
-% Example:
-%   TreatmentlistSZ4thMay2018 = importfile('Treatment-list-SZ-4thMay2018.csv', 1, 49);
-
+% Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
 %-------------------------------------------------------------------------------
@@ -156,6 +148,7 @@ for i = 1:numGenes
         end
     end
 end
+
 %-------------------------------------------------------------------------------
 % Convert to proportions:
 propMatrix = indicatorMatrix;

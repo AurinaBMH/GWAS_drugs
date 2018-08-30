@@ -18,7 +18,6 @@ function D = distance_bin(A)
 %
 %   Algorithm: Algebraic shortest paths.
 %
-%
 %   Mika Rubinov, U Cambridge
 %   Jonathan Clayden, UCL
 %   2007-2013
@@ -27,19 +26,19 @@ function D = distance_bin(A)
 % 2007: Original (MR)
 % 2013: Bug fix, enforce zero distance for self-connections (JC)
 
-A=double(A~=0);                 %binarize and convert to double format
+A = double(A~=0);                 %binarize and convert to double format
 
-l=1;                            %path length
-Lpath=A;                        %matrix of paths l
-D=A;                            %distance matrix
+l = 1;                            %path length
+Lpath = A;                        %matrix of paths l
+D = A;                            %distance matrix
 
-Idx=true;
+Idx = true;
 while any(Idx(:))
-    l=l+1;
-    Lpath=Lpath*A;
-    Idx=(Lpath~=0)&(D==0);
-    D(Idx)=l;
+    l = l+1;
+    Lpath = Lpath*A;
+    Idx = (Lpath~=0)&(D==0);
+    D(Idx) = l;
 end
 
-D(~D)=inf;                      %assign inf to disconnected nodes
-D(1:length(A)+1:end)=0;         %clear diagonal
+D(~D) = Inf;                      %assign inf to disconnected nodes
+D(1:length(A)+1:end) = 0;         %clear diagonal

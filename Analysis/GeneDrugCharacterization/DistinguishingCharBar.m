@@ -21,7 +21,6 @@ numDiseases_GWAS = length(whatDiseases_GWAS);
 % Load treatment weights of each gene implicated in each disorder:
 normalizeWithinDrugs = true; % weight genes lower if they occur in drugs with large numbers of gene targets
 [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs);
-% indicatorTable = percIndicatorTable;
 
 %===============================================================================
 f = figure('color','w');
@@ -29,6 +28,7 @@ for i = 1:numDiseases_GWAS
     % Load data:
     fileName = sprintf('resultsTable_%s.mat',whatDiseases_GWAS{i});
     load(fileName,'geneScores');
+    fprintf(1,'Loaded gene scores from %s\n',fileName);
     switch whatProperty
     case 'numGWASMapped'
         geneWeights_GWAS = geneScores.DNA.numGWAS;

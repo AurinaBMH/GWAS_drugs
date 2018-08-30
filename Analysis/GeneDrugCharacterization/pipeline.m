@@ -28,6 +28,7 @@ LDthreshold = params.LDthreshold;
 indicatorTable = ImportTreatmentLists(false);
 allUniqueGenes = indicatorTable.Properties.RowNames;
 numUniqueGenes = length(allUniqueGenes);
+fprintf(1,'Analyzing %u genes that have drug targets in our list\n',numUniqueGenes);
 
 %-------------------------------------------------------------------------------
 % Import SNP, gene, disease, GWAS, LD annotations for a given GWAS study:

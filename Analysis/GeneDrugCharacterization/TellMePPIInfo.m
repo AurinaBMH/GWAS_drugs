@@ -1,36 +1,26 @@
-function geneStats = TellMePPIInfo(contextGenes,genesChar,doWeighted,PPINevidenceThreshold,numSteps)
+function geneStats = TellMePPIInfo(contextGenes,genesChar,doWeighted,evidenceThreshold,numSteps)
 % Characterize each gene in the list genesChar in terms of its nearness to the
 % set of context genes in contextGenes
 %-------------------------------------------------------------------------------
 if nargin < 3
-    doWeighted = true;
+    doWeighted = false;
 end
 if nargin < 4
-    PPINevidenceThreshold = 0;
+    evidenceThreshold = 0;
 end
 if nargin < 5
     numSteps = 1;
 end
 
-whatPPIData = 'HGNC';
+whatPPIData = 'HGNCmatch';
 numContextGenes = length(contextGenes);
 
 %-------------------------------------------------------------------------------
 % Filenames:
-if doWeighted
-    extraText = '_w';
-    fprintf(1,'Loading weighted PPIN data...\n');
-else
-    extraText = sprintf('_th%u',PPINevidenceThreshold);
-    fprintf(1,'Loading PPIN data for evidence threshold of %.2f...\n',PPINevidenceThreshold);
-end
-switch whatPPIData
-case 'HGNC'
-    preText = 'PPI_HGNC';
-end
-fileNameAdj = sprintf('%s_Adj%s.mat',preText,extraText);
-fileNameGeneLabels = sprintf('%s_geneLabels%s.mat',preText,extraText);
-fileNamePDist = sprintf('%s_Dist%s.mat',preText,extraText);
+fileNames = PPIFileNames(doWeighted,evidenceThreshold,whatPPIData);
+fileNameGeneLabels = fileNames{2};
+fileNameAdj = fileNames{3};
+fileNamePDist = fileNames{4};
 
 %-------------------------------------------------------------------------------
 % LOAD PPIN DATA (precomputed from PPINImport):
@@ -39,11 +29,10 @@ try
     load(fileNameGeneLabels,'geneNames');
     PPIN = struct();
     PPIN.AdjPPI = AdjPPI;
-    PPIN.geneNames = geneNames; % (actually protein names)
+    PPIN.geneNames = geneNames; % (/protein names?)
     clear('AdjPPI','geneNames');
     fprintf(1,'Data loaded from %s and %s!\n',fileNameAdj,fileNameGeneLabels);
 catch
-    keyboard
     error('No precomputed data for specified PPI network...!!!')
 end
 
@@ -52,13 +41,13 @@ end
 % I've distinguished these as genesChar -> allUniqueProteins
 %-------------------------------------------------------------------------------
 % mapHow = 'UniProt'; % original method (no good)
-% mapHow = 'HGNC'; % Janette's new method for mapping... (needs proteins)
+% mapHow = 'HGNC_map'; % Janette's new method for mapping... (needs proteins)
 mapHow = 'exact';
 switch mapHow
 case 'UniProt'
     fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(genesChar,PPIN.geneNames);
-case 'HGNC'
+case 'HGNC_map'
     fprintf(1,'Mapping gene names to PPIN names (this only minimally helps)...\n');
     allUniqueProteins = ImportProteinGeneMapping(genesChar,PPIN.geneNames);
 case 'exact'
@@ -115,16 +104,14 @@ for i = 1:numGenesChar
     gene_i = genesChar{i};
     protein_i = allUniqueProteins{i};
 
-    % First try matching the protein:
-    PPI_index = find(strcmp(PPIN.geneNames,protein_i));
+    % First try matching the gene:
+    PPI_index = find(strcmp(PPIN.geneNames,gene_i));
     % Then try matching the gene:
     if isempty(PPI_index)
-        PPI_index = find(strcmp(PPIN.geneNames,gene_i));
+        PPI_index = find(strcmp(PPIN.geneNames,protein_i));
     end
-
-    %-------------------------------------------------------------------------------
     if isempty(PPI_index)
-        fprintf('%s -> %s is not represented in the PPI network\n',gene_i,protein_i)
+        fprintf('%s/%s is not represented in the PPI network\n',gene_i,protein_i)
         continue;
     end
 

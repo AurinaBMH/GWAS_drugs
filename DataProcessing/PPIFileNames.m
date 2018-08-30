@@ -35,6 +35,7 @@ fileNames{1} = sprintf('%s_processed%s.mat',preText,extraText);
 fileNames{2} = sprintf('%s_geneLabels%s.mat',preText,extraText);
 fileNames{3} = sprintf('%s_Adj%s.mat',preText,extraText);
 fileNames{4} = sprintf('%s_Dist%s.mat',preText,extraText);
+
 % Put them all in the DataOutput directory:
 for i = 1:4
     fileNames{i} = fullfile('DataOutput',fileNames{i});

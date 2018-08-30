@@ -26,14 +26,27 @@ isASD = logical(C{4});
 isBIP = logical(C{5});
 isMDD_old = logical(C{6});
 isDiabetes = logical(C{10});
-isMDD = logical(C{11}); % isMDD2
+isMDD_new = logical(C{11}); % isMDD2
 mappedGeneJanette = C{7};
 mappedGeneJanette(strcmp(mappedGeneJanette,'0')) = {''}; % remove '0' -> empty
 isGWAS = logical(C{8});
 isLD = logical(C{9});
 % SNPAnnotationTable = table(SNP_id,mappedGene,isGWAS,isLD,isSZP,isADHD,isASD,isBIP,isMDD,isDiabetes);
 %-------------------------------------------------------------------------------
-isMDD = (isMDD | isMDD2);
+
+% How to deal with multiple MDD annotations
+whichMDD = 'new'; % 'both'
+switch whichMDD
+case 'new'
+    isMDD = isMDD_new;
+    fprintf(1,'Using new MDD GWAS annotations\n');
+case 'old'
+    isMDD = isMDD_old;
+    fprintf(1,'Using old MDD GWAS annotations\n');
+case 'both'
+    isMDD = (isMDD_old | isMDD_new);
+    fprintf(1,'Using an OR combination of MDD GWAS annotations\n');
+end
 
 %-------------------------------------------------------------------------------
 % We first want a table relating each SNP to a gene

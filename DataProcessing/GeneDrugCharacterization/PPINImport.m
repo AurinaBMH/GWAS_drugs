@@ -18,7 +18,7 @@ end
 fileNameSave = PPIFileNames(doWeighted,evidenceThreshold,whatInput);
 
 %-------------------------------------------------------------------------------
-% Read in data:
+% Read in PPI data:
 switch whatInput
 case 'HGNCmatch'
     % Latest matching to HGNC genes by Janette (July 2018):
@@ -30,7 +30,8 @@ case 'original'
     % Original STRING nomenclature:
     fileName = '6_PPIN_STRINGv10.5.csv';
 end
-fprintf(1,'Constructing protein-protein interactions using %s input: ''%s''\n',whatInput,fileName);
+fprintf(1,'Constructing protein-protein interactions using %s input: ''%s''\n',...
+                whatInput,fileName);
 fid = fopen(fileName,'r');
 C = textscan(fid,'%s%s%u','Delimiter',',','HeaderLines',1);
 fclose(fid);
@@ -86,12 +87,15 @@ fprintf(1,'(saved to %s)\n',fileNameSave{2});
 % Convert gene names to indices:
 fprintf(1,['Constructing sparse list of edges (%ux%u);',...
             ' as indices across %u edges...\n'],numGenes,numGenes,numInteractions);
-indx1 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
-indx2 = zeros(numInteractions,1,'uint8'); % save memory/time by preallocating as 8-bit positive integers
+indx1 = zeros(numInteractions,1,'uint16');
+indx2 = zeros(numInteractions,1,'uint16');
+if length(geneNames) > 2^16
+    error('There will be a problem storing indices as unsigned int16 data');
+end
 parfor k = 1:numInteractions
-    % There can only be one match (since geneNames are unique)
-    indx1(k) = find(strcmp(geneNames,PPIN{k,1}),1);
-    indx2(k) = find(strcmp(geneNames,PPIN{k,2}),1);
+    % There can only be one match (since geneNames contains unique entries)
+    indx1(k) = find(strcmp(PPIN{k,1},geneNames),1);
+    indx2(k) = find(strcmp(PPIN{k,2},geneNames),1);
 end
 save(fileNameSave{3},'indx1','indx2');
 fprintf(1,'Indices saved to %s\n',fileNameSave{3});
