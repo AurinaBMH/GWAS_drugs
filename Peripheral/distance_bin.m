@@ -1,5 +1,5 @@
-function D = distance_bin(A)
-%DISTANCE_BIN       Distance matrix
+function D = distance_bin(A,maxLength)
+% DISTANCE_BIN       Compute pathlength matrix from input adjacency matrix
 %
 %   D = distance_bin(A);
 %
@@ -36,21 +36,21 @@ if issparse(A)
     A = full(A);
 end
 A = double(A > 0); % binarize and convert to double format
-if any(diag(A) > 0); % Self connections lead to a never-ending while loop
+if any(diag(A) > 0); % Self connections can lead to issues...
     warning('%u self-connections?? Removed.',sum(diag(A) > 0))
     A(logical(eye(size(A)))) = 0;
 end
 %-------------------------------------------------------------------------------
 
-l = 1;             % path length
-Lpath = A;         % matrix of paths l
-D = A;             % distance matrix
+l = 1;     % path length
+Lpath = A; % matrix of paths l
+D = A;     % distance matrix (prefilled with path length of 1)
 
-% Iterate through path lengths:
+% Iterate through higher path lengths:
 Idx = true;
 while any(Idx(:))
-    fprintf(1,'Path length %u...\n',l);
     l = l + 1;
+    fprintf(1,'Path length %u...\n',l);
     Lpath = Lpath*A;
     Idx = (Lpath~=0) & (D==0);
     fprintf(1,'%u pairs of nodes have a path length of %u...\n',sum(Idx(:)),l);
