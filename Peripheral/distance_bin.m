@@ -38,7 +38,7 @@ end
 A = double(A > 0); % binarize and convert to double format
 if any(diag(A) > 0); % Self connections lead to a never-ending while loop
     warning('%u self-connections?? Removed.',sum(diag(A) > 0))
-    A(logical(eye(size(D)))) = 0;
+    A(logical(eye(size(A)))) = 0;
 end
 %-------------------------------------------------------------------------------
 
