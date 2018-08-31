@@ -26,19 +26,35 @@ function D = distance_bin(A)
 % 2007: Original (MR)
 % 2013: Bug fix, enforce zero distance for self-connections (JC)
 
-A = double(A~=0);                 %binarize and convert to double format
+%-------------------------------------------------------------------------------
+% Checks on input matrix:
+if issparse(A)
+    fprintf(1,'Converting sparse to a full matrix :O\n');
+    A = full(A);
+end
+if any(A(:) < 0)
+    error('Adjacency matrix contains negative values')
+end
 
-l = 1;                            %path length
-Lpath = A;                        %matrix of paths l
-D = A;                            %distance matrix
+A = double(A > 0); % binarize and convert to double format
 
+l = 1;             % path length
+Lpath = A;         % matrix of paths l
+D = A;             % distance matrix
+
+% Iterate through path lengths:
 Idx = true;
 while any(Idx(:))
-    l = l+1;
+    fprintf(1,'Path length %u...\n',l);
+    l = l + 1;
     Lpath = Lpath*A;
-    Idx = (Lpath~=0)&(D==0);
+    Idx = (Lpath~=0) & (D==0);
+    fprintf(1,'%u pairs of nodes have a path length of %u...\n',l);
     D(Idx) = l;
 end
 
-D(~D) = Inf;                      %assign inf to disconnected nodes
-D(1:length(A)+1:end) = 0;         %clear diagonal
+% Clean up:
+D(~D) = Inf;                      % assign inf to disconnected nodes
+D(logical(eye(size(D)))) = 0;     % clear diagonal
+
+end

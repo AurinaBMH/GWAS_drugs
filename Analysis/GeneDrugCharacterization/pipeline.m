@@ -74,14 +74,18 @@ geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,f
 % geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0,numSteps);
 
 % (*) binarized at an evidence threshold of 0.4:
-numSteps = 5;
+numSteps = 3;
 geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
 % geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400,numSteps);
 
 % (*) binarized at an evidence threshold of 0.6:
-numSteps = 5;
+numSteps = 4;
 geneScores.PPI_mapped_th600 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,600,numSteps);
 % geneScores.PPI_LD_th600 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,600,numSteps);
+
+% (*) binarized at an evidence threshold of 0.6:
+numSteps = 6;
+geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 
 % (*) weighted:
 numSteps = 4;
