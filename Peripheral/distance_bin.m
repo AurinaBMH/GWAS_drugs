@@ -28,15 +28,19 @@ function D = distance_bin(A)
 
 %-------------------------------------------------------------------------------
 % Checks on input matrix:
+if any(A(:) < 0)
+    error('Adjacency matrix contains negative values')
+end
 if issparse(A)
     fprintf(1,'Converting sparse to a full matrix :O\n');
     A = full(A);
 end
-if any(A(:) < 0)
-    error('Adjacency matrix contains negative values')
-end
-
 A = double(A > 0); % binarize and convert to double format
+if any(diag(A) > 0); % Self connections lead to a never-ending while loop
+    warning('%u self-connections?? Removed.',sum(diag(A) > 0))
+    A(logical(eye(size(D)))) = 0;
+end
+%-------------------------------------------------------------------------------
 
 l = 1;             % path length
 Lpath = A;         % matrix of paths l
@@ -49,7 +53,7 @@ while any(Idx(:))
     l = l + 1;
     Lpath = Lpath*A;
     Idx = (Lpath~=0) & (D==0);
-    fprintf(1,'%u pairs of nodes have a path length of %u...\n',l);
+    fprintf(1,'%u pairs of nodes have a path length of %u...\n',sum(Idx(:)),l);
     D(Idx) = l;
 end
 
