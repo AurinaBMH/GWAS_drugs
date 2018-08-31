@@ -32,7 +32,7 @@ end
 
 %-------------------------------------------------------------------------------
 % Save out:
-save(fileNameSave,'distMatrix');
+save(fileNameSave,'distMatrix','-v7.3');
 fprintf(1,'Saved pairwise network distance data to %s\n',fileNameSave);
 
 end

@@ -69,27 +69,27 @@ geneScores.DNA = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
 % (ii) Include genes LD to GWAS SNPs
 
 % (*) binarized at zero evidence threshold:
-numSteps = 2;
-geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0,numSteps);
-% geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0,numSteps);
-
-% (*) binarized at an evidence threshold of 0.4:
-numSteps = 3;
-geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
+% numSteps = 2;
+% geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0,numSteps);
+% % geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0,numSteps);
+%
+% % (*) binarized at an evidence threshold of 0.4:
+% numSteps = 3;
+% geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
 % geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400,numSteps);
 
 % (*) binarized at an evidence threshold of 0.6:
-numSteps = 4;
+numSteps = 6;
 geneScores.PPI_mapped_th600 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,600,numSteps);
 % geneScores.PPI_LD_th600 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,600,numSteps);
 
-% (*) binarized at an evidence threshold of 0.6:
+% (*) Binarized at an evidence threshold of 0.9:
 numSteps = 6;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 
 % (*) weighted:
-numSteps = 4;
-geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
+% numSteps = 4;
+% geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
 % geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true,numSteps);
 
 %-------------------------------------------------------------------------------

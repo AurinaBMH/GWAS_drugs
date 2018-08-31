@@ -9,7 +9,8 @@ if nargin < 4
     evidenceThreshold = 0;
 end
 if nargin < 5
-    numSteps = 1;
+    numSteps = 5;
+    fprintf(1,'%u steps by default\n',numSteps);
 end
 
 whatPPIData = 'HGNCmatch';
@@ -24,6 +25,7 @@ fileNamePDist = fileNames{4};
 
 %-------------------------------------------------------------------------------
 % LOAD PPIN DATA (precomputed from PPINImport):
+%-------------------------------------------------------------------------------
 try
     load(fileNameAdj,'AdjPPI');
     load(fileNameGeneLabels,'geneNames');
@@ -35,6 +37,15 @@ try
 catch
     error('No precomputed data for specified PPI network...!!!')
 end
+% Load shortest path distances on the PPI network:
+% (cf. ComputePPIDist)
+try
+    load(fileNamePDist,'distMatrix');
+    PPIN.distMatrix = distMatrix;
+    clear('distMatrix');
+catch
+    error('No PPI shortest path information found, you must run ComputePPIDist');
+end
 
 %-------------------------------------------------------------------------------
 % 1. Map gene names (HGNC) -> names that match in the PPIN
@@ -42,17 +53,22 @@ end
 %-------------------------------------------------------------------------------
 % mapHow = 'UniProt'; % original method (no good)
 % mapHow = 'HGNC_map'; % Janette's new method for mapping... (needs proteins)
-mapHow = 'exact';
-switch mapHow
-case 'UniProt'
-    fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
-    [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(genesChar,PPIN.geneNames);
-case 'HGNC_map'
-    fprintf(1,'Mapping gene names to PPIN names (this only minimally helps)...\n');
-    allUniqueProteins = ImportProteinGeneMapping(genesChar,PPIN.geneNames);
-case 'exact'
+% mapHow = 'exact';
+switch whatPPIData
+case 'HGNCmatch'
+    % No need to map out to other nomenclatures because data is already in the format
     allUniqueProteins = genesChar;
+otherwise
+    warning('Unknown dataset, how should I match gene names -> protein names for optimal matching?')
 end
+% switch mapHow
+% case 'UniProt'
+%     fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
+%     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(genesChar,PPIN.geneNames);
+% case 'HGNC_map'
+%     fprintf(1,'Mapping gene names to PPIN names (this only minimally helps)...\n');
+%     allUniqueProteins = ImportProteinGeneMapping(genesChar,PPIN.geneNames);
+% end
 
 %-------------------------------------------------------------------------------
 % Get indices of mapped disease genes on PPI network:
@@ -75,44 +91,18 @@ for i = 1:length(missingChar)
 end
 
 %-------------------------------------------------------------------------------
-% Load shortest path distances on the PPI network:
-% (cf. ComputePPIDist)
-%-------------------------------------------------------------------------------
-try
-    PPIND = load(fileNamePDist,'distMatrix');
-    PPIN.distMatrix = PPIND.distMatrix;
-    clear('PPIND');
-catch
-    warning('No PPI shortest path information found');
-end
-
-%-------------------------------------------------------------------------------
 % Initialize variables:
 numGenesChar = length(genesChar);
-
 numPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
 hasPath = cell(numSteps,1);
 meanPPIDistance = nan(numGenesChar,1);
 
-% Initialize and precompute longer (binary) paths
+% Initialize longer (binary) paths
 for k = 1:numSteps
-    fprintf(1,'Computing PPIN paths of length %u\n',k);
     numPPIneighbors{k} = nan(numGenesChar,1);
     percPPIneighbors{k} = nan(numGenesChar,1);
-    if k==1
-        hasPath{1} = double(PPIN.AdjPPI);
-    else
-        hasPath{k} = hasPath{k-1}*hasPath{1}; % matrix power
-    end
-end
-for k = 1:numSteps
-    % Removing self-connections
-    hasPath{k}(logical(eye(size(hasPath{k})))) = 0;
-    % Longer paths include union of shorter paths:
-    if k > 1
-        hasPath{k} = hasPath{k} | hasPath{k-1};
-    end
+    weiPPIneighbors{k} = nan(numGenesChar,1);
 end
 
 %-------------------------------------------------------------------------------
@@ -140,7 +130,9 @@ for i = 1:numGenesChar
     %-------------------------------------------------------------------------------
     % Get the k-step neighbors:
     for k = 1:numSteps
-        iskStepNeighbor = (hasPath{k}(PPI_index,:) > 0);
+        % (i) Don't distinguish neighbors by pathlength (take union):
+        iskStepNeighbor = (PPIN.distMatrix(PPI_index,:) <= k);
+
         numNeighbors = sum(iskStepNeighbor);
         if numNeighbors==0
             numPPIneighbors{k}(i) = 0;
@@ -162,6 +154,15 @@ for i = 1:numGenesChar
                 % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
                 percPPIneighbors{k}(i) = 100*mean(isInContext);
                 % fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
+            end
+        end
+
+        % (ii) Weight contribution of neighbors by their pathlength:
+        for kk = 1:k
+            iskkStepNeighbor = (PPIN.distMatrix(PPI_index,:) == k);
+            prop_kk_neighbors = 100*mean(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes));
+            if ~isnan(prop_kk_neighbors)
+                weiPPIneighbors{k} = weiPPIneighbors{k} + prop_kk_neighbors/kk;
             end
         end
     end

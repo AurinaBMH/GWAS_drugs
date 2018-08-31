@@ -42,9 +42,9 @@ if any(diag(A) > 0); % Self connections can lead to issues...
 end
 %-------------------------------------------------------------------------------
 
-l = 1;     % path length
+l = 1;     % initial path length
 Lpath = A; % matrix of paths l
-D = A;     % distance matrix (prefilled with path length of 1)
+D = Lpath;     % distance matrix (prefilled with path length of 1)
 
 % Iterate through higher path lengths:
 Idx = true;
