@@ -37,14 +37,13 @@ try
 catch
     error('No precomputed data for specified PPI network...!!!')
 end
-% Load shortest path distances on the PPI network:
-% (cf. ComputePPIDist)
+% Load shortest path distances on the PPI network (cf. ComputePPIDist):
 try
     load(fileNamePDist,'distMatrix');
     PPIN.distMatrix = distMatrix;
     clear('distMatrix');
 catch
-    error('No PPI shortest path information found, you must run ComputePPIDist');
+    error('No PPI shortest path information found in %s, you must run ComputePPIDist',fileNamePDist);
 end
 
 %-------------------------------------------------------------------------------
@@ -97,12 +96,14 @@ numPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
 hasPath = cell(numSteps,1);
 meanPPIDistance = nan(numGenesChar,1);
+medianPPIDistance = nan(numGenesChar,1);
 
 % Initialize longer (binary) paths
 for k = 1:numSteps
     numPPIneighbors{k} = nan(numGenesChar,1);
     percPPIneighbors{k} = nan(numGenesChar,1);
-    weiPPIneighbors{k} = nan(numGenesChar,1);
+    weiPPIneighbors{k} = zeros(numGenesChar,1);
+    expWeiPPIneighbors{k} = zeros(numGenesChar,1);
 end
 
 %-------------------------------------------------------------------------------
@@ -118,7 +119,7 @@ for i = 1:numGenesChar
 
     % First try matching the gene:
     PPI_index = find(strcmp(PPIN.geneNames,gene_i));
-    % Then try matching the gene:
+    % Then try matching the protein:
     if isempty(PPI_index)
         PPI_index = find(strcmp(PPIN.geneNames,protein_i));
     end
@@ -162,7 +163,8 @@ for i = 1:numGenesChar
             iskkStepNeighbor = (PPIN.distMatrix(PPI_index,:) == k);
             prop_kk_neighbors = 100*mean(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes));
             if ~isnan(prop_kk_neighbors)
-                weiPPIneighbors{k} = weiPPIneighbors{k} + prop_kk_neighbors/kk;
+                weiPPIneighbors{k}(i) = weiPPIneighbors{k}(i) + prop_kk_neighbors/kk;
+                expWeiPPIneighbors{k}(i) = expWeiPPIneighbors{k}(i) + prop_kk_neighbors/factorial(kk);
             end
         end
     end
@@ -170,10 +172,10 @@ for i = 1:numGenesChar
     %-------------------------------------------------------------------------------
     % PPIN Distance:
     % What is the mean path length to genes on the disease list (mapped/LD)?:
-    if isfield(PPIN,'distMatrix')
-        allDistances = PPIN.distMatrix(PPI_index,PPI_isInContext);
-        meanPPIDistance(i) = mean(allDistances);
-    end
+    isInContext = ismember(PPIN.geneNames,contextGenes);
+    allDistances = PPIN.distMatrix(PPI_index,isInContext);
+    meanPPIDistance(i) = nanmean(allDistances);
+    medianPPIDistance(i) = nanmedian(allDistances);
 end
 
 %===============================================================================
@@ -187,7 +189,9 @@ geneStats = struct();
 for k = 1:numSteps
     geneStats.(sprintf('numPPIneighbors%u',k)) = numPPIneighbors{k};
     geneStats.(sprintf('percPPIneighbors%u',k)) = percPPIneighbors{k};
+    geneStats.(sprintf('weiPPIneighbors%u',k)) = weiPPIneighbors{k};
 end
+geneStats.medianPPIDistance = medianPPIDistance;
 geneStats.meanPPIDistance = meanPPIDistance;
 
 end
