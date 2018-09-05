@@ -1,7 +1,10 @@
-function DistinguishingCharBar(whatProperty)
+function DistinguishingCharBar(similarityType,whatProperty)
 
 if nargin < 1
-    whatProperty = 'numGWASMapped';
+    similarityType = 'DNA';
+end
+if nargin < 2
+    whatProperty = 'propGWAS';
     % 'numGWASMapped','numLDSNPs','percPPIneigh1Mapped','percPPIneigh1LD','AllenMeanCoexpMapped','AllenMeanCoexpLD'
 end
 
@@ -29,45 +32,29 @@ for i = 1:numDiseases_GWAS
     fileName = sprintf('resultsTable_%s.mat',whatDiseases_GWAS{i});
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores from %s\n',fileName);
-    switch whatProperty
-    case 'numGWASMapped'
-        geneWeights_GWAS = geneScores.DNA.numGWAS;
-    case 'percGWASMapped'
-        geneWeights_GWAS = geneScores.DNA.percGWAS;
-    case 'percGWASLD'
-        geneWeights_GWAS = geneScores.DNA.percLD;
-    case 'PPIMappedWeighted_percNeigh1'
-        geneWeights_GWAS = geneScores.PPI_mapped_weighted.percPPIneighbors1;
-    case 'PPI_mapped_th0_percNeigh1'
-        geneWeights_GWAS = geneScores.PPI_mapped_th0.percPPIneighbors1;
-    case 'PPI_mapped_th0_percNeigh2'
-        geneWeights_GWAS = geneScores.PPI_mapped_th0.percPPIneighbors2;
-    case 'PPI_mapped_th400_percNeigh1'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors1;
-    case 'PPI_mapped_th400_percNeigh2'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors2;
-    case 'PPI_mapped_th400_weiNeigh2'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.weiPPIneighbors2;
-    case 'PPI_mapped_th400_numNeigh2'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.numPPIneighbors2;
-    case 'PPI_mapped_th400_percNeigh3'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.percPPIneighbors3;
-    case 'PPI_mapped_th600_percNeigh1'
-        geneWeights_GWAS = geneScores.PPI_mapped_th600.percPPIneighbors1;
-    case 'PPI_mapped_th600_percNeigh3'
-        geneWeights_GWAS = geneScores.PPI_mapped_th600.percPPIneighbors3;
-    case 'PPI_mapped_th900_percNeigh3'
-        geneWeights_GWAS = geneScores.PPI_mapped_th900.percPPIneighbors3;
-    case 'PPI_mapped_th600_weiNeigh4'
-        geneWeights_GWAS = geneScores.PPI_mapped_th600.weiPPIneighbors4;
-    case 'PPI_mapped_th900_weiNeigh7'
-        geneWeights_GWAS = geneScores.PPI_mapped_th900.weiPPIneighbors7;
-    case 'PPI_th400_meanPPID'
-        geneWeights_GWAS = geneScores.PPI_mapped_th400.meanPPIDistance;
-    case 'AllenMeanCoexpMapped'
+    switch similarityType
+    case 'DNA'
+        % numSNPs, numGWAS, percGWAS, numLD, percLD
+        geneWeights_GWAS = geneScores.DNA.(whatProperty);
+    case 'PPI_weighted'
+        % numPPIneighbors1
+        % percPPIneighbors1
+        % weiPPIneighbors1
+        % medianPPIDistance
+        % meanPPIDistance
+        geneWeights_GWAS = geneScores.PPI_mapped_weighted.(whatProperty);
+    case 'PPI_th0'
+        geneWeights_GWAS = geneScores.PPI_mapped_th0.(whatProperty);
+    case 'PPI_th400'
+        geneWeights_GWAS = geneScores.PPI_mapped_th400.(whatProperty);
+    case 'PPI_th600'
+        geneWeights_GWAS = geneScores.PPI_mapped_th600.(whatProperty);
+    case 'PPI_th900'
+        geneWeights_GWAS = geneScores.PPI_mapped_th900.(whatProperty);
+    case 'Expression'
         geneWeights_GWAS = geneScores.AllenMeanCoexpMapped;
     otherwise
-        error('Unknown property: ''%s''',whatProperty);
+        error('Unknown similarity type: ''%s''',similarityType);
     end
 
     % Combine two datasets on overlap:
@@ -100,7 +87,7 @@ for i = 1:numDiseases_GWAS
             rhos(k) = ComputeWeightedSum(geneWeights_treatment,geneWeights_GWAS,theDisease,false);
         end
 
-        % Generate (pooled) nulls [could be done individually for each particular weighting if needed]:
+        % Generate null distributions:
         numNulls = 1000;
         nullScores = zeros(numNulls,1);
         whatNull = 'randomWeight'; % randomWeight, randomDisease
@@ -108,13 +95,15 @@ for i = 1:numDiseases_GWAS
             switch whatNull
             case 'randomWeight'
                 geneWeightsRand = rand(height(indicatorTable),1);
+                nullScores(k) = ComputeWeightedSum(geneWeightsRand,geneWeights_GWAS,theDisease,false);
             case 'randomDisease'
-                % Shuffle weights taken from a random disease:
+                % Shuffle weights taken from a random disease (pooled nulls):
+                % [could be done individually for each particular weighting if needed]
                 theDiseaseInd = randi(numDiseases_Treatment,1);
                 theDisease = whatDiseases_Treatment{theDiseaseInd};
                 geneWeightsRand = indicatorTable.(theDisease);
+                nullScores(k) = ComputeWeightedSum(geneWeightsRand,geneWeights_GWAS,theDisease,true);
             end
-            nullScores(k) = ComputeWeightedSum(geneWeights_treatment,geneWeights_GWAS,theDisease,true);
         end
         % Compute p-values:
         for k = 1:numDiseases_Treatment
@@ -124,14 +113,14 @@ for i = 1:numDiseases_GWAS
     [rhos,ix] = sort(rhos,'descend');
 
     %---------------------------------------------------------------------------
-    ax = subplot(2,3,i); hold on
+    ax = subplot(1,5,i); hold on
     b = bar(rhos);
-    if addNull
+    if addNull && ~all(isnan(nullScores))
         % Add null distribution:
-        [f,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
-        f = f/max(f);
-        plot(ones(2,1)*(numDiseases_Treatment+1)+f,x,'k');
-        plot(ones(2,1)*(numDiseases_Treatment+1)-f,x,'k');
+        [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
+        ff = 0.8*ff/max(ff);
+        plot(ones(2,1)*(numDiseases_Treatment+1)+ff,x,'k');
+        plot(ones(2,1)*(numDiseases_Treatment+1)-ff,x,'k');
         ax.XTick = 1:numDiseases_Treatment+1;
         ax.XTickLabel = {whatDiseases_Treatment{ix},'null'};
         % Add horizontal lines to aid comparison to null:
@@ -139,8 +128,17 @@ for i = 1:numDiseases_GWAS
         plot([1,numDiseases_Treatment+1],ones(2,1)*null_p50,':k')
         null_p95 = quantile(nullScores,0.95);
         plot([1,numDiseases_Treatment+1],ones(2,1)*null_p95,'--k')
-        if min(rhos) < max(rhos)
-            ax.YLim = [min(rhos)*0.9,max(rhos)*1.1];
+        if range(rhos) > 0
+            maxLim = max(rhos)*1.1;
+            if maxLim < null_p95
+                maxLim = null_p95*1.1;
+            end
+            minLim = min(rhos)*0.9;
+            null_p10 = quantile(nullScores,0.1);
+            if minLim > null_p10;
+                minLim = null_p10*0.9;
+            end
+            ax.YLim = [minLim,maxLim];
         end
     else
         ax.XTick = 1:numDiseases_Treatment;
@@ -148,7 +146,7 @@ for i = 1:numDiseases_GWAS
     end
     ax.XTickLabelRotation = 45;
     xlabel('Disease treatment')
-    ylabel(whatScore)
+    ylabel(sprintf('%s similarity',whatScore))
     title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
     cMapGeneric = BF_getcmap('set2',numDiseases_Treatment,false);
     for k = find(~isSig)'
@@ -157,6 +155,8 @@ for i = 1:numDiseases_GWAS
     b.CData = cMapGeneric(ix,:);
     b.FaceColor = 'flat';
 end
+
+f.Position = [471,945,1830,318];
 
 %-------------------------------------------------------------------------------
 function rho = ComputeWeightedSum(v1,v2,theName,doShuffle)
@@ -180,12 +180,16 @@ function rho = ComputeWeightedSum(v1,v2,theName,doShuffle)
         v1_good = v1_good(randperm(length(v1_good)));
     end
 
-    % Normalize v1 and v2, to sum to 1:
+    % Normalize v1 and v2 to sum to 1:
     if any(v1_good < 0) || any(v2_good < 0)
-        error('Weight vectors contain negative values')
+        warning('Weight vectors contain negative values')
     end
-    v1_good = v1_good/sum(v1_good);
-    v2_good = v2_good/sum(v2_good);
+    if all(v1_good > 0)
+        v1_good = v1_good/sum(v1_good);
+    end
+    if all(v2_good > 0)
+        v2_good = v2_good/sum(v2_good);
+    end
 
     % Compute the score:
     rho = sum(v1_good.*v2_good);
