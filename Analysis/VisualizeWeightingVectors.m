@@ -7,6 +7,8 @@ whatMeasurement = 'GWAS';
 similarityType = 'PPI_th0';
 whatProperty = 'percPPIneighbors1';
 numTop = 30; % Look at the top X genes in particular
+orderByWhat = 'max';
+cMapMax = 0.20;
 
 %-------------------------------------------------------------------------------
 numDiseases = length(whichDiseases);
@@ -24,8 +26,12 @@ end
 data = horzcat(geneWeightsNorm{:})';
 
 % Order by maximum weight:
-% maxGene = max(data,[],1);
-maxGene = mean(data,1);
+switch orderByWhat
+case 'max'
+    maxGene = max(data,[],1);
+case 'mean'
+    maxGene = mean(data,1);
+end
 [maxGeneSort,ix] = sort(maxGene,'descend');
 ix(isnan(maxGeneSort)) = []; % remove top genes that are actually NaNs
 data = data(:,ix(1:numTop));
@@ -44,7 +50,7 @@ ax.XTickLabel = geneNames;
 ax.XTickLabelRotation = 90;
 cB = colorbar;
 cB.Label.String = 'Normalized treatment weight';
-caxis([0,0.15])
+caxis([0,cMapMax])
 % Title:
 extraText = '';
 if strcmp(whatMeasurement,'GWAS')
@@ -52,4 +58,4 @@ if strcmp(whatMeasurement,'GWAS')
 end
 title(sprintf('%s weightings over genes (%s)',whatMeasurement,extraText),...
                     'interpreter','none')
-f.Position = [440   427   887   371];
+f.Position = [855   870   569   234];
