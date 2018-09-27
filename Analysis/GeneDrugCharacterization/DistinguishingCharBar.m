@@ -167,10 +167,11 @@ function rho = ComputeWeightedSum(v1,v2,theName,doShuffle)
     if nargin < 4
         doShuffle = false;
     end
+    minGoodProp = 0.4; % Require fewer than 40% bad values after matching indices
 
     % Check for and filter bad values:
     r = ~isnan(v1) & ~isnan(v2);
-    if mean(r) > 0.4 % More than 40% bad values
+    if mean(r) > minGoodProp
         warning('More than 40% bad values when comparing %s',theName)
     end
     v1_good = v1(r);
@@ -185,10 +186,10 @@ function rho = ComputeWeightedSum(v1,v2,theName,doShuffle)
         warning('Weight vectors contain negative values')
     end
     if all(v1_good > 0)
-        v1_good = v1_good/sum(v1_good);
+        v1_good = v1_good/norm(v1_good,2);
     end
     if all(v2_good > 0)
-        v2_good = v2_good/sum(v2_good);
+        v2_good = v2_good/norm(v2_good,2);
     end
 
     % Compute the score:

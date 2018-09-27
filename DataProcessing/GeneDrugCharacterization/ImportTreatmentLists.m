@@ -69,11 +69,13 @@ for k = 1:numDiseases
             dataArray{col} = [dataArray{col};dataArrayBlock{col}];
         end
     end
-    %% Close the text file.
-    fclose(fileID);
+    fclose(fileID); % Close the text file
 
-    %% Create output variable
-    dataTable.(whatDisease) = table(dataArray{1:end-1}, 'VariableNames', {'Name','Target'});
+    % Create structure of tables:
+    dataTable.(whatDisease) = table(dataArray{1:end-1},'VariableNames',{'Name','Target'});
+
+    numDrugs = length(dataArray{1});
+    fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
 end
 
 %-------------------------------------------------------------------------------
@@ -106,7 +108,7 @@ for k = 1:numDiseases
 
     % Determine weights on genes:
     if normalizeWithinDrugs
-        % the count cell should be weighted by the weights vector:
+        % The count cell should be weighted by the weights vector:
         counts{k} = zeros(numGenesTreat,1);
         for j = 1:numGenesTreat
             counts{k}(j) = sum(weights(strcmp(geneLists{k}{j},geneList)));
@@ -123,7 +125,8 @@ for k = 1:numDiseases
     counts{k} = counts{k}(ix);
 
     % Talk to me:
-    fprintf(1,'%u genes are targeted by existing drugs for %s:\n',numGenesTreat,whatDisease);
+    fprintf(1,'%u genes are targeted by existing drugs for %s:\n',...
+                        numGenesTreat,whatDisease);
     for i = 1:numGenesTreat
         fprintf(1,'%s, ',geneLists{k}{i});
     end

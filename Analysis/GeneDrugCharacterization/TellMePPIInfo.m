@@ -178,11 +178,6 @@ for i = 1:numGenesChar
     medianPPIDistance(i) = nanmedian(allDistances);
 end
 
-%===============================================================================
-% Genes that are 2-step neighbors on the PPI network -- doesn't make much sense (so many!):
-% (e.g., in one example case there are 3235 1-step neighbors; 17992 2-step neighbors)
-% (this basically gives coverage to the entire network in two steps...)
-
 %-------------------------------------------------------------------------------
 % Package up output nicely:
 geneStats = struct();

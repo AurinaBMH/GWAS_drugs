@@ -19,7 +19,7 @@ numLD = zeros(numGenesChar,1);
 percGWAS = zeros(numGenesChar,1);
 percLD = zeros(numGenesChar,1);
 
-fprintf(1,'Computing number of SNPs LD to SNPs in %u genes\n',numGenesChar);
+fprintf(1,'Computing number of SNPs (mapped and LD) to SNPs in %u genes\n',numGenesChar);
 for i = 1:numGenesChar
     gene_i = genesChar{i};
     fprintf(1,'%u/%u: %s',i,numGenesChar,gene_i);
