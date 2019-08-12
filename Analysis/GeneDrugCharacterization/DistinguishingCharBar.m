@@ -53,20 +53,19 @@ for i = 1:numDiseases_GWAS
     end
 
     % Generate null distributions:
-    numNulls = 1000;
+    numNulls = 500;
     nullScores = zeros(numNulls,1);
-    whatNull = 'randomWeight'; % randomWeight, randomDisease
+    whatNull = 'randomDisease'; % randomWeight, randomDisease
     for k = 1:numNulls
         switch whatNull
         case 'randomWeight'
             geneWeightsRand = rand(numDrugScores,1);
-            geneWeightsRand = geneWeightsRand/norm(geneWeightsRand,2);
             nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS);
         case 'randomDisease'
             % Shuffle weights taken from a random disease (pooled nulls):
             % [could be done individually for each particular weighting if needed]
             diseaseInd = randi(numDiseases_Treatment,1);
-            geneWeightsRand = drugScores(diseaseInd,:)';
+            geneWeightsRand = drugScores(:,diseaseInd);
             nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
         end
     end

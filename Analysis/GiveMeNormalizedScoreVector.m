@@ -14,6 +14,7 @@ end
 if nargin < 4
     whatProperty = 'percGWAS';
 end
+whatNorm = 1;
 
 %-------------------------------------------------------------------------------
 
@@ -59,6 +60,6 @@ end
 % Normalize (non-NaN elements) to unit vector as 2-norm:
 r = ~isnan(geneWeights);
 geneWeightsNorm = geneWeights;
-geneWeightsNorm(r) = geneWeightsNorm(r)/norm(geneWeights(r),2);
+geneWeightsNorm(r) = geneWeightsNorm(r)/norm(geneWeights(r),whatNorm);
 
 end
