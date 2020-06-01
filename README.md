@@ -48,7 +48,7 @@ drug-target gene relates to the set of GWAS hits for a given disorder X.
 #### `DistinguishingCharBar`
 Allows visualization of how a set of drug-target genes relates to GWAS hits for a given disorder.
 For example, this looks at how percentage of direct PPI neighbors matches onto GWAS hits for a given disorder:
-```
+```matlab
 DistinguishingCharBar('PPI_mapped_th0_percNeigh1')
 ```
 
