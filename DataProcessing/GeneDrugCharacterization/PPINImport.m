@@ -39,9 +39,15 @@ C = textscan(fid,'%s%s%u','Delimiter',',','HeaderLines',1);
 fclose(fid);
 gene1 = C{1};
 gene2 = C{2};
+
 evidenceScore = C{3};
 clear('C');
 fprintf(1,'Read in %u interactions :-O\n',length(gene1));
+
+G = [gene1,gene2]; 
+nPairsR = table2cell(unique(cell2table(G))); 
+fprintf('There are %d entries in the original data, %d pairs are unique\n', length(gene1), length(nPairsR))
+
 
 % Strip whitespace:
 gene1 = strtrim(gene1);
@@ -66,6 +72,10 @@ end
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 evidenceScore = evidenceScore(keepEdge);
 numInteractions = sum(keepEdge);
+
+nPairsC = table2cell(unique(cell2table(PPIN))); 
+fprintf('There are %d entries in the characterised data, %d pairs are unique\n', size(PPIN,1), length(nPairsC))
+
 if doWeighted
     fprintf(1,'Weighted analysis: keeping all %u edges in the PPIN\n',numInteractions);
 else
@@ -89,15 +99,19 @@ fprintf(1,'(saved to %s)\n',fileNameSave{2});
 % Convert gene names to indices:
 fprintf(1,['Constructing sparse list of edges (%ux%u);',...
             ' as indices across %u edges...\n'],numGenes,numGenes,numInteractions);
-indx1 = zeros(numInteractions,1,'uint16');
-indx2 = zeros(numInteractions,1,'uint16');
+%indx1 = zeros(numInteractions,1,'uint16');
+%indx2 = zeros(numInteractions,1,'uint16');
 if length(geneNames) > 2^16
     error('Problem storing indices as unsigned int16 data');
 end
-parfor k = 1:numInteractions
+
+AdjPPI = zeros(numGenes, numGenes); 
+for k = 1:numInteractions
     % There can only be one match (since geneNames contains unique entries)
-    indx1(k) = find(strcmp(PPIN{k,1},geneNames),1);
-    indx2(k) = find(strcmp(PPIN{k,2},geneNames),1);
+    indx1 = find(strcmp(PPIN{k,1},geneNames),1);
+    indx2 = find(strcmp(PPIN{k,2},geneNames),1);
+    
+    AdjPPI(indx1, indx2) = double(evidenceScore(k));
 end
 save(fileNameSave{3},'indx1','indx2');
 fprintf(1,'Indices saved to %s\n',fileNameSave{3});
@@ -107,13 +121,11 @@ clear('PPIN');
 % Create a sparse matrix containing all interactions:
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
 AdjPPI = zeros(numGenes, numGenes); 
-%indx1 = double(indx1); 
-%indx2 = double(indx2); 
 
 for i=1:length(evidenceScore)
     if doWeighted
 
-        AdjPPI(indx1(i), indx2(i)) = double(evidenceScore(i));
+        AdjPPI(double(indx1(i)), double(indx2(i))) = double(evidenceScore(i));
         
     else
         
