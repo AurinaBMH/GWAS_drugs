@@ -5,6 +5,14 @@
 clear all; 
 % load PPI network links
 PROTEINlinks = importPROTEINLINKSfile('9606.protein.links.v11.0.txt'); 
+P = PROTEINlinks(:,[1,2]); 
+nPairsR = unique(P); 
+if size(nPairsR,1)==size(PROTEINlinks,1)
+    sprintf('all protein pairs are unique\n')
+else
+    sprintf('there are duplicate protin pairs')
+end
+%  - at the level of protein all pairs are unique
 % remove 9606 from protein IDs and replace protein IDs 
 splitP1 = split(PROTEINlinks.protein1,'.'); 
 splitP2 = split(PROTEINlinks.protein2,'.'); 
