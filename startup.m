@@ -10,5 +10,5 @@ end
 %-------------------------------------------------------------------------------
 % load('processedData.mat');
 %-------------------------------------------------------------------------------
-fprintf(1,'Adding path to MatlabmySQL toolbox\n');
-addpath('/Users/benfulcher/DropboxSydneyUni/CodeToolboxes/MatlabmySQL/')
+% fprintf(1,'Adding path to MatlabmySQL toolbox\n');
+% addpath('/Users/benfulcher/DropboxSydneyUni/CodeToolboxes/MatlabmySQL/')
