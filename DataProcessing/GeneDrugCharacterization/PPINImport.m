@@ -1,4 +1,4 @@
-function [AdjPPI,geneNames,PPIN] = PPINImport(doWeighted,evidenceThreshold,whatInput)
+function [AdjPPI,geneNames] = PPINImport(doWeighted,evidenceThreshold,whatInput)
 % Import PPIN data from STRING
 %-------------------------------------------------------------------------------
 
@@ -20,15 +20,17 @@ fileNameSave = PPIFileNames(doWeighted,evidenceThreshold,whatInput);
 %-------------------------------------------------------------------------------
 % Read in PPI data:
 switch whatInput
-case 'HGNCmatch'
-    % Latest matching to HGNC genes by Janette (July 2018):
-    fileName = 'PPI_conversionToGenes.csv';
-case 'proteins'
-    % Mapping to proteins:
-    fileName = '9606.protein.links.v10.5.txt';
-case 'original'
-    % Original STRING nomenclature:
-    fileName = '6_PPIN_STRINGv10.5.csv';
+    case 'HGNCmatch'
+        % Latest matching to HGNC genes by Janette (July 2018):
+        fileName = 'PPI_conversionToGenes.csv';
+    case 'proteins'
+        % Mapping to proteins:
+        fileName = '9606.protein.links.v10.5.txt';
+    case 'original'
+        % Original STRING nomenclature:
+        fileName = '6_PPIN_STRINGv10.5.csv';
+    case 'genes'
+        fileName = 'PPIlinks.txt';
 end
 fprintf(1,'Constructing protein-protein interactions using %s input: ''%s''\n',...
                 whatInput,fileName);
@@ -104,15 +106,38 @@ clear('PPIN');
 %-------------------------------------------------------------------------------
 % Create a sparse matrix containing all interactions:
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
-if doWeighted
-    AdjPPI = sparse(double(indx1),double(indx2),double(evidenceScore),numGenes,numGenes);
-else
-    AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
-    fprintf(1,'Symmetrizing the sparse matrix...');
-    AdjPPI = (AdjPPI | AdjPPI');
-    fprintf(1,' Done.\n');
+AdjPPI = zeros(numGenes, numGenes); 
+%indx1 = double(indx1); 
+%indx2 = double(indx2); 
+
+for i=1:length(evidenceScore)
+    if doWeighted
+
+        AdjPPI(indx1(i), indx2(i)) = double(evidenceScore(i));
+        
+    else
+        
+        AdjPPI(indx1(i), indx2(i)) = 1;
+        % sparse version generates evidence Scores>1000 for the last gene in the matrix - don't know why;
+        % AdjPPI = sparse(double(indx1),double(indx2),double(evidenceScore),numGenes,numGenes);
+        
+        %AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
+        %fprintf(1,'Symmetrizing the sparse matrix...');
+        %AdjPPI = (AdjPPI | AdjPPI');
+        
+    end
+    
 end
+fprintf(1,' Done.\n');
+
+% check if the matrix is symmetric
+if issymmetric(AdjPPI)
+    fprintf('PPI matrix is symmetric')
+else
+    fprintf('PPI matrix is not symmetric')
+end
+
 save(fileNameSave{3},'AdjPPI','-append');
-fprintf(1,'Saved (sparse) Adj to %s\n',fileNameSave{3});
+fprintf(1,'Saved Adj to %s\n',fileNameSave{3});
 
 end
