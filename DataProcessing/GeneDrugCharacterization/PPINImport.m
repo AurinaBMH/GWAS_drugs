@@ -98,23 +98,6 @@ evidenceScore_unique = PPINfull_sorted.evidenceScore(INDunique);
 numInteractions = length(evidenceScore_unique); 
 
 clear('PPIN', 'PPINfull_sorted', 'GENES_sort', 'PPINfull');
-% for d=1:length(DUP)
-%     V = PPIN(DUP(d),:);
-%     V1 = find(ismember(PPIN(:,1),V{1})); 
-%     V2 = find(ismember(PPIN(:,2),V{2})); 
-%     V12 = intersect(V1,V2); 
-%     
-%     % find non-max scores and save their index to exclude in isDUP
-%     % if all scores are equal, this will select one fo them
-%     [~, sI] = sort(evidenceScore(V12));
-%     isDUP(V12(sI(2:end))) = 1;
-%     fprintf('%d pair processed\n', d); 
-% end
-% 
-% % remove non-selected duplicates
-% PPIN(isDUP,:) = []; 
-% evidenceScore(isDUP) = [];
-
 
 if doWeighted
     fprintf(1,'Weighted analysis: keeping all unique %u edges in the PPIN\n',numInteractions);
@@ -145,7 +128,6 @@ if length(geneNames) > 2^16
     error('Problem storing indices as unsigned int16 data');
 end
 
-%AdjPPI = zeros(numGenes, numGenes); 
 for k = 1:numInteractions
     % There can only be one match (since geneNames contains unique entries)
     indx1(k) = find(strcmp(PPIN_unique{k,1},geneNames),1);
@@ -167,32 +149,13 @@ else
     AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
 end
 
-    
-% for i=1:length(evidenceScore)
-%     if doWeighted
-% 
-%         AdjPPI(double(indx1(i)), double(indx2(i))) = double(evidenceScore(i));
-%         
-%     else
-%         
-%         AdjPPI(indx1(i), indx2(i)) = 1;
-%         % sparse version generates evidence Scores>1000 for the last gene in the matrix - don't know why;
-%         % AdjPPI = sparse(double(indx1),double(indx2),double(evidenceScore),numGenes,numGenes);
-%         
-%         %AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
-%         %fprintf(1,'Symmetrizing the sparse matrix...');
-%         %AdjPPI = (AdjPPI | AdjPPI');
-%         
-%     end
-%     
-% end
 fprintf(1,' Done.\n');
 
 % check if the matrix is symmetric
 if issymmetric(AdjPPI)
-    fprintf('PPI matrix is symmetric')
+    fprintf('PPI matrix is symmetric\n')
 else
-    fprintf('PPI matrix is not symmetric')
+    fprintf('PPI matrix is not symmetric\n')
 end
 
 save(fileNameSave{3},'AdjPPI','-append');
