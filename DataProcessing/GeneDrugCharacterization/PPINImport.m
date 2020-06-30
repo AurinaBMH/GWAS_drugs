@@ -73,42 +73,54 @@ end
 % Filter edges by keepEdge
 PPIN = [gene1(keepEdge),gene2(keepEdge)];
 evidenceScore = evidenceScore(keepEdge);
-numInteractions = sum(keepEdge);
 
-[nPairsC,W] = unique(cell2table(PPIN), 'rows','stable'); 
+nPairsC = unique(cell2table(PPIN), 'rows','stable'); 
 fprintf('There are %d entries in the characterised data, %d pairs are unique\n', size(PPIN,1), size(nPairsC,1))
-clear('nPairsC');
+
 % after assigning proteins to genes, some protein pairs (n=36540) become non-unique 
 % what to do in that case? 
 % take the pair with the highest evidence score; 
-DUP = setdiff(1:size(PPIN,1),W); 
-isDUP = false(length(evidenceScore),1); 
-fprintf('There are %d duplicate entries\n', length(DUP))
+
 fprintf('Select entry with highest evidence score\n')
 
-for d=1:length(DUP)
-    V = PPIN(DUP(d),:);
-    V1 = find(ismember(PPIN(:,1),V{1})); 
-    V2 = find(ismember(PPIN(:,2),V{2})); 
-    V12 = intersect(V1,V2); 
-    
-    % find non-max scores and save their index to exclude in isDUP
-    % if all scores are equal, this will select one fo them
-    [~, sI] = sort(evidenceScore(V12));
-    isDUP(V12(sI(2:end))) = 1;
-    fprintf('%d pair processed\n', d); 
-end
+% make a table with all values and weights
+PPINfull = table(PPIN(:,1), PPIN(:,2), evidenceScore); 
+% sort the values by gene 1, then by gene 2 and then by score
+PPINfull_sorted = sortrows(PPINfull, [1 2 3]);
+% select only gene pairs from the sorted version and find unique rows
+GENES_sort = table(PPINfull_sorted.Var1, PPINfull_sorted.Var2); 
+% find the last index of the sorted unique values - this will select the
+% value with higher weight, because data are sorted;
+[~,INDunique] = unique(GENES_sort,'last');
+% select PPIN and evidence scores for those values
+PPIN_unique = table2cell(GENES_sort(INDunique,:)); 
+evidenceScore_unique = PPINfull_sorted.evidenceScore(INDunique);
+numInteractions = length(evidenceScore_unique); 
 
-% remove non-selected duplicates
-PPIN(isDUP,:) = []; 
-evidenceScore(isDUP) = [];
-numInteractions = length(evidenceScore); 
+clear('PPIN', 'PPINfull_sorted', 'GENES_sort', 'PPINfull');
+% for d=1:length(DUP)
+%     V = PPIN(DUP(d),:);
+%     V1 = find(ismember(PPIN(:,1),V{1})); 
+%     V2 = find(ismember(PPIN(:,2),V{2})); 
+%     V12 = intersect(V1,V2); 
+%     
+%     % find non-max scores and save their index to exclude in isDUP
+%     % if all scores are equal, this will select one fo them
+%     [~, sI] = sort(evidenceScore(V12));
+%     isDUP(V12(sI(2:end))) = 1;
+%     fprintf('%d pair processed\n', d); 
+% end
+% 
+% % remove non-selected duplicates
+% PPIN(isDUP,:) = []; 
+% evidenceScore(isDUP) = [];
+
 
 if doWeighted
     fprintf(1,'Weighted analysis: keeping all unique %u edges in the PPIN\n',numInteractions);
 else
     fprintf(1,'Filtered on evidence threshold %g -> %u edges in the PPIN\n',...
-                        evidenceThreshold,numInteractions);
+                        evidenceScore_unique,numInteractions);
 end
 
 clear('gene1','gene2','keepEdge','isGood','highEvidence');
@@ -116,7 +128,7 @@ clear('gene1','gene2','keepEdge','isGood','highEvidence');
 %-------------------------------------------------------------------------------
 % Determine the list of genes contained in the PPIN:
 fprintf(1,'Determining unique genes...\n');
-geneNames = unique(vertcat(PPIN(:,1),PPIN(:,2)));
+geneNames = unique(vertcat(PPIN_unique(:,1),PPIN_unique(:,2)));
 numGenes = length(geneNames);
 fprintf(1,'%u unique genes in the PPIN\n',numGenes);
 
@@ -136,21 +148,21 @@ end
 %AdjPPI = zeros(numGenes, numGenes); 
 for k = 1:numInteractions
     % There can only be one match (since geneNames contains unique entries)
-    indx1(k) = find(strcmp(PPIN{k,1},geneNames),1);
-    indx2(k) = find(strcmp(PPIN{k,2},geneNames),1);
+    indx1(k) = find(strcmp(PPIN_unique{k,1},geneNames),1);
+    indx2(k) = find(strcmp(PPIN_unique{k,2},geneNames),1);
     
 end
 
 save(fileNameSave{3},'indx1','indx2');
 fprintf(1,'Indices saved to %s\n',fileNameSave{3});
-clear('PPIN');
+
 
 %-------------------------------------------------------------------------------
 % Create a sparse matrix containing all interactions:
 fprintf(1,'Generating a sparse matrix from the gene-matched indices:\n');
 
 if doWeighted
-    AdjPPI = sparse(double(indx1),double(indx2),double(evidenceScore),numGenes,numGenes);
+    AdjPPI = sparse(double(indx1),double(indx2),double(evidenceScore_unique),numGenes,numGenes);
 else
     AdjPPI = sparse(double(indx1),double(indx2),1,numGenes,numGenes);
 end
