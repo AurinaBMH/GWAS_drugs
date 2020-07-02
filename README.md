@@ -10,15 +10,15 @@ Process PPI network data, save to processed sparse matrix.
 
 Generate a binary PPI network thresholded at evidence threshold of 0, using data where proteins have been matched to HGNC symbols:
 ```matlab
-[AdjPPI,geneNames,PPIN] = PPINImport(false,0,'HGNCmatch')
+[AdjPPI,geneNames] = PPINImport(false,0,'HGNCmatch');
 ```
 Generate a binary PPI network thresholded at evidence threshold of 0.4, using data where proteins have been matched to HGNC symbols:
 ```matlab
-[AdjPPI,geneNames,PPIN] = PPINImport(false,400,'HGNCmatch');
+[AdjPPI,geneNames] = PPINImport(false,400,'HGNCmatch');
 ```
 Generate a weighted PPI network with evidence thresholds as weights:
 ```matlab
-PPINImport(true);
+[AdjPPI,geneNames] = PPINImport(true);
 ```
 Precompute pairwise distances on the PPI network (computed at a binary evidence threshold of 0.4):
 ```matlab
