@@ -16,8 +16,8 @@ DISORDERS=c('ADHD', 'AUT', 'BIP2', 'IQSavage', 'MDD2', 'SCZ', 'DIABETES')
 pThr = 10^-5
 for (disorder in DISORDERS){
   
-# load the dataset 'AUT', 'BIP2' have independent SNPs in the original file
-if (disorder=='AUT' || disorder=='BIP2'){
+# load the dataset 'AUT', have independent SNPs in the original file
+if (disorder=='AUT'){
   fileName = sprintf('pgc%s.txt', disorder)
 # for others load clumped data
 } else {
