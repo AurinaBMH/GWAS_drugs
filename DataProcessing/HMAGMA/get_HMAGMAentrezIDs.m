@@ -24,6 +24,9 @@ for D=1:length(Disorders)
         % add to table
         mapLIST = addvars(mapLIST,ENTREZID,'After','GENE');
         
+        fprintf('%d genes\n', sum(mapLIST.P<5*10^-6));
+        
+
         writetable(mapLIST, sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes_entrezID.txt', ...
             Disorders{D}, whatANNOT{A}), 'Delimiter','\t'); 
     end

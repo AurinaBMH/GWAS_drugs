@@ -13,6 +13,10 @@ do
 ${WHEREISCODE}/magma --bfile ${WHEREIS1000G}/g1000_eur --gene-annot ${WHEREISANNOT}/${whatANNOT}.genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}
 cp ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}.genes.out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}_genes.txt
 
+# do eMAGMA mapping using eQTL-based annotations
+# ###############Gene-based eMAGMA!############
+
+# ${WHEREISCODE}/magma --bfile ${WHEREISCODE}/magma --gene-annot Brain/Brain_Amygdala.genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --gene-settings adap-permp=10000 --out Amygdala_emagma
 # gene names are in the ENSG00000000457 format, need to get entrez IDs or gene names for them
 # use BIOMART annotations to assign IDs to genes in matlab
 
