@@ -2,7 +2,7 @@ library("biomaRt")
 library("dplyr")
 
 
-setwd("~/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/")
+setwd("~/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/GWAS")
 # load data that will be used for mapping: SNP-level and gene level
 grch38.snp = useMart(biomart="ENSEMBL_MART_SNP", host="ensembl.org", path="/biomart/martservice",dataset="hsapiens_snp")
 grch38 = useMart(biomart="ENSEMBL_MART_ENSEMBL", host="ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
