@@ -4,7 +4,6 @@ WHEREISCLUMPED='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWAS
 WHEREISGENE='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/NCBI37.3'
 WHEREISOUT='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/GWASgenes'
 WHEREIS1000G='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/g1000_eur'
-WHEREISANNOT='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/HMAGMA'
 
 for DISORDER in 'ADHD' 'MDD2' 'SCZ' 'DIABETES' 'BIP2' 'HF' 'AD'
 do
