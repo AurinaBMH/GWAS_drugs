@@ -21,7 +21,7 @@ PROTEINlinks.protein1 = splitP1(:,2);
 PROTEINlinks.protein2 = splitP2(:,2); 
 
 % load biomart file containing gene names associated with proteins
-BioMartRESULTS = importBIOMARTfile('BioMart_RESULTS.txt'); 
+BioMartRESULTS = importPROTEINfile('data/GWASlists/BIOMART_geneIDs.txt'); 
 
 % find gene names for proteins and create a table for protein-protein
 % interractions with gene names
@@ -38,14 +38,14 @@ for p=1:length(prot)
     IP1 = strcmp(PROTEINlinks.protein1 ,prot(p)); 
     IP2 = strcmp(PROTEINlinks.protein2 ,prot(p));
     % replace protein name with corresponding gene name
-    IG = strcmp(BioMartRESULTS.ProteinstableID ,prot(p));
+    IG = strcmp(BioMartRESULTS.ensembl_peptide_id ,prot(p));
     
     if isempty(find(IG, 1))
         PPI.protein1(IP1) = 'uncharacterised';
         PPI.protein2(IP2) = 'uncharacterised';
     else
-        PPI.protein1(IP1) = BioMartRESULTS.Genename{IG};
-        PPI.protein2(IP2) = BioMartRESULTS.Genename{IG};
+        PPI.protein1(IP1) = BioMartRESULTS.external_gene_name{IG};
+        PPI.protein2(IP2) = BioMartRESULTS.external_gene_name{IG};
     end
 end
 
