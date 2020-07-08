@@ -25,8 +25,12 @@ for D=1:length(Disorders)
     for A=1:length(whatANNOT)
         
         fileName = sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes.txt', Disorders{D}, whatANNOT{A});
-        mapLIST = importHMAGMAoutfile(fileName); 
-        
+        if strcmp(whatANNOT{A}, 'eQTLpec')
+            mapLIST = importeMAGMAoutfile(fileName);
+        else
+            mapLIST = importHMAGMAoutfile(fileName);
+        end
+
         fprintf('Processing disorder: %s, annotation %s\n', Disorders{D}, whatANNOT{A});
         
         [~, INDmap, indENT] = intersect(mapLIST.GENE, entrezIDonly.ensembl_gene_id, 'stable'); 
