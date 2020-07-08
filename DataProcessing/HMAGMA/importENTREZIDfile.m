@@ -19,7 +19,7 @@ function BIOMARTentrezID = importENTREZIDfile(filename, dataLines)
 
 % If dataLines is not specified, define defaults
 if nargin < 2
-    dataLines = [7, Inf];
+    dataLines = [1, Inf];
 end
 
 %% Setup the Import Options and import the data
