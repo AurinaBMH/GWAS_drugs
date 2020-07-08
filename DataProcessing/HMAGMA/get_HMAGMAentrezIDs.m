@@ -2,8 +2,11 @@
 % This script imports HMAGMA output files and assigns each gene an entrezID
 %--------------------------------------------------------------------------- 
 
-Disorders = {'ADHD', 'MDD2', 'SCZ', 'DIABETES', 'BIP2', 'HF', 'AD'}; 
+Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'}; 
 whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLpec'}; 
+% MAGMA: 'MAGMAdefault'
+% MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 
+% eMAGMA: 'eQTLpec'
 
 % load gene ID matching file and select genes that have entrezIDs
 entrezID = importGENEIDfile('data/GWASlists/BIOMART_geneIDs.txt'); 
