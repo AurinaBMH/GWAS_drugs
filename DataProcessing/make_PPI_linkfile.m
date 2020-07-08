@@ -3,6 +3,7 @@
 % corresponding gene names based on biomart annotation. 
 %----------------------------------------------------------------------
 clear all; 
+
 % load PPI network links
 PROTEINlinks = importPROTEINLINKSfile('9606.protein.links.v11.0.txt'); 
 P = PROTEINlinks(:,[1,2]); 
