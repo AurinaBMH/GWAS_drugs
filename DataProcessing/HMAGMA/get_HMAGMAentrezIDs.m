@@ -8,7 +8,7 @@ Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'}; 
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 
-% eMAGMA: 'eQTLpec'
+% eMAGMA: 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'
 
 % load gene ID matching file and select genes that have entrezIDs
 entrezID = importGENEIDfile('data/GWASlists/BIOMART_geneIDs.txt'); 
