@@ -19,18 +19,23 @@ for whatANNOT in 'MAGMAdefault' 'Adult_brain' 'Fetal_brain' 'Neuro' 'Astro'
 do
 ${WHEREISCODE}/magma --bfile ${WHEREIS1000G}/g1000_eur --gene-annot ${WHEREISANNOT}/${whatANNOT}.genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}
 cp ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}.genes.out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}_genes.txt
+done
 
 # do eMAGMA mapping using eQTL-based annotations send by Zac, these are based on the psychENCODE database
 # Options are chosen based on the example on github: https://github.com/eskederks/eMAGMA-tutorial.git
-
-# ###############Gene-based eMAGMA!############
+# eMAGMA using brain annotations
 ${WHEREISCODE}/magma --bfile ${WHEREIS1000G}/g1000_eur --gene-annot ${WHEREISANNOT}/pec_genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --gene-settings adap-permp=10000 --out ${WHEREISOUT}/pgc${DISORDER}_eQTLpec
 cp ${WHEREISOUT}/pgc${DISORDER}_eQTLpec.genes.out ${WHEREISOUT}/pgc${DISORDER}_eQTLpec_genes.txt
-# The --gene-settings flag also controls the settings for permutation-based empirical gene p-values,
-# using the fixed-permp or adap-permp modifiers to enable computation of an empirical p-value using
-# a fixed number of permutations or an adaptive permutation procedure respectively
+
+# run separately for eMAGMA using blood, heart, liver eQTLs (from GTEx)
+for whatANNOT in 'Whole_Blood' 'Liver' 'Heart_Left_Ventricle'
+do
+# ###############Gene-based eMAGMA!############
+${WHEREISCODE}/magma --bfile ${WHEREIS1000G}/g1000_eur --gene-annot ${WHEREISANNOT}/emagma_gtexv8_annot/${whatANNOT}.genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --gene-settings adap-permp=10000 --out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}
+cp ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}.genes.out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}_genes.txt
 
 done
+
 
 done
 
