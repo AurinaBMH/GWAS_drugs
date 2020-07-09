@@ -1,9 +1,11 @@
 %--------------------------------------------------------------------------- 
 % This script imports HMAGMA output files and assigns each gene an entrezID
 %--------------------------------------------------------------------------- 
+clear all; 
+close all; 
 
 Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'}; 
-whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLpec'}; 
+whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'}; 
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 
 % eMAGMA: 'eQTLpec'
@@ -21,11 +23,14 @@ entrezIDname = entrezID(:, {'entrezgene_id', 'external_gene_name'});
 [~, INDunique] = unique(entrezIDname, 'rows');
 entrezIDonly = entrezIDonly(INDunique,:); 
 
+% make a structure to save the formated outputs; 
+DISORDERlist=struct; 
+
 for D=1:length(Disorders)
     for A=1:length(whatANNOT)
         
         fileName = sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes.txt', Disorders{D}, whatANNOT{A});
-        if strcmp(whatANNOT{A}, 'eQTLpec')
+        if contains(whatANNOT{A}, 'eQTL')
             mapLIST = importeMAGMAoutfile(fileName);
         else
             mapLIST = importHMAGMAoutfile(fileName);
@@ -49,6 +54,7 @@ for D=1:length(Disorders)
         pThr = 0.05/size(mapLIST,1); 
         fprintf('%d genes\n', sum(mapLIST.P<pThr));
         
+        DISORDERlist.(whatANNOT{A}).(Disorders{D}) = mapLIST; 
         % there are also some cases where the same ENTREZis and same gene
         % name corresponds to several GENEIDs, if that's the case, keep one
 
@@ -56,5 +62,8 @@ for D=1:length(Disorders)
             Disorders{D}, whatANNOT{A}), 'Delimiter','\t'); 
     end
 end
+
+% save sigle file for future analyses
+save('data/GeneTaggingData/GWAS_disordersMAGMA.mat', 'DISORDERlist')
 
 
