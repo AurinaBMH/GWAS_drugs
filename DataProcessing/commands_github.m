@@ -9,3 +9,5 @@
 
 % compute distances between genes 
 distMatrix = ComputePPIDist(400,false);
+distMatrix = ComputePPIDist(0,false);
+distMatrix = ComputePPIDist([],true);
