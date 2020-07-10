@@ -1,4 +1,5 @@
-function geneScores = pipeline(whatDisease)
+function geneScores = pipeline(DISORDERlist, whatDisease)
+mappingMethods = fieldnames(DISORDERlist); 
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -15,7 +16,7 @@ end
 %-------------------------------------------------------------------------------
 params = SetDefaultParams();
 doWeighted = params.doWeighted;
-LDthreshold = params.LDthreshold;
+geneScore = params.geneScore;  
 
 %===============================================================================
 % LOAD DATA
@@ -33,14 +34,19 @@ fprintf(1,'Analyzing %u genes that have drug targets in our list\n',numUniqueGen
 %-------------------------------------------------------------------------------
 % Import SNP, gene, disease, GWAS, LD annotations for a given GWAS study:
 %-------------------------------------------------------------------------------
+
+
 SNPAnnotationTable = SNPAnnotationImport(whatDisease,LDthreshold);
 
-% Combine all mapped genes:
-allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
+% Directly mapped gened from standard MAGMA analysis will be used as inputs to PPI network and gene coexpression calculations
+% Set threshold to include diretcly mapped genes to PPI network
+% According to Zac's recommendation this could be a 0.05/number of genes identified through the MAGMA analysis; 
+listGENES = DISORDERlist.MAGMAdefault.(whatDisease);
+pThr = 0.05/size(listGENES,1); % Bonf correction for the number of genes in the list 
 
-% Add LD-genes:
-onlyLDDiseaseGenes = unique(vertcat(SNPAnnotationTable.LDgenes{:}));
-allLDDiseaseGenes = union(allMappedDiseaseGenes,onlyLDDiseaseGenes);
+%allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
+allMappedDiseaseGenes = listGENES.GENENAME(listGENES.P<=pThr); 
+
 
 %===============================================================================
 %======================CHARACTERIZATION MODULES=================================
@@ -54,12 +60,23 @@ geneScores.params = params;
 %-------------------------------------------------------------------------------
 % SNP->gene distance on DNA (mapped SNP, or LD SNP to a gene)
 %-------------------------------------------------------------------------------
-geneScores.DNA = TellMeDNADistance(allUniqueGenes,SNPAnnotationTable);
-
-%-------------------------------------------------------------------------------
-% eQTL Characterization:
-%-------------------------------------------------------------------------------
-% eQTL_info = TellMeQTL(allDiseaseGenesMapped,allUniqueGenes);
+for m=1:length(mappingMethods)
+    
+    scoreVectorZ = zeros(length(allUniqueGenes),1);
+    scoreVectorP = zeros(length(allUniqueGenes),1);
+    
+    mapping = mappingMethods{m};
+    mapTABLE = DISORDERlist.(mapping).(whatDisease);
+    % select genes that are drug targets
+    [~, INDput, INDtake] = intersect(allUniqueGenes, mapTABLE.GENENAME);
+    % give Z-stats to all mentioned genes and - to all others
+    
+    scoreVectorZ(INDput) = mapTABLE.ZSTAT(INDtake);
+    scoreVectorP(INDput) = -log10(mapTABLE.P(INDtake));
+    
+    geneScores.(mapping).ZSTAT = scoreVectorZ;
+    geneScores.(mapping).P = scoreVectorP;
+end
 
 %-------------------------------------------------------------------------------
 % PPIN characterization:
