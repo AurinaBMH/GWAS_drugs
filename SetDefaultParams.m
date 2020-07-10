@@ -13,7 +13,7 @@ params.PPINevidenceThreshold = 0;
 % SNP-gene mapping
 %-------------------------------------------------------------------------------
 % Threshold for linking SNPs through LD relationships:
-params.LDthreshold = 0.5;
+% params.LDthreshold = 0.5;
 
 %-------------------------------------------------------------------------------
 % Score for genes - could be ZSTAT, could be P

@@ -57,25 +57,35 @@ allMappedDiseaseGenes = listGENES.GENENAME(listGENES.P<=pThr);
 geneScores = struct();
 geneScores.params = params;
 
+geneWeights = {'ZSTAT', 'P', 'NSNPS', 'NSNPSnorm'}; 
 %-------------------------------------------------------------------------------
 % SNP->gene distance on DNA (mapped SNP, or LD SNP to a gene)
 %-------------------------------------------------------------------------------
 for m=1:length(mappingMethods)
     
-    scoreVectorZ = zeros(length(allUniqueGenes),1);
-    scoreVectorP = zeros(length(allUniqueGenes),1);
-    
-    mapping = mappingMethods{m};
-    mapTABLE = DISORDERlist.(mapping).(whatDisease);
-    % select genes that are drug targets
-    [~, INDput, INDtake] = intersect(allUniqueGenes, mapTABLE.GENENAME);
-    % give Z-stats to all mentioned genes and - to all others
-    
-    scoreVectorZ(INDput) = mapTABLE.ZSTAT(INDtake);
-    scoreVectorP(INDput) = -log10(mapTABLE.P(INDtake));
-    
-    geneScores.(mapping).ZSTAT = scoreVectorZ;
-    geneScores.(mapping).P = scoreVectorP;
+    for s=1:length(geneWeights)
+        % give an empty vector
+        scoreVector = zeros(length(allUniqueGenes),1);
+        
+        mapping = mappingMethods{m};
+        mapTABLE = DISORDERlist.(mapping).(whatDisease);
+        % select genes that are drug targets
+        [~, INDput, INDtake] = intersect(allUniqueGenes, mapTABLE.GENENAME);
+        
+        % give the selected score to all mentioned genes and keep 0 to all others
+        switch geneWeights{s}
+            case 'NSNPSnorm'
+                % give a score of NSNPS normalised to gene length
+                geneLength = mapTABLE.STOP-mapTABLE.START;
+                scoreVector(INDput) = mapTABLE.NSNPS(INDtake)./geneLength(INDtake);
+                
+            otherwise
+                scoreVector(INDput) = mapTABLE.(geneWeights{s})(INDtake);
+        end
+        
+        geneScores.(mapping).(geneWeights{s}) = scoreVector;
+        
+    end
 end
 
 %-------------------------------------------------------------------------------
