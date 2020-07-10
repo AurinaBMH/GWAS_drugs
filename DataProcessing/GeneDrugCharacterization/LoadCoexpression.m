@@ -13,12 +13,14 @@ switch zscoreOrSigmoid
 case 'zscore'
 
 case 'sigmoid'
-    fileName = 'geneXgeneCoexpressionSigmoidSquareform.mat';
+    % this file is the renamed version of
+    % 100DS360scaledRobustSigmoidNSGDSQC1Lcortex_ROI_NOdistCorrSurface.mat
+    fileName = '360geneExpression.mat.mat';
 end
 fprintf(1,'Loading data from %s\n',fileName);
-load(fileName,'geneCoexpressionDist','probeInformation');
-fprintf(1,'Loaded; now converting to square matrix of Spearman correlation values...');
-geneCoexp = 1-squareform(geneCoexpressionDist);
+load(fileName,'parcelExpression','probeInformation');
+fprintf(1,'Loaded; now calculating gene x gene coexpression ...');
+geneCoexp = corr(parcelExpression(:,2:end), 'type', 'Spearman', 'rows','complete');
 fprintf(1,' Done.\n');
 
 end
