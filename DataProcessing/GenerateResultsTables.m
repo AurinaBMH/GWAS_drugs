@@ -3,7 +3,7 @@
 % for each:
 
 % Diseases with SNP info, etc.:
-whatDiseases = {'ADHD','BIP','SZP','MDD','diabetes'};
+whatDiseases = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 params = SetDefaultParams();
 
 %-------------------------------------------------------------------------------
