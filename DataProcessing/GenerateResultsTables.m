@@ -12,7 +12,7 @@ params = SetDefaultParams();
 numDiseases = length(whatDiseases);
 for k = 1:numDiseases
     whatDisease = whatDiseases{k};
-    geneScores = pipeline(whatDisease);
+    geneScores = pipeline(DISORDERlist, whatDisease);
     % Save:
     fileName = sprintf('resultsTable_%s.mat',whatDisease);
     fileName = fullfile('DataOutput',fileName);

@@ -128,7 +128,7 @@ geneScores.PPI_eQTLbrain_weighted = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUn
 % For mapped SNPs:
 geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
 % Including LD SNPs:
-geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
+geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
 
 %===============================================================================
 % Assimilate results
