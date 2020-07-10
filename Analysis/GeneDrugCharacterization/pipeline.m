@@ -1,5 +1,8 @@
 function geneScores = pipeline(DISORDERlist, whatDisease)
+
+% use all mapping methods in the file
 mappingMethods = fieldnames(DISORDERlist); 
+
 % Pipeline for producing table characterizing individual genes
 %-------------------------------------------------------------------------------
 
@@ -8,7 +11,7 @@ mappingMethods = fieldnames(DISORDERlist);
 %-------------------------------------------------------------------------------
 if nargin < 1
     % GWAS hits from which disease?: 'all','SZP','ASD','ADHD','BIP','MDD'
-    whatDisease = 'MDD';
+    whatDisease = 'MDD2';
 end
 
 %-------------------------------------------------------------------------------
@@ -32,21 +35,20 @@ numUniqueGenes = length(allUniqueGenes);
 fprintf(1,'Analyzing %u genes that have drug targets in our list\n',numUniqueGenes);
 
 %-------------------------------------------------------------------------------
-% Import SNP, gene, disease, GWAS, LD annotations for a given GWAS study:
+% Get genes for a given GWAS study for different mapping methods:
 %-------------------------------------------------------------------------------
-
-
-SNPAnnotationTable = SNPAnnotationImport(whatDisease,LDthreshold);
 
 % Directly mapped gened from standard MAGMA analysis will be used as inputs to PPI network and gene coexpression calculations
 % Set threshold to include diretcly mapped genes to PPI network
 % According to Zac's recommendation this could be a 0.05/number of genes identified through the MAGMA analysis; 
-listGENES = DISORDERlist.MAGMAdefault.(whatDisease);
-pThr = 0.05/size(listGENES,1); % Bonf correction for the number of genes in the list 
+listGENESmapped = DISORDERlist.MAGMAdefault.(whatDisease);
+listGENESeQTLbrain = DISORDERlist.eQTLbrain.(whatDisease);
 
-%allMappedDiseaseGenes = unique(vertcat(SNPAnnotationTable.mappedGenes{:}));
-allMappedDiseaseGenes = listGENES.GENENAME(listGENES.P<=pThr); 
+pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list 
+pThr_e = 0.05/size(listGENESeQTLbrain,1); % Bonf correction for the number of genes in the list 
 
+allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<=pThr_m); 
+alleQTLbrainDiseaseGenes = listGENESeQTLbrain.GENENAME(listGENESeQTLbrain.P<=pThr_e); 
 
 %===============================================================================
 %======================CHARACTERIZATION MODULES=================================
@@ -92,32 +94,33 @@ end
 % PPIN characterization:
 %-------------------------------------------------------------------------------
 % Considering:
-% (i) Just mapped disease genes (genes with a GWAS SNP in them)
-% (ii) Include genes LD to GWAS SNPs
+% (i) Just mapped disease genes (genes with a GWAS SNP in them) 
+% - these will be from MAGMA analysis
+% (ii) Include genes that are brain eQTLs 
 
 % (*) binarized at zero evidence threshold:
 numSteps = 5;
 geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0,numSteps);
-% geneScores.PPI_LD_th0 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,0,numSteps);
+geneScores.PPI_eQTLbrain_th0 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,0,numSteps);
 
 % (*) binarized at an evidence threshold of 0.4:
 numSteps = 6;
 geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
-% geneScores.PPI_LD_th400 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,400,numSteps);
+geneScores.PPI_eQTLbrain_th400 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,400,numSteps);
 
 % (*) binarized at an evidence threshold of 0.6:
 numSteps = 6;
 geneScores.PPI_mapped_th600 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,600,numSteps);
-% geneScores.PPI_LD_th600 = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,false,600,numSteps);
+geneScores.PPI_eQTLbrain_th600 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,600,numSteps);
 
 % (*) Binarized at an evidence threshold of 0.9:
 numSteps = 6;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
-
+geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,900,numSteps);
 % (*) weighted:
 % numSteps = 6;
-% geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
-% geneScores.PPI_LD_weighted = TellMePPIInfo(allLDDiseaseGenes,allUniqueGenes,true,numSteps);
+geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
+geneScores.PPI_eQTLbrain_weighted = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,true,numSteps);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
@@ -125,7 +128,7 @@ geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes
 % For mapped SNPs:
 geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
 % Including LD SNPs:
-% geneScores.AllenMeanCoexpLD = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
+geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,allLDDiseaseGenes);
 
 %===============================================================================
 % Assimilate results
