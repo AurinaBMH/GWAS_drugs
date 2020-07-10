@@ -16,6 +16,11 @@ params.PPINevidenceThreshold = 0;
 params.LDthreshold = 0.5;
 
 %-------------------------------------------------------------------------------
+% Score for genes - could be ZSTAT, could be P
+%-------------------------------------------------------------------------------
+params.geneScore = 'ZSTAT'; 
+
+%-------------------------------------------------------------------------------
 % Scoring similarity between two sets of SNPs/genes
 %-------------------------------------------------------------------------------
 params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
