@@ -25,7 +25,8 @@ numGenes = size(AdjPPI,1);
 if doWeighted
     fprintf(1,'Computing weighted pairwise PPI distances between %u genes...\n',numGenes);
     % for the weighted version, input should be a distance matrix, not connectivity - should use an inverse of AdjPPI?
-    distMatrix = distance_wei(AdjPPI);
+    lengthPPI = 1./(AdjPPI); 
+    distMatrix = distance_wei(lengthPPI);
 else
     fprintf(1,'Computing binary pairwise PPI distances between %u genes...\n',numGenes);
     distMatrix = distance_bin(AdjPPI);
