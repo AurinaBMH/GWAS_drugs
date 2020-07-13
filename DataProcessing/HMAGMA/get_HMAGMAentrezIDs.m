@@ -4,7 +4,7 @@
 clear all;
 close all;
 
-Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+Disorders = {'ADHD', 'AUT', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'};
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro',
