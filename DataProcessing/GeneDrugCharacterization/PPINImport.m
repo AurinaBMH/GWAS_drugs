@@ -103,7 +103,7 @@ if doWeighted
     fprintf(1,'Weighted analysis: keeping all unique %u edges in the PPIN\n',numInteractions);
 else
     fprintf(1,'Filtered on evidence threshold %g -> %u edges in the PPIN\n',...
-                        evidenceScore_unique,numInteractions);
+                        evidenceThreshold,numInteractions);
 end
 
 clear('gene1','gene2','keepEdge','isGood','highEvidence');
