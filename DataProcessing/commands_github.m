@@ -8,6 +8,14 @@
 [AdjPPI,geneNames] = PPINImport(true);
 
 % compute distances between genes 
-distMatrix = ComputePPIDist(400,false);
 distMatrix = ComputePPIDist(0,false);
-distMatrix = ComputePPIDist([],true);
+distMatrix = ComputePPIDist(400,false);
+distMatrix = ComputePPIDist(600,false);
+distMatrix = ComputePPIDist(900,false);
+
+distMatrix = ComputePPIDist([],true); - % this takes ages, didn't finish in 3 days. 
+
+% now result tables are generated for each disorder
+GenerateResultsTables
+
+
