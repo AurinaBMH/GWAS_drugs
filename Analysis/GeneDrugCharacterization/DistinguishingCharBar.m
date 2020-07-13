@@ -1,15 +1,15 @@
 function DistinguishingCharBar(similarityType,whatProperty)
 
 if nargin < 1
-    similarityType = 'DNA';
+    similarityType = 'MAGMAdefault';
 end
 if nargin < 2
-    whatProperty = 'percGWAS';
+    whatProperty = 'ZSTAT';
     % 'numGWASMapped','numLDSNPs','percPPIneigh1Mapped','percPPIneigh1LD','AllenMeanCoexpMapped','AllenMeanCoexpLD'
 end
 addNull = true;
 
-whatDiseases_GWAS = {'ADHD','BIP','SZP','MDD','diabetes'};
+whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
