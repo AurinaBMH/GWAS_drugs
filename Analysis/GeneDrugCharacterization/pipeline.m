@@ -117,17 +117,19 @@ geneScores.PPI_eQTLbrain_th600 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqu
 numSteps = 6;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,900,numSteps);
-% (*) weighted:
+
+% (*) weighted: - weighted PPI distances are not calculated for now
 % numSteps = 6;
-geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
-geneScores.PPI_eQTLbrain_weighted = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,true,numSteps);
+
+%geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
+%geneScores.PPI_eQTLbrain_weighted = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,true,numSteps);
 
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
 %-------------------------------------------------------------------------------
-% For mapped SNPs:
+% For mapped genes: 
 geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
-% Including LD SNPs:
+% Including barin eQTL genes:
 geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
 
 %===============================================================================
