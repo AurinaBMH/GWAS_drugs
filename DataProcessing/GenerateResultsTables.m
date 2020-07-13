@@ -3,7 +3,7 @@
 % for each:
 
 % Diseases with SNP info, etc.:
-whatDiseases = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+whatDiseases = {'ADHD', 'AUT', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 % load information on genes mapped using different methods
 load('GWAS_disordersMAGMA.mat')
 params = SetDefaultParams();
