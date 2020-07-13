@@ -9,10 +9,14 @@ if nargin < 2
     whatMeasurement = 'GWAS';
 end
 if nargin < 3
-    similarityType = 'DNA';
+    similarityType = 'MAGMAdefault';
 end
 if nargin < 4
-    whatProperty = 'percGWAS';
+    if contains(similarityType, 'PPI')
+        whatProperty = 'percPPIneighbors1';
+    else
+        whatProperty = 'ZSTAT';
+    end
 end
 whatNorm = 1;
 
@@ -30,30 +34,37 @@ case 'GWAS'
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
-    switch similarityType
-    case 'DNA'
-        % numSNPs, numGWAS, percGWAS, numLD, percLD
-        geneWeights = geneScores.DNA.(whatProperty);
-    case 'PPI_weighted'
-        % numPPIneighbors1
-        % percPPIneighbors1
-        % weiPPIneighbors1
-        % medianPPIDistance
-        % meanPPIDistance
-        geneWeights = geneScores.PPI_mapped_weighted.(whatProperty);
-    case 'PPI_th0'
-        geneWeights = geneScores.PPI_mapped_th0.(whatProperty);
-    case 'PPI_th400'
-        geneWeights = geneScores.PPI_mapped_th400.(whatProperty);
-    case 'PPI_th600'
-        geneWeights = geneScores.PPI_mapped_th600.(whatProperty);
-    case 'PPI_th900'
-        geneWeights = geneScores.PPI_mapped_th900.(whatProperty);
-    case 'Expression'
-        geneWeights = geneScores.AllenMeanCoexpMapped;
-    otherwise
-        error('Unknown similarity type: ''%s''',similarityType);
+    
+    if strcmp(similarityType, 'AllenMeanCoexpMapped') || strcmp(similarityType, 'AllenMeanCoexpeQTLbrain')
+        geneWeights = geneScores.(similarityType);
+    else
+        geneWeights = geneScores.(similarityType).(whatProperty);
     end
+    
+%     switch similarityType
+%     case 'MAGMAdefault'
+%         % ZSTAT, P, NSNPS, NSNPSnorm
+%         geneWeights = geneScores.MAGMAdefault.(whatProperty);
+%     case 'PPI_weighted'
+%         % numPPIneighbors1
+%         % percPPIneighbors1
+%         % weiPPIneighbors1
+%         % medianPPIDistance
+%         % meanPPIDistance
+%         geneWeights = geneScores.PPI_mapped_weighted.(whatProperty);
+%     case 'PPI_th0'
+%         geneWeights = geneScores.PPI_mapped_th0.(whatProperty);
+%     case 'PPI_th400'
+%         geneWeights = geneScores.PPI_mapped_th400.(whatProperty);
+%     case 'PPI_th600'
+%         geneWeights = geneScores.PPI_mapped_th600.(whatProperty);
+%     case 'PPI_th900'
+%         geneWeights = geneScores.PPI_mapped_th900.(whatProperty);
+%     case 'Expression'
+%         geneWeights = geneScores.AllenMeanCoexpMapped;
+%     otherwise
+%         error('Unknown similarity type: ''%s''',similarityType);
+%     end
 end
 
 %-------------------------------------------------------------------------------
