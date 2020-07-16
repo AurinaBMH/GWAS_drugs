@@ -80,7 +80,9 @@ for m=1:length(mappingMethods)
                 % give a score of NSNPS normalised to gene length
                 geneLength = mapTABLE.STOP-mapTABLE.START;
                 scoreVector(INDput) = mapTABLE.NSNPS(INDtake)./geneLength(INDtake);
-                
+            case 'P'
+                % take the log10p to indicate p-values - higher values are "better"
+                scoreVector(INDput) = -log10(mapTABLE.(geneWeights{s})(INDtake));
             otherwise
                 scoreVector(INDput) = mapTABLE.(geneWeights{s})(INDtake);
         end
