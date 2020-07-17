@@ -5,13 +5,13 @@ if nargin < 1
     % {'MAGMAdefault';'Adult_brain';'Fetal_brain';'Neuro';'Astro';'eQTLbrain';'eQTLWhole_Blood';'eQTLLiver';'eQTLHeart_Left_Ventricle';'PPI_mapped_th0';'PPI_eQTLbrain_th0';'PPI_mapped_th400';'PPI_eQTLbrain_th400';'PPI_mapped_th600';'PPI_eQTLbrain_th600';'PPI_mapped_th900';'PPI_eQTLbrain_th900';'AllenMeanCoexpMapped';'AllenMeanCoexpeQTLbrain'}
 end
 if nargin < 2
-    whatProperty = 'ZSTAT';
+    whatProperty = 'P';
     % for MAGMA-based: {'ZSTAT';'P';'NSNPS';'NSNPSnorm'}
     % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
 addNull = true;
 
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+whatDiseases_GWAS = {'ADHD', 'AUT', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
