@@ -24,14 +24,16 @@ load('resultsTable_ADHD.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params'}); 
 
 for t=1:length(similarityTypes)
-   
+    
     if contains(similarityTypes{t},'PPI')
         whatProperty = 'percPPIneighbors1';
+        
     elseif contains(similarityTypes{t},'Allen')
         whatProperty = 'r';
-    else 
+    else
         whatProperty = 'ZSTAT';
     end
+    
     DistinguishingCharBar(similarityTypes{t},whatProperty)
     figureName = sprintf('figures/GWASdrug_%s_%s', similarityTypes{t},whatProperty);
     print(gcf,figureName,'-dpng','-r300');
