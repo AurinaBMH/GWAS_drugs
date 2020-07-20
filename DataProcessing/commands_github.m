@@ -26,7 +26,11 @@ similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params'});
 for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
-        whatProperty = 'percPPIneighbors1';
+        whatProperty = 'percPPIneighbors3';
+        
+        DistinguishingCharBar(similarityTypes{t},whatProperty)
+        figureName = sprintf('figures/GWASdrug_%s_%s', similarityTypes{t},whatProperty);
+        print(gcf,figureName,'-dpng','-r300');
         
     elseif contains(similarityTypes{t},'Allen')
         whatProperty = 'r';
@@ -34,9 +38,9 @@ for t=1:length(similarityTypes)
         whatProperty = 'ZSTAT';
     end
     
-    DistinguishingCharBar(similarityTypes{t},whatProperty)
-    figureName = sprintf('figures/GWASdrug_%s_%s', similarityTypes{t},whatProperty);
-    print(gcf,figureName,'-dpng','-r300');
+    %     DistinguishingCharBar(similarityTypes{t},whatProperty)
+    %     figureName = sprintf('figures/GWASdrug_%s_%s', similarityTypes{t},whatProperty);
+    %     print(gcf,figureName,'-dpng','-r300');
     
 end
 

@@ -1,4 +1,4 @@
-function geneScores = pipeline(DISORDERlist, whatDisease)
+function geneScores = pipeline(DISORDERlist, whatDisease, whatThreshold)
 
 % use all mapping methods in the file
 mappingMethods = fieldnames(DISORDERlist); 
@@ -20,7 +20,6 @@ end
 params = SetDefaultParams();
 doWeighted = params.doWeighted;
 geneScore = params.geneScore; 
-whatThreshold = params.whatThreshold; 
 
 %===============================================================================
 % LOAD DATA
