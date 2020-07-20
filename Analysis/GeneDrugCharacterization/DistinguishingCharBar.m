@@ -11,7 +11,7 @@ if nargin < 2
 end
 addNull = true;
 
-whatDiseases_GWAS = {'ADHD', 'AUT', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
