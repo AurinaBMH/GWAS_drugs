@@ -19,7 +19,8 @@ end
 %-------------------------------------------------------------------------------
 params = SetDefaultParams();
 doWeighted = params.doWeighted;
-geneScore = params.geneScore;  
+geneScore = params.geneScore; 
+whatThreshold = params.whatThreshold; 
 
 %===============================================================================
 % LOAD DATA
@@ -44,11 +45,20 @@ fprintf(1,'Analyzing %u genes that have drug targets in our list\n',numUniqueGen
 listGENESmapped = DISORDERlist.MAGMAdefault.(whatDisease);
 listGENESeQTLbrain = DISORDERlist.eQTLbrain.(whatDisease);
 
-pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list 
-pThr_e = 0.05/size(listGENESeQTLbrain,1); % Bonf correction for the number of genes in the list 
+switch whatThreshold
+    case 'BF'
+        pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
+        pThr_e = 0.05/size(listGENESeQTLbrain,1); % Bonf correction for the number of genes in the list
+        allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
+        alleQTLbrainDiseaseGenes = listGENESeQTLbrain.GENENAME(listGENESeQTLbrain.P<pThr_e);
+        
+    case 'FDR'
+        pFDR_m = mafdr(listGENESmapped.P, 'BHFDR', true);
+        pFDR_e = mafdr(listGENESeQTLbrain.P, 'BHFDR', true);
+        allMappedDiseaseGenes = listGENESmapped.GENENAME(pFDR_m<0.05);
+        alleQTLbrainDiseaseGenes = listGENESeQTLbrain.GENENAME(pFDR_e<0.05);
+end
 
-allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<=pThr_m); 
-alleQTLbrainDiseaseGenes = listGENESeQTLbrain.GENENAME(listGENESeQTLbrain.P<=pThr_e); 
 
 %===============================================================================
 %======================CHARACTERIZATION MODULES=================================
