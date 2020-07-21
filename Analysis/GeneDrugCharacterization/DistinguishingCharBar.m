@@ -18,6 +18,8 @@ whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gas
 % Load in default parameters:
 params = SetDefaultParams();
 whatScore = params.whatScore;
+whatThreshold = params.whatThreshold; 
+
 
 %-------------------------------------------------------------------------------
 numDiseases_Treatment = length(whatDiseases_Treatment);
@@ -33,7 +35,7 @@ f = figure('color','w');
 ax = cell(numDiseases_GWAS,1);
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
-    [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty);
+    [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
 
     % Combine two datasets on overlap:
     [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');

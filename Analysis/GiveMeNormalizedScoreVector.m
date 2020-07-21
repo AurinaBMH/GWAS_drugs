@@ -1,4 +1,4 @@
-function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector(whatDisease,whatMeasurement,similarityType,whatProperty)
+function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector(whatDisease,whatMeasurement,similarityType,whatProperty, whatThreshold)
 %-------------------------------------------------------------------------------
 % Inputs:
 %-------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ case 'Drug'
     geneWeights = indicatorTable.(whatDisease);
 case 'GWAS'
     % Load data:
-    fileName = sprintf('resultsTable_%s.mat',whatDisease);
+    fileName = sprintf('resultsTable_%s_%s.mat',whatDisease, whatThreshold);
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
@@ -41,30 +41,6 @@ case 'GWAS'
         geneWeights = geneScores.(similarityType).(whatProperty);
     end
     
-%     switch similarityType
-%     case 'MAGMAdefault'
-%         % ZSTAT, P, NSNPS, NSNPSnorm
-%         geneWeights = geneScores.MAGMAdefault.(whatProperty);
-%     case 'PPI_weighted'
-%         % numPPIneighbors1
-%         % percPPIneighbors1
-%         % weiPPIneighbors1
-%         % medianPPIDistance
-%         % meanPPIDistance
-%         geneWeights = geneScores.PPI_mapped_weighted.(whatProperty);
-%     case 'PPI_th0'
-%         geneWeights = geneScores.PPI_mapped_th0.(whatProperty);
-%     case 'PPI_th400'
-%         geneWeights = geneScores.PPI_mapped_th400.(whatProperty);
-%     case 'PPI_th600'
-%         geneWeights = geneScores.PPI_mapped_th600.(whatProperty);
-%     case 'PPI_th900'
-%         geneWeights = geneScores.PPI_mapped_th900.(whatProperty);
-%     case 'Expression'
-%         geneWeights = geneScores.AllenMeanCoexpMapped;
-%     otherwise
-%         error('Unknown similarity type: ''%s''',similarityType);
-%     end
 end
 
 %-------------------------------------------------------------------------------
