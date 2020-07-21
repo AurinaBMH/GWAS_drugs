@@ -1,4 +1,4 @@
-function DistinguishingCharBar(similarityType,whatProperty)
+function DistinguishingCharBar(similarityType,whatProperty, whatThreshold)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -9,6 +9,11 @@ if nargin < 2
     % for MAGMA-based: {'ZSTAT';'P';'NSNPS';'NSNPSnorm'}
     % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
+
+if nargin <3
+    whatThreshold = 'BF';
+end
+
 addNull = true;
 
 whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
@@ -18,8 +23,6 @@ whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gas
 % Load in default parameters:
 params = SetDefaultParams();
 whatScore = params.whatScore;
-whatThreshold = params.whatThreshold; 
-
 
 %-------------------------------------------------------------------------------
 numDiseases_Treatment = length(whatDiseases_Treatment);
