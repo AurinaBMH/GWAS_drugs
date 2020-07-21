@@ -60,7 +60,7 @@ for i = 1:numDiseases_GWAS
     end
 
     % Generate null distributions:
-    numNulls = 500;
+    numNulls = 5000;
     nullScores = zeros(numNulls,1);
     whatNull = 'randomDisease'; % randomWeight, randomDisease
     for k = 1:numNulls
