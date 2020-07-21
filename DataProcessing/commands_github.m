@@ -22,7 +22,7 @@ GenerateResultsTables;
 % load ADHD as example to select mapping methods
 load('resultsTable_ADHD_FDR.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params'}); 
-whatThreshold = 'FDR'; 
+whatThreshold = 'BF'; 
 
 for t=1:length(similarityTypes)
     
@@ -36,8 +36,8 @@ for t=1:length(similarityTypes)
     end
     
     DistinguishingCharBar(similarityTypes{t},whatProperty, whatThreshold)
-    figureName = sprintf('figures/GWASdrug_%s_%s_%s', similarityTypes{t},whatProperty, whatThreshold);
-    print(gcf,figureName,'-dpng','-r300');
+%     figureName = sprintf('figures/GWASdrug_%s_%s_%s', similarityTypes{t},whatProperty, whatThreshold);
+%     print(gcf,figureName,'-dpng','-r300');
 
 end
 
