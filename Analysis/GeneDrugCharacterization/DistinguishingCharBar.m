@@ -109,7 +109,7 @@ for i = 1:numDiseases_GWAS
             end
             minLim = min(rhos)*0.9;
             null_p10 = quantile(nullScores,0.1);
-            if minLim > null_p10;
+            if minLim > null_p10
                 minLim = null_p10*0.9;
             end
             ax{i}.YLim = [minLim,maxLim];

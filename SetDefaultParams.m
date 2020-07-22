@@ -18,7 +18,7 @@ params.PPINevidenceThreshold = 0;
 %-------------------------------------------------------------------------------
 % Score for genes - could be ZSTAT, could be P
 %-------------------------------------------------------------------------------
-params.geneScore = 'ZSTAT'; 
+params.geneScore = 'P'; 
 
 %-------------------------------------------------------------------------------
 % Scoring similarity between two sets of SNPs/genes
