@@ -26,7 +26,7 @@ similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'PPI_mapped_th0', 'PPI_mapped_th400'});
 
 whatThreshold = 'BF'; 
-
+whatNull = 'randomGene'; 
 for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
@@ -39,9 +39,9 @@ for t=1:length(similarityTypes)
         whatProperty = 'P';
     end
     
-    DistinguishingCharBar(similarityTypes{t},whatProperty, whatThreshold)
-    %figureName = sprintf('figures/GWASdrug_%s_%s_%s', similarityTypes{t},whatProperty, whatThreshold);
-    %print(gcf,figureName,'-dpng','-r300');
+    DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold)
+    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
+    print(gcf,figureName,'-dpng','-r300');
     
     
 end

@@ -1,4 +1,4 @@
-function DistinguishingCharBar(similarityType,whatProperty, whatThreshold)
+function DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -9,14 +9,24 @@ if nargin < 2
     % for MAGMA-based: {'ZSTAT';'P';'NSNPS';'NSNPSnorm'}
     % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
-
-if nargin <3
+if nargin < 3
+    whatNull = 'randomDisease'; 
+end
+if nargin <4
     whatThreshold = 'BF';
 end
 
 addNull = true;
 
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+switch whatNull
+    case 'randomGene'
+        % if using randomGene null, then don't include AD - it has no drug
+        % targets
+        whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
+    otherwise
+        whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+end
+
 whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
@@ -62,7 +72,7 @@ for i = 1:numDiseases_GWAS
     % Generate null distributions:
     numNulls = 1000;
     nullScores = zeros(numNulls,1);
-    whatNull = 'randomPsychDisease'; % randomWeight, randomDisease
+    
     for k = 1:numNulls
         switch whatNull
             case 'randomWeight'
@@ -93,7 +103,23 @@ for i = 1:numDiseases_GWAS
                 diseaseInd = selectDIS_IND(randi(num_DIS,1));
                 geneWeightsRand = drugScores(:,diseaseInd);
                 nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+            case 'randomGene'
+                % shuffle genes within the drugs for the selected disorder
+                % - do drugs for the disorder match GWAS hits better than a
+                % random set of gene targets with the same properties; 
+                % this can only be done for GWAS lists with drugs; , so not for AD; 
+                switch whatDisease
+                    case 'HF'
+                diseaseInd = contains(whatDiseases_Treatment, 'cardiology', 'IgnoreCase',true); 
+                    otherwise
+                indLET = isletter(whatDisease);
+                diseaseInd = contains(whatDiseases_Treatment, whatDisease(indLET), 'IgnoreCase',true); 
+                end
                 
+                drugScores_DIS = drugScores(:,diseaseInd);
+                geneWeightsRand = drugScores_DIS(randperm(numel(drugScores_DIS))); 
+                nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+            case 'randomGenePsych'
                 
         end
     end
