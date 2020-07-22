@@ -59,8 +59,8 @@ simScore = (geneWeights_GWAS + geneWeights_treatment);
 % Scatter plot:
 f = figure('color','w'); hold on
 plot(geneWeights_GWAS,geneWeights_treatment,'ok')
-xlabel(sprintf('gene scoreâ€”-%sGWAS-%s',whatDiseaseGWAS,whatProperty))
-ylabel(sprintf('gene scoreâ€”-%sdrugs',whatDiseaseDrug))
+xlabel(sprintf('gene score”-%sGWAS-%s',whatDiseaseGWAS,whatProperty))
+ylabel(sprintf('gene score”-%sdrugs',whatDiseaseDrug))
 [rho,p] = corr(geneWeights_GWAS,geneWeights_treatment,'type','Spearman');
 title(sprintf('rho = %.2f (p = %.3g)\n',rho,p));
 

@@ -17,7 +17,7 @@ end
 addNull = true;
 
 whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
-whatDiseases_Treatment = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
+whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
@@ -62,18 +62,39 @@ for i = 1:numDiseases_GWAS
     % Generate null distributions:
     numNulls = 1000;
     nullScores = zeros(numNulls,1);
-    whatNull = 'randomDisease'; % randomWeight, randomDisease
+    whatNull = 'randomPsychDisease'; % randomWeight, randomDisease
     for k = 1:numNulls
         switch whatNull
-        case 'randomWeight'
-            geneWeightsRand = rand(numDrugScores,1);
-            nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS);
-        case 'randomDisease'
-            % Shuffle weights taken from a random disease (pooled nulls):
-            % [could be done individually for each particular weighting if needed]
-            diseaseInd = randi(numDiseases_Treatment,1);
-            geneWeightsRand = drugScores(:,diseaseInd);
-            nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+            case 'randomWeight'
+                geneWeightsRand = rand(numDrugScores,1);
+                nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS);
+            case 'randomDisease'
+                % Shuffle weights taken from a random disease (pooled nulls):
+                % [could be done individually for each particular weighting if needed]
+                diseaseInd = randi(numDiseases_Treatment,1);
+                geneWeightsRand = drugScores(:,diseaseInd);
+                nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+            case 'randomPsychDisease'
+                % based on GWAS list, constrain the null to only shuffle the
+                % psychiatric disorders or non-psychiatric;
+                
+                psychDIS = contains(whatDiseases_Treatment, 'ADHD') | contains(whatDiseases_Treatment, 'BIP') | ...
+                        contains(whatDiseases_Treatment, 'SCZ') | contains(whatDiseases_Treatment, 'MDD');
+                
+                % find columns for psychiatric drug lists
+                if strcmp(whatDisease, 'ADHD') || strcmp(whatDisease,'MDD2') || ...
+                        strcmp(whatDisease, 'SCZ') || strcmp(whatDisease, 'BIP2')
+                    selectDIS_IND = find(psychDIS); 
+                else
+                    selectDIS_IND = find(psychDIS==0); 
+                end
+                
+                num_DIS = length(selectDIS_IND);
+                diseaseInd = selectDIS_IND(randi(num_DIS,1));
+                geneWeightsRand = drugScores(:,diseaseInd);
+                nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+                
+                
         end
     end
 

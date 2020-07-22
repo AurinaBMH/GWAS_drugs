@@ -3,20 +3,25 @@ function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector(w
 % Inputs:
 %-------------------------------------------------------------------------------
 if nargin < 1
-    whatDisease = 'SZP';
+    whatDisease = 'SCZ';
 end
 if nargin < 2
     whatMeasurement = 'GWAS';
 end
 if nargin < 3
     similarityType = 'MAGMAdefault';
+    fprintf('using %s similarity type by DEFAULT\n', similarityType)
 end
 if nargin < 4
     if contains(similarityType, 'PPI')
         whatProperty = 'percPPIneighbors1';
     else
-        whatProperty = 'ZSTAT';
+        whatProperty = 'P';
     end
+end
+if nargin <5
+     whatThreshold = 'BF'; 
+     fprintf('using %s threshold by DEFAULT\n', whatThreshold)
 end
 whatNorm = 1;
 
@@ -34,6 +39,7 @@ case 'GWAS'
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
+
     
     if strcmp(similarityType, 'AllenMeanCoexpMapped') || strcmp(similarityType, 'AllenMeanCoexpeQTLbrain')
         geneWeights = geneScores.(similarityType);

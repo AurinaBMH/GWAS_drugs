@@ -11,10 +11,9 @@ if normalizeWithinDrugs
 end
 
 %-------------------------------------------------------------------------------
-% What diseases to consider (each must point to its own .csv file of annotations)
-whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
+whatDiseases = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
@@ -38,7 +37,7 @@ for k = 1:numDiseases
             fileName = 'Treatment-list-ADHD-4thMay2018.csv';
         case 'BIP'
             fileName = 'Treatment-list-BIP-7thMay2018.csv';
-        case 'SZP'
+        case 'SCZ'
             fileName = 'Treatment-list-SZ-4thMay2018.csv';
         case 'MDD'
             fileName = 'Treatment-list-MDD-7thMay2018.csv';

@@ -50,9 +50,7 @@ end
 % 1. Map gene names (HGNC) -> names that match in the PPIN
 % I've distinguished these as genesChar -> allUniqueProteins
 %-------------------------------------------------------------------------------
-% mapHow = 'UniProt'; % original method (no good)
-% mapHow = 'HGNC_map'; % Janette's new method for mapping... (needs proteins)
-% mapHow = 'exact';
+
 switch whatPPIData
 case 'HGNCmatch'
     % No need to map out to other nomenclatures because data is already in the format
@@ -60,14 +58,7 @@ case 'HGNCmatch'
 otherwise
     warning('Unknown dataset, how should I match gene names -> protein names for optimal matching?')
 end
-% switch mapHow
-% case 'UniProt'
-%     fprintf(1,'Mapping gene names to UniProt protein names. This actually makes things worse\n');
-%     [geneNameHGNC,proteinNameUniprot,allUniqueProteins] = ImportGeneUniProt(genesChar,PPIN.geneNames);
-% case 'HGNC_map'
-%     fprintf(1,'Mapping gene names to PPIN names (this only minimally helps)...\n');
-%     allUniqueProteins = ImportProteinGeneMapping(genesChar,PPIN.geneNames);
-% end
+
 
 %-------------------------------------------------------------------------------
 % Get indices of mapped disease genes on PPI network:
@@ -94,6 +85,8 @@ end
 numGenesChar = length(genesChar);
 numPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
+weiPPIneighbors = cell(numSteps,1);
+expWeiPPIneighbors = cell(numSteps,1);
 hasPath = cell(numSteps,1);
 meanPPIDistance = nan(numGenesChar,1);
 medianPPIDistance = nan(numGenesChar,1);

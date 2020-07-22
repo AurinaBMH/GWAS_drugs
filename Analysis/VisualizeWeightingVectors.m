@@ -1,14 +1,14 @@
-% Parameters:
-whichDiseases = {'ADHD','MDD','BIP','SZP'}; % 'diabetes','pulmonary','cardiology','gastro'};
-% whatMeasurement = 'Drug';
-whatMeasurement = 'GWAS';
-% similarityType = 'DNA';
-% whatProperty = 'percGWAS';
-similarityType = 'PPI_th0';
-whatProperty = 'percPPIneighbors1';
-numTop = 30; % Look at the top X genes in particular
+function data = VisualizeWeightingVectors(whichDiseases, whatMeasurement, similarityType, whatProperty)
+
+if nargin < 3
+    similarityType = 'MAGMAdefault'; 
+end
+if nargin < 4
+    whatProperty = 'P'; 
+end
+numTop = 50; % Look at the top X genes in particular
 orderByWhat = 'max';
-cMapMax = 0.20;
+cMapMax = 0.03;
 
 %-------------------------------------------------------------------------------
 numDiseases = length(whichDiseases);
@@ -50,7 +50,7 @@ ax.XTickLabel = geneNames;
 ax.XTickLabelRotation = 90;
 cB = colorbar;
 cB.Label.String = 'Normalized treatment weight';
-caxis([0,cMapMax])
+%caxis([0,cMapMax])
 % Title:
 extraText = '';
 if strcmp(whatMeasurement,'GWAS')
@@ -59,3 +59,4 @@ end
 title(sprintf('%s weightings over genes (%s)',whatMeasurement,extraText),...
                     'interpreter','none')
 f.Position = [855   870   569   234];
+end
