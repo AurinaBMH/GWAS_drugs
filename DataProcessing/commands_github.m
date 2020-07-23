@@ -85,3 +85,10 @@ subplot(1,4,2); histogram(indicatorTable.diabetes); title('DIABETES'); xlim([0 0
 subplot(1,4,3); histogram(indicatorTable.cardiology); title('CARDIOLOGY'); xlim([0 0.25]); ylim([0 600])
 subplot(1,4,4); histogram(indicatorTable.gastro); title('GASTRO'); xlim([0 0.25]); ylim([0 600])
 
+% visualise GWAS and drug vectors side by side for a pair of selected disorders
+whatDiseaseGWAS = 'DIABETES'; % select from: 'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'; 
+whatDiseaseDRUG = 'diabetes'; % select from: 'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'
+similarityType = 'PPI_mapped_th600'; 
+whatProperty = 'percPPIneighbors1'; 
+data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty);
+

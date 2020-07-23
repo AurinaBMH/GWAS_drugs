@@ -1,5 +1,5 @@
 % plot drug and gene scores for each disorder
-function VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty)
+function data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty)
 
 if nargin <3
     similarityType = 'MAGMAdefault';
@@ -11,9 +11,9 @@ if nargin <4
 end
 numTop = 100;
 
-[geneNamesDrug,geneWeightsNormDrug] = GiveMeNormalizedScoreVector(whatDiseaseGWAS,'Drug');
+[geneNamesDrug,geneWeightsNormDrug] = GiveMeNormalizedScoreVector(whatDiseaseDRUG,'Drug');
                                 
-[geneNamesGWAS,geneWeightsNormGWAS] = GiveMeNormalizedScoreVector(whatDiseaseDRUG,...
+[geneNamesGWAS,geneWeightsNormGWAS] = GiveMeNormalizedScoreVector(whatDiseaseGWAS,...
                                     'GWAS',similarityType,whatProperty);
                                 
 [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
@@ -39,10 +39,10 @@ ax.XTickLabel = geneNames;
 ax.XTickLabelRotation = 90;
 cB = colorbar;
 cB.Label.String = 'Normalized treatment weight';
-%caxis([0,cMapMax])
+caxis([0,max(data(1,:))])
 % Title:
 extraText = sprintf('%s-%s',similarityType,whatProperty);
-title(sprintf('%s weightings over genes (%s)',whatDisease,extraText),...
+title(sprintf('%s weightings over genes (%s)',whatDiseaseGWAS,extraText),...
                     'interpreter','none')
 f.Position = [855   870   569   234];
 end
