@@ -54,5 +54,6 @@ end
 r = ~isnan(geneWeights);
 geneWeightsNorm = geneWeights;
 geneWeightsNorm(r) = geneWeightsNorm(r)/norm(geneWeights(r),whatNorm);
+% max(geneWeights(r)); %
 
 end
