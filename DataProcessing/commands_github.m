@@ -64,7 +64,7 @@ whatPropertys = {'P', 'P', 'percPPIneighbors1'};
 
 for k=1:length(similarityTypes)
     
-    data = VisualizeWeightingVectors(whichDiseases, whatMeasurement, similarityTypes{k}, whatPropertys{k}); 
+    VisualizeWeightingVectors(whichDiseases, whatMeasurement, similarityTypes{k}, whatPropertys{k}); 
     figureName = sprintf('figures/geneWeights_%s_%s_%s', whatMeasurement, similarityTypes{k}, whatPropertys{k}); 
     print(gcf,figureName,'-dpng','-r300');
     
