@@ -16,6 +16,9 @@ if nargin <4
     whatThreshold = 'BF';
 end
 
+if strcmp(whatNull, 'randomGene')
+    load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
+end
 addNull = true;
 
 whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
@@ -119,7 +122,7 @@ for i = 1:numDiseases_GWAS
                             % select a random set of genes from GWAS scores - keep
                             % drugs the same, randomise GWAS scores; This is
                             % suitable only for MAGMA-based  methods;
-                            load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
+                            
                             switch whatProperty
                                 case 'P'
                                     geneWeightsGWAS_all = -log10(DISORDERlist.(similarityType).(whatDisease).(whatProperty));
