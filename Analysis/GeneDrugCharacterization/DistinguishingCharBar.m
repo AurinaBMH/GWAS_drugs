@@ -116,7 +116,7 @@ for i = 1:numDiseases_GWAS
                 % separate set of nulls for each drug target list
                 switch whatNull
                     
-                    case 'randomGene'
+                    case 'randomGene' % is the actual match higher than a match with completely random genes
                         if ~contains(similarityType, 'PPI') && ~contains(similarityType, 'Allen')
                             % for this null, load all available scores for genes
                             % select a random set of genes from GWAS scores - keep
@@ -141,9 +141,8 @@ for i = 1:numDiseases_GWAS
                             
                         end
                         
-                    case 'randomDrug'
-                        % for each drug list, randomise gene scores, get
-                        % null distribution for each column
+                    case 'randomDrug' % is the actual match higher than a match with random gene score assignment
+                        % for each drug list, randomise gene scores, get null distribution for each column
                         drugScores_DIS = drugScores(:,l);
                         geneWeightsRand = drugScores_DIS(randperm(numel(drugScores_DIS)));
                         nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
