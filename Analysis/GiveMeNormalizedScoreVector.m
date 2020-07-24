@@ -51,9 +51,6 @@ end
 
 %-------------------------------------------------------------------------------
 % Normalize (non-NaN elements) to unit vector as 2-norm:
-r = ~isnan(geneWeights);
-geneWeightsNorm = geneWeights;
-geneWeightsNorm(r) = geneWeightsNorm(r)/norm(geneWeights(r),whatNorm);
-% max(geneWeights(r)); %
+geneWeightsNorm = normalizeScoreVector(geneWeights, whatNorm); 
 
 end

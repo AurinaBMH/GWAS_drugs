@@ -1,6 +1,6 @@
 function geneWeightsNorm = normalizeScoreVector(geneWeights, whatNorm)
 if nargin < 2
-    whatNorm = 1; 
+    whatNorm = 1; % as currently in the 
 end
 
 r = ~isnan(geneWeights);
