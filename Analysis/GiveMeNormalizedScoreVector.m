@@ -23,7 +23,7 @@ if nargin <5
      whatThreshold = 'BF'; 
      fprintf('using %s threshold by DEFAULT\n', whatThreshold)
 end
-whatNorm = 1;
+whatNorm = 2;
 
 %-------------------------------------------------------------------------------
 

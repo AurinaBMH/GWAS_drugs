@@ -8,7 +8,7 @@ if nargin < 4
     minGoodProp = 0.4;
 end
 if nargin < 5
-    whatNorm = 2;
+    whatNorm = 1;
 end
 %-------------------------------------------------------------------------------
 
