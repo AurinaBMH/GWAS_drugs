@@ -131,7 +131,8 @@ for i = 1:numDiseases_GWAS
                             end
                             
                             geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
-                            nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_rand,true);
+                            geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand); 
+                            nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm,true);
                         else
                             
                             warning('% null is not compatible with %s\n', whatNull, whatNull)
