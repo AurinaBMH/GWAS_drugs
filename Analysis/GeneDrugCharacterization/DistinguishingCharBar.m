@@ -131,6 +131,8 @@ for i = 1:numDiseases_GWAS
                             end
                             
                             geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
+                            % normalizde the weights, by default this used
+                            % norm-1, but mabe should be chnaged to norm2?
                             geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand); 
                             nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm,true);
                         else
