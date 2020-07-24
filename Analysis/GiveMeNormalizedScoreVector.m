@@ -23,8 +23,10 @@ if nargin <5
      whatThreshold = 'BF'; 
      fprintf('using %s threshold by DEFAULT\n', whatThreshold)
 end
-whatNorm = 2;
-
+whatNorm = 1;
+% this norm here doesn't matter as much, when computing the dot-product,
+% scores are re-normalized, so that's where it matters
+% but lley's use consistent
 %-------------------------------------------------------------------------------
 
 switch whatMeasurement
