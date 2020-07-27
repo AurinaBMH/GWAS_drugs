@@ -28,7 +28,7 @@ maxGene = max(data,[],1);
 
 [maxGeneSort,ix] = sort(maxGene,'descend');
 ix(isnan(maxGeneSort)) = []; % remove top genes that are actually NaNs
-dataALL = data(:,ix);
+dataALL = data; 
 data = data(:,ix(1:numTop));
 
 geneNames = geneNames(ix(1:numTop));

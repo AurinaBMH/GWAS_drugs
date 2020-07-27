@@ -22,12 +22,13 @@ GenerateResultsTables;
 % load ADHD as example to select mapping methods
 load('resultsTable_ADHD_FDR.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
-    'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400'...
-    'PPI_mapped_th0', 'PPI_mapped_th400'});
+    'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400',...
+    'PPI_mapped_th0', 'PPI_mapped_th400',...
+    'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'});
 
 whatThreshold = 'BF'; 
-whatNull = 'randomDisease'; 
-norm = 'norm1'; 
+whatNull = 'randomDrug'; 
+
 for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
@@ -41,7 +42,7 @@ for t=1:length(similarityTypes)
     end
     
     DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold)
-    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold, norm);
+    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
     print(gcf,figureName,'-dpng','-r300');
     
     
@@ -88,10 +89,10 @@ subplot(1,4,4); histogram(indicatorTable.gastro); title('GASTRO'); xlim([0 0.25]
 
 % visualise GWAS and drug vectors side by side for a pair of selected disorders
 % what pairs to visualise:
-whatDiseaseGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'BIP2'}; % select from: 'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'; 
-whatDiseaseDRUG = {'ADHD', 'MDD', 'SCZ', 'BIP', 'diabetes', 'cardiology', 'cardiology'}; % select from: 'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'
-similarityType = {'MAGMAdefault', 'eQTLbrain', 'Adult_brain', 'PPI_mapped_th600'}; 
-whatProperty = {'P', 'P', 'P', 'percPPIneighbors1'};
+whatDiseaseGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'}; % select from: 'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'; 
+whatDiseaseDRUG = {'ADHD', 'MDD', 'SCZ', 'BIP', 'diabetes', 'cardiology'}; % select from: 'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'
+similarityType = {'MAGMAdefault', 'PPI_mapped_th600'}; 
+whatProperty = {'P', 'percPPIneighbors1'};
 
 
 for D = 1:length(whatDiseaseGWAS)
@@ -99,7 +100,8 @@ figure;
     for T = 1:length(similarityType)
         subplot(length(similarityType),1,T);
         data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS{D}, whatDiseaseDRUG{D}, similarityType{T}, whatProperty{T}, false);
-
+        figureName = sprintf('figures/geneWeights_GWASvsDRUG_%s_%s', whatDiseaseGWAS{D}, whatDiseaseDRUG{D});
+        print(gcf,figureName,'-dpng','-r300');
     end
 end
 

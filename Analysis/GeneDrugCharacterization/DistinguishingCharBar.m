@@ -40,6 +40,7 @@ numDrugScores = length(drugScoresAll);
 
 %===============================================================================
 f = figure('color','w');
+sgtitle(sprintf('%s, %s',similarityType, whatProperty))
 ax = cell(numDiseases_GWAS,1);
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
