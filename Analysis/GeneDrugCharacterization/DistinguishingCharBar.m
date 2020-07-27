@@ -83,8 +83,8 @@ for i = 1:numDiseases_GWAS
                     geneWeightsRand = drugScores(:,diseaseInd);
                     nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
                 case 'randomPsychDisease'
-                    % based on GWAS list, constrain the null to only shuffle the
-                    % psychiatric disorders or non-psychiatric;
+                    % Shuffle weights taken from a random 
+                    % psychiatric disorders or non-psychiatric disease (pooled nulls):
                     
                     psychDIS = contains(whatDiseases_Treatment, 'ADHD') | contains(whatDiseases_Treatment, 'BIP') | ...
                         contains(whatDiseases_Treatment, 'SCZ') | contains(whatDiseases_Treatment, 'MDD');
@@ -134,7 +134,7 @@ for i = 1:numDiseases_GWAS
                             % normalizde the weights, by default this used
                             % norm-1, but mabe should be chnaged to norm2?
                             geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand); 
-                            nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm,true);
+                            nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm);
                         else
                             
                             warning('% null is not compatible with %s\n', whatNull, whatNull)
@@ -142,10 +142,10 @@ for i = 1:numDiseases_GWAS
                         end
                         
                     case 'randomDrug' % is the actual match higher than a match with random gene score assignment
-                        % for each drug list, randomise gene scores, get null distribution for each column
+                        % Shuffle weights taken from each drug list individually
                         drugScores_DIS = drugScores(:,l);
-                        geneWeightsRand = drugScores_DIS(randperm(numel(drugScores_DIS)));
-                        nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
+                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
+                        % randomise v1 within ComputeDotProduct
                 end
             end
             % Compute p-values: based on separate nulls

@@ -26,7 +26,8 @@ similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'PPI_mapped_th0', 'PPI_mapped_th400'});
 
 whatThreshold = 'BF'; 
-whatNull = 'randomGene'; 
+whatNull = 'randomDisease'; 
+norm = 'norm1'; 
 for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
@@ -40,7 +41,7 @@ for t=1:length(similarityTypes)
     end
     
     DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold)
-    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
+    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold, norm);
     print(gcf,figureName,'-dpng','-r300');
     
     
@@ -86,9 +87,19 @@ subplot(1,4,3); histogram(indicatorTable.cardiology); title('CARDIOLOGY'); xlim(
 subplot(1,4,4); histogram(indicatorTable.gastro); title('GASTRO'); xlim([0 0.25]); ylim([0 600])
 
 % visualise GWAS and drug vectors side by side for a pair of selected disorders
-whatDiseaseGWAS = 'DIABETES'; % select from: 'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'; 
-whatDiseaseDRUG = 'diabetes'; % select from: 'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'
-similarityType = 'PPI_mapped_th600'; 
-whatProperty = 'percPPIneighbors1'; 
-data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty);
+% what pairs to visualise:
+whatDiseaseGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'BIP2'}; % select from: 'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'; 
+whatDiseaseDRUG = {'ADHD', 'MDD', 'SCZ', 'BIP', 'diabetes', 'cardiology', 'cardiology'}; % select from: 'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'
+similarityType = {'MAGMAdefault', 'eQTLbrain', 'Adult_brain', 'PPI_mapped_th600'}; 
+whatProperty = {'P', 'P', 'P', 'percPPIneighbors1'};
+
+
+for D = 1:length(whatDiseaseGWAS)
+figure; 
+    for T = 1:length(similarityType)
+        subplot(length(similarityType),1,T);
+        data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS{D}, whatDiseaseDRUG{D}, similarityType{T}, whatProperty{T}, false);
+
+    end
+end
 

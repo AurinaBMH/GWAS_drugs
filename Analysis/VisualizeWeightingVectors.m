@@ -7,7 +7,7 @@ if nargin < 4
     whatProperty = 'P'; 
 end
 numTop = 50; % Look at the top X genes in particular
-orderByWhat = 'max';
+orderByWhat = 'mean';
 cMapMax = 0.03;
 
 %-------------------------------------------------------------------------------

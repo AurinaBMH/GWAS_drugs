@@ -1,5 +1,5 @@
 % plot drug and gene scores for each disorder
-function data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty)
+function dataALL = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS, whatDiseaseDRUG, similarityType, whatProperty, plotSeparate)
 
 if nargin <3
     similarityType = 'MAGMAdefault';
@@ -8,6 +8,9 @@ end
 if nargin <4
     whatProperty = 'P';
     fprintf('Ploting MEASURE %s by DEFAULT', whatProperty)
+end
+if nargin <5
+    plotSeparate = 1;
 end
 numTop = 100;
 
@@ -25,10 +28,13 @@ maxGene = max(data,[],1);
 
 [maxGeneSort,ix] = sort(maxGene,'descend');
 ix(isnan(maxGeneSort)) = []; % remove top genes that are actually NaNs
+dataALL = data(:,ix);
 data = data(:,ix(1:numTop));
-geneNames = geneNames(ix(1:numTop));
 
+geneNames = geneNames(ix(1:numTop));
+if plotSeparate
 f = figure('color','w');
+end
 imagesc(data)
 colormap([1,1,1;BF_getcmap('blues',9,false)])
 ax = gca;
