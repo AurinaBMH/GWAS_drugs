@@ -1,4 +1,4 @@
-function [rhos ,pVals] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold)
+function [rhos ,pVals] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, whatDiseases_Treatment)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -16,13 +16,15 @@ if nargin <4
     whatThreshold = 'BF';
 end
 
+if nargin<5
+    whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
+    whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
+end
+
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 end
 addNull = true;
-
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
-whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
