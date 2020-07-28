@@ -1,4 +1,4 @@
-function [rhos ,pVals] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, whatDiseases_Treatment)
+function [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -18,8 +18,13 @@ end
 
 if nargin<5
     whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
-    whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 end
+
+if nargin<6
+    doPlot = true; 
+end
+
+whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
@@ -41,9 +46,14 @@ numDiseases_GWAS = length(whatDiseases_GWAS);
 numDrugScores = length(drugScoresAll);
 
 %===============================================================================
+if doPlot
 f = figure('color','w');
 sgtitle(sprintf('%s, %s',similarityType, whatProperty))
 ax = cell(numDiseases_GWAS,1);
+end
+rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
+pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
+
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
@@ -67,6 +77,8 @@ for i = 1:numDiseases_GWAS
         end
     end
     
+    rhosALL(:,i) = rhos; 
+
     % Generate null distributions:
     numNulls = 1000;
     isSig = zeros(numDiseases_Treatment,1);
@@ -155,8 +167,11 @@ for i = 1:numDiseases_GWAS
             end
             % Compute p-values: based on separate nulls
             isSig(l) = (mean(rhos(l) < nullScores) < 0.05);
+            pVals(l) = mean(rhos(l) < nullScores); 
         end
     end
+    
+    pValsALL(:,i) = pVals; 
     
     % Sort:
     [rhos,ix] = sort(rhos,'descend');
