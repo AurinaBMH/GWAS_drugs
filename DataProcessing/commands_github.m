@@ -20,14 +20,14 @@ GenerateResultsTables;
 
 % loop over all mapping methods and save the results to file, so can compare; 
 % load ADHD as example to select mapping methods
-load('resultsTable_ADHD_FDR.mat', 'geneScores')
+load('resultsTable_ADHD_BF.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400',...
     'PPI_mapped_th0', 'PPI_mapped_th400',...
     'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'});
 
 whatThreshold = 'BF'; 
-whatNull = 'randomDrug'; 
+whatNull = 'randomDisease'; 
 
 for t=1:length(similarityTypes)
     

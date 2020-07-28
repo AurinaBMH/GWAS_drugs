@@ -18,8 +18,8 @@ end
 if nargin <5
     % if the target drug list not provided, compare with itself
     Dname = whatDiseases_GWAS{1};
-    Dname = Dname(isstrprop(Dname,'alpha'));
 end
+Dname = Dname(isstrprop(Dname,'alpha'));
 
 % measures for non PPI mappings
 OTHERmeasures_names = {'P', 'r'};

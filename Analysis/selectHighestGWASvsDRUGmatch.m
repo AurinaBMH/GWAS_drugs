@@ -8,10 +8,10 @@ load('resultsTable_ADHD_FDR.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params'});
 
 % for PPI select 1 neighbor and mean and median measures;
-whatDiseases_GWAS = {'SCZ'};
+whatDiseases_GWAS = {'BIP2'};
 whatDiseases_Drug = 'BIP';
 whatNull = 'randomDisease';
-PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1','weiPPIneighbors1','expWeiPPIneighbors1', 'medianPPIDistance', 'meanPPIDistance'}; 
+PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1','weiPPIneighbors1','expWeiPPIneighbors1', 'numPPIneighbors2','percPPIneighbors2'}; 
 
 compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, similarityTypes, PPImeasures_names, whatDiseases_Drug); 
 
