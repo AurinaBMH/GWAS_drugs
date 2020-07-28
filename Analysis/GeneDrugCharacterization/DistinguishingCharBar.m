@@ -21,7 +21,7 @@ if nargin<5
 end
 
 if nargin<6
-    doPlot = true; 
+    doPlot = true;
 end
 
 whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
@@ -47,9 +47,12 @@ numDrugScores = length(drugScoresAll);
 
 %===============================================================================
 if doPlot
-f = figure('color','w');
-sgtitle(sprintf('%s, %s',similarityType, whatProperty))
-ax = cell(numDiseases_GWAS,1);
+    f = figure('color','w');
+    sgtitle(sprintf('%s, %s',similarityType, whatProperty))
+    ax = cell(numDiseases_GWAS,1);
+    if length(whatDiseases_GWAS)>3
+    f.Position = [471,945,1830,318];
+    end
 end
 rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
@@ -77,8 +80,8 @@ for i = 1:numDiseases_GWAS
         end
     end
     
-    rhosALL(:,i) = rhos; 
-
+    rhosALL(:,i) = rhos;
+    
     % Generate null distributions:
     numNulls = 1000;
     isSig = zeros(numDiseases_Treatment,1);
@@ -99,7 +102,7 @@ for i = 1:numDiseases_GWAS
                     geneWeightsRand = drugScores(:,diseaseInd);
                     nullScores(k) = ComputeDotProduct(geneWeightsRand,geneWeightsGWAS,true);
                 case 'randomPsychDisease'
-                    % Shuffle weights taken from a random 
+                    % Shuffle weights taken from a random
                     % psychiatric disorders or non-psychiatric disease (pooled nulls):
                     
                     psychDIS = contains(whatDiseases_Treatment, 'ADHD') | contains(whatDiseases_Treatment, 'BIP') | ...
@@ -122,7 +125,7 @@ for i = 1:numDiseases_GWAS
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
             isSig(k) = (mean(rhos(k) < nullScores) < 0.05);
-            pVals(k) = mean(rhos(k) < nullScores); 
+            pVals(k) = mean(rhos(k) < nullScores);
         end
         
     else
@@ -150,7 +153,7 @@ for i = 1:numDiseases_GWAS
                             geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
                             % normalizde the weights, by default this used
                             % norm-1, but mabe should be chnaged to norm2?
-                            geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand); 
+                            geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand);
                             nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm);
                         else
                             
@@ -167,76 +170,77 @@ for i = 1:numDiseases_GWAS
             end
             % Compute p-values: based on separate nulls
             isSig(l) = (mean(rhos(l) < nullScores) < 0.05);
-            pVals(l) = mean(rhos(l) < nullScores); 
+            pVals(l) = mean(rhos(l) < nullScores);
         end
     end
     
-    pValsALL(:,i) = pVals; 
+    pValsALL(:,i) = pVals;
     
     % Sort:
     [rhos,ix] = sort(rhos,'descend');
     
     %---------------------------------------------------------------------------
-    ax{i} = subplot(1,numDiseases_GWAS,i); hold on
-    b = bar(rhos);
-    
-    if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
-        if addNull && ~all(isnan(nullScores))
-            % Add null distribution:
-            [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
-            ff = 0.8*ff/max(ff);
-            plot(ones(2,1)*(numDiseases_Treatment+1)+ff,x,'k');
-            plot(ones(2,1)*(numDiseases_Treatment+1)-ff,x,'k');
-            ax{i}.XTick = 1:numDiseases_Treatment+1;
-            ax{i}.XTickLabel = {whatDiseases_Treatment{ix},'null'};
-            % Add horizontal lines to aid comparison to null:
-            null_p50 = quantile(nullScores,0.5);
-            plot([1,numDiseases_Treatment+1],ones(2,1)*null_p50,':k')
-            null_p95 = quantile(nullScores,0.95);
-            plot([1,numDiseases_Treatment+1],ones(2,1)*null_p95,'--k')
-            if range(rhos) > 0
-                maxLim = max(rhos)*1.1;
-                if maxLim < null_p95
-                    maxLim = null_p95*1.1;
+    if doPlot
+        ax{i} = subplot(1,numDiseases_GWAS,i); hold on
+        b = bar(rhos);
+        
+        if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
+            if addNull && ~all(isnan(nullScores))
+                % Add null distribution:
+                [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
+                ff = 0.8*ff/max(ff);
+                plot(ones(2,1)*(numDiseases_Treatment+1)+ff,x,'k');
+                plot(ones(2,1)*(numDiseases_Treatment+1)-ff,x,'k');
+                ax{i}.XTick = 1:numDiseases_Treatment+1;
+                ax{i}.XTickLabel = {whatDiseases_Treatment{ix},'null'};
+                % Add horizontal lines to aid comparison to null:
+                null_p50 = quantile(nullScores,0.5);
+                plot([1,numDiseases_Treatment+1],ones(2,1)*null_p50,':k')
+                null_p95 = quantile(nullScores,0.95);
+                plot([1,numDiseases_Treatment+1],ones(2,1)*null_p95,'--k')
+                if range(rhos) > 0
+                    maxLim = max(rhos)*1.1;
+                    if maxLim < null_p95
+                        maxLim = null_p95*1.1;
+                    end
+                    minLim = min(rhos)*0.9;
+                    null_p10 = quantile(nullScores,0.1);
+                    if minLim > null_p10
+                        minLim = null_p10*0.9;
+                    end
+                    ax{i}.YLim = [minLim,maxLim];
                 end
-                minLim = min(rhos)*0.9;
-                null_p10 = quantile(nullScores,0.1);
-                if minLim > null_p10
-                    minLim = null_p10*0.9;
-                end
-                ax{i}.YLim = [minLim,maxLim];
+                
+            else
+                
+                ax{i}.XTick = 1:numDiseases_Treatment;
+                ax{i}.XTickLabel = whatDiseases_Treatment(ix);
+                
             end
             
         else
             
             ax{i}.XTick = 1:numDiseases_Treatment;
-            ax{i}.XTickLabel = whatDiseases_Treatment(ix);
+            ax{i}.XTickLabel = {whatDiseases_Treatment{ix}};
             
         end
         
-    else
         
-        ax{i}.XTick = 1:numDiseases_Treatment;
-        ax{i}.XTickLabel = {whatDiseases_Treatment{ix}};
+        ax{i}.XTickLabelRotation = 45;
+        xlabel('Disease treatment')
+        ylabel(sprintf('%s similarity',whatScore))
+        title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
+        cMapGeneric = BF_getcmap('set2',numDiseases_Treatment,false);
+        for k = find(~isSig)'
+            cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
+        end
+        b.CData = cMapGeneric(ix,:);
+        b.FaceColor = 'flat';
         
+        linkaxes([ax{:}],'y');
     end
     
     
-    ax{i}.XTickLabelRotation = 45;
-    xlabel('Disease treatment')
-    ylabel(sprintf('%s similarity',whatScore))
-    title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
-    cMapGeneric = BF_getcmap('set2',numDiseases_Treatment,false);
-    for k = find(~isSig)'
-        cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
-    end
-    b.CData = cMapGeneric(ix,:);
-    b.FaceColor = 'flat';
-    
-    
+end
 end
 
-linkaxes([ax{:}],'y');
-f.Position = [471,945,1830,318];
-
-end
