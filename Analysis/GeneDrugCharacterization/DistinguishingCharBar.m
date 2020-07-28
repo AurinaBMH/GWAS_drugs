@@ -1,4 +1,4 @@
-function DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold)
+function [rhos ,pVals] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -68,6 +68,7 @@ for i = 1:numDiseases_GWAS
     % Generate null distributions:
     numNulls = 1000;
     isSig = zeros(numDiseases_Treatment,1);
+    pVals = zeros(numDiseases_Treatment,1);
     
     if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
         % one single set of nulls for the whole analysis
@@ -107,6 +108,7 @@ for i = 1:numDiseases_GWAS
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
             isSig(k) = (mean(rhos(k) < nullScores) < 0.05);
+            pVals(k) = mean(rhos(k) < nullScores); 
         end
         
     else
