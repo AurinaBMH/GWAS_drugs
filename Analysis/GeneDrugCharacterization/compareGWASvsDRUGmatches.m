@@ -1,4 +1,4 @@
-function compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, similarityTypes, PPImeasures_names, Dname)
+function [diseaseResultsR, diseaseResultsP] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, similarityTypes, PPImeasures_names, Dname)
 
 if nargin <2 
     whatNull = 'randomDisease';
@@ -71,7 +71,7 @@ similarityTypes_label = strrep(similarityTypes(:),'_',' '); % remove _ for plott
 colors = cbrewer('seq', 'Reds', 64);
 
 figure; set(gcf,'color','w');
-title(sprintf('%s GWAS vs %s Drugs', whatDiseases_GWAS{1}, Dname))
+
 imagesc(diseaseResultsR); axis('square')
 
 %colors = flipud(colors); % puts red on top, blue at the bottom
@@ -88,5 +88,9 @@ xticklabels(ALLmeasures)
 
 xtickangle(45);
 box off
+
+title(sprintf('%s GWAS vs %s Drugs', whatDiseases_GWAS{1}, Dname))
+colorbar
+caxis([0 0.4])
 
 end
