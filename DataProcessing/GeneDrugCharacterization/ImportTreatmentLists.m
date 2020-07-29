@@ -127,7 +127,7 @@ for k = 1:numDiseases
     fprintf(1,'%u genes are targeted by existing drugs for %s:\n',...
                         numGenesTreat,whatDisease);
     for i = 1:numGenesTreat
-        fprintf(1,'%s, ',geneLists{k}{i});
+        %fprintf(1,'%s, ',geneLists{k}{i});
     end
     fprintf(1,'\n');
 end
