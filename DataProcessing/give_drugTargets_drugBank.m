@@ -1,7 +1,5 @@
 function T = give_drugTargets_drugBank(vocabulary, targets, drugName)
-% this function finds drug targets for selected drug based on drugBank
-% database
-
+% this function finds drug targets for selected drug based on drugBank database
 
 INDvoc = find(contains(lower(vocabulary.CommonName), lower(drugName)), 1);
 if isempty(INDvoc)

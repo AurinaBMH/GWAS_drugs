@@ -7,6 +7,7 @@ drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/
 
 % load drugBank database files
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
+%targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
 targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
 data = struct;
 
