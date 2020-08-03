@@ -1,10 +1,7 @@
-function T = give_drugTargets_drugBank(drugName)
+function T = give_drugTargets_drugBank(vocabulary, targets, drugName)
 % this function finds drug targets for selected drug based on drugBank
 % database
 
-% load
-vocabulary = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
-targets = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
 
 INDvoc = find(contains(lower(vocabulary.CommonName), lower(drugName)), 1);
 if isempty(INDvoc)
