@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs)
+function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -6,6 +6,10 @@ function [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWit
 if nargin < 1
     normalizeWithinDrugs = true;
 end
+if nargin < 2
+    whatDrugTargets = '2020';
+end
+
 if normalizeWithinDrugs
     fprintf(1,'Weighting genes equally within a drug...\n');
 end
@@ -29,52 +33,58 @@ endRow = inf;
 formatSpec = '%q%q%[^\n\r]';
 
 dataTable = struct();
-
-for k = 1:numDiseases
-    whatDisease = whatDiseases{k};
-    switch whatDisease
-        case 'ADHD'
-            fileName = 'Treatment-list-ADHD-4thMay2018.csv';
-        case 'BIP'
-            fileName = 'Treatment-list-BIP-7thMay2018.csv';
-        case 'SCZ'
-            fileName = 'Treatment-list-SZ-4thMay2018.csv';
-        case 'MDD'
-            fileName = 'Treatment-list-MDD-7thMay2018.csv';
-        case 'pulmonary'
-            fileName = 'Treatment-list-pulmonary-4thMay2018.csv';
-        case 'cardiology'
-            fileName = 'Treatment-list-cardiology-4thMay2018.csv';
-        case 'gastro'
-            fileName = 'Treatment-list-gastro-4thMay2018.csv';
-        case 'diabetes'
-            fileName = 'Treatment-list-diabetes-25thMay2018.csv';
-        otherwise
-            error('Unknown disease: ''%s''',whatDisease);
-    end
-
-    %% Open the text file.
-    fileID = fopen(fileName,'r');
-
-    %% Read columns of data according to the format.
-    % This call is based on the structure of the file used to generate this
-    % code. If an error occurs for a different file, try regenerating the code
-    % from the Import Tool.
-    dataArray = textscan(fileID, formatSpec, endRow(1)-startRow(1)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', 1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-    for block=2:length(startRow)
-        frewind(fileID);
-        dataArrayBlock = textscan(fileID, formatSpec, endRow(block)-startRow(block)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(block)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-        for col=1:length(dataArray)
-            dataArray{col} = [dataArray{col};dataArrayBlock{col}];
+switch whatDrugTargets
+    case '2018'
+        % use drug targets assigned by Janette in 05/2018
+        for k = 1:numDiseases
+            whatDisease = whatDiseases{k};
+            switch whatDisease
+                case 'ADHD'
+                    fileName = 'Treatment-list-ADHD-4thMay2018.csv';
+                case 'BIP'
+                    fileName = 'Treatment-list-BIP-7thMay2018.csv';
+                case 'SCZ'
+                    fileName = 'Treatment-list-SCZ-4thMay2018.csv';
+                case 'MDD'
+                    fileName = 'Treatment-list-MDD-7thMay2018.csv';
+                case 'pulmonary'
+                    fileName = 'Treatment-list-pulmonary-4thMay2018.csv';
+                case 'cardiology'
+                    fileName = 'Treatment-list-cardiology-4thMay2018.csv';
+                case 'gastro'
+                    fileName = 'Treatment-list-gastro-4thMay2018.csv';
+                case 'diabetes'
+                    fileName = 'Treatment-list-diabetes-25thMay2018.csv';
+                otherwise
+                    error('Unknown disease: ''%s''',whatDisease);
+            end
+            
+            %% Open the text file.
+            fileID = fopen(fileName,'r');
+            
+            %% Read columns of data according to the format.
+            % This call is based on the structure of the file used to generate this
+            % code. If an error occurs for a different file, try regenerating the code
+            % from the Import Tool.
+            dataArray = textscan(fileID, formatSpec, endRow(1)-startRow(1)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', 1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+            for block=2:length(startRow)
+                frewind(fileID);
+                dataArrayBlock = textscan(fileID, formatSpec, endRow(block)-startRow(block)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(block)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+                for col=1:length(dataArray)
+                    dataArray{col} = [dataArray{col};dataArrayBlock{col}];
+                end
+            end
+            fclose(fileID); % Close the text file
+            
+            % Create structure of tables:
+            dataTable.(whatDisease) = table(dataArray{1:end-1},'VariableNames',{'Name','Target'});
+            
+            numDrugs = length(dataArray{1});
+            fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
         end
-    end
-    fclose(fileID); % Close the text file
-
-    % Create structure of tables:
-    dataTable.(whatDisease) = table(dataArray{1:end-1},'VariableNames',{'Name','Target'});
-
-    numDrugs = length(dataArray{1});
-    fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
+    case '2020'
+        % use drug targets assigned automatically by AA in 08/2020
+        dataTable = give_drugTargets();
 end
 
 %-------------------------------------------------------------------------------
@@ -99,12 +109,12 @@ for k = 1:numDiseases
     geneList = horzcat(geneList{:});
     % Remove any whitespace:
     geneList = regexprep(geneList,'\W','');
-
+    
     % Count how many appear:
     frequencyTable = tabulate(geneList);
     geneLists{k} = frequencyTable(:,1);
     numGenesTreat = length(geneLists{k});
-
+    
     % Determine weights on genes:
     if normalizeWithinDrugs
         % The count cell should be weighted by the weights vector:
@@ -117,15 +127,15 @@ for k = 1:numDiseases
         % (i.e., how many drugs a gene appears in)
         counts{k} = [frequencyTable{:,2}];
     end
-
+    
     % Sort by counts:
     [~,ix] = sort(counts{k},'descend');
     geneLists{k} = geneLists{k}(ix);
     counts{k} = counts{k}(ix);
-
+    
     % Talk to me:
     fprintf(1,'%u genes are targeted by existing drugs for %s:\n',...
-                        numGenesTreat,whatDisease);
+        numGenesTreat,whatDisease);
     for i = 1:numGenesTreat
         %fprintf(1,'%s, ',geneLists{k}{i});
     end
@@ -137,7 +147,7 @@ end
 allGenes = unique(vertcat(geneLists{:}));
 numGenes = length(allGenes);
 fprintf(1,'%u genes assigned to at least one drug across our %u disorders\n',...
-                        numGenes,numDiseases);
+    numGenes,numDiseases);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table
@@ -170,9 +180,9 @@ end
 
 % Make a table:
 indicatorTable = array2table(indicatorMatrix,'RowNames',allGenes,...
-                                    'VariableNames',whatDiseases);
+    'VariableNames',whatDiseases);
 percIndicatorTable = array2table(propMatrix,'RowNames',allGenes,...
-                                    'VariableNames',whatDiseases);
+    'VariableNames',whatDiseases);
 
 % Sort the table:
 [~,ix] = sort(meanRow,'descend');
