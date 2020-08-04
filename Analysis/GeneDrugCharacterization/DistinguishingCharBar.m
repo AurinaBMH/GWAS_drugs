@@ -169,9 +169,10 @@ for i = 1:numDiseases_GWAS
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
                     case 'randomDrug' % for each disease get a random set of drugs that is the same size as 
-                        % real list of drugs, e.g. for SCZ select 45 drugs; 
-                        % select random drugs
-                        give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs); 
+                        % real list of drugs, e.g. for ADHD select 18 drugs
+                        % and get a normalized score vector for this list
+                        % of drugs as if it's a separate disease
+                        drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs); 
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
                         
                 end

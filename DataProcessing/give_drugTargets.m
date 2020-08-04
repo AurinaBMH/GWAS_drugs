@@ -26,7 +26,7 @@ for d = 1:length(disorders)
     listDrugs = readcell(sprintf('data/TREATMENTlists/Drug_list_disorders/treatment_list_%s.txt', disorders{d}));
     drugName = cell(length(listDrugs),1); 
     targetCOMB = cell(length(listDrugs),1);
-    
+    k=1; 
     for i = 1:length(listDrugs)
         
         % get targets from hub
@@ -45,6 +45,9 @@ for d = 1:length(disorders)
         
         % combine both and select unique genes
         targetCOMB_s = vertcat(targetREPlist, targetBANKlist);
+                
+        % if there are no targets for the drug, skip
+        if ~all(strcmp(targetCOMB_s, ""))
         targetCOMB_s(strcmp(targetCOMB_s,"")) = [];
         
         % in case there are differences in cases, make all upper and only the select unique
@@ -53,16 +56,24 @@ for d = 1:length(disorders)
         
         % combine all into one strin to be compatible with Ben's old script
         targetCOMB_s = strjoin(targetCOMB_s,',');
+
         
         % remove some characters to make it a viable structure field
-        drugName{i} = erase(listDrugs{i}, {'-', '+', '/','\', ')', '('}); 
-        targetCOMB{i} = targetCOMB_s; 
+        drugName{k} = erase(listDrugs{i}, {'-', '+', '/','\', ')', '('}); 
+        targetCOMB{k} = targetCOMB_s; 
+        k=k+1; 
+        end
 
         
     end
+    % there are some drugs that have no targets, remove those
+    R = find(cellfun(@isempty, drugName)); 
+    drugName(R) = [];
+    targetCOMB(R) = []; 
+    
     % put it in the same format as Ben did before: structure of tables
     dataTable.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
-    fprintf(1,'%s has %u drugs\n',disorders{d},length(listDrugs));
+    fprintf(1,'%s has %u drugs\n',disorders{d},length(drugName));
 end
 
 save('DataOutput/drugTargets_2020.mat', 'dataTable')

@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists_random(normalizeWithinDrugs, whatDrugTargets, numRand)
+function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists_random(normalizeWithinDrugs, drugs_rand, whatDrugTargets)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -6,7 +6,7 @@ function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatm
 if nargin < 1
     normalizeWithinDrugs = true;
 end
-if nargin < 2
+if nargin < 3
     whatDrugTargets = '2018';
     % 2020 - uses automated AA version
     % 2018 - uses Janett's version from May 2018; 
@@ -19,8 +19,8 @@ end
 %-------------------------------------------------------------------------------
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
-whatDiseases = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes', 'random'};
-numDiseases = length(whatDiseases)-1;
+whatDiseases = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes', 'RANDOM'};
+numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
@@ -37,9 +37,8 @@ formatSpec = '%q%q%[^\n\r]';
 dataTable = struct();
 switch whatDrugTargets
     case '2018'
-        tic
         % use drug targets assigned by Janette in 05/2018
-        for k = 1:numDiseases
+        for k = 1:numDiseases-1
             whatDisease = whatDiseases{k};
             switch whatDisease
                 case 'ADHD'
@@ -85,25 +84,14 @@ switch whatDrugTargets
             numDrugs = length(dataArray{1});
             fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
         end
-        toc
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
         load('DataOutput/drugTargets_2020.mat', 'dataTable'); 
 end
-% make a table of all mentioned drugs with their targets keeping only unique ones 
-DT = cell(numDiseases,1); 
-for kk=1:numDiseases
-   DT{kk} = dataTable.(whatDiseases{kk}); 
-end 
-
-allDrugs = vertcat(DT{:}); 
-% remove drugs with non-existent targets
-allDrugs(strcmp(string(allDrugs.Target), ""),:) = [];  
-% select only unique drug names
-[~, INDunique] = unique(allDrugs.Name); 
-allDrugs = allDrugs(INDunique,:); 
+% add drugs_rand to the dataTable
+dataTable.('RANDOM') = drugs_rand; 
 
 %-------------------------------------------------------------------------------
 % Get a list of all genes mentioned:
