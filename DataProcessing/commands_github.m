@@ -27,7 +27,7 @@ similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'});
 
 whatThreshold = 'BF'; 
-whatNull = 'randomDisease'; 
+whatNull = 'randomDrug'; 
 
 for t=1:length(similarityTypes)
     
@@ -42,8 +42,8 @@ for t=1:length(similarityTypes)
     end
     
     DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold); 
-    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
-    print(gcf,figureName,'-dpng','-r300');
+%     figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
+%     print(gcf,figureName,'-dpng','-r300');
     
     
 end

@@ -85,7 +85,7 @@ for i = 1:numDiseases_GWAS
     rhosALL(:,i) = rhos;
     
     % Generate null distributions:
-    numNulls = 1000;
+    numNulls = 500;
     isSig = zeros(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
     
@@ -170,8 +170,7 @@ for i = 1:numDiseases_GWAS
                         % randomise v1 within ComputeDotProduct
                     case 'randomDrug' % for each disease get a random set of drugs that is the same size as 
                         % real list of drugs, e.g. for ADHD select 18 drugs
-                        % and get a normalized score vector for this list
-                        % of drugs as if it's a separate disease
+                        % and get a normalized score vector for this list of drugs as if it's a separate disease
                         drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs); 
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
                         
