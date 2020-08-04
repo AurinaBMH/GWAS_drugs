@@ -7,7 +7,7 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 2
-    whatDrugTargets = '2020';
+    whatDrugTargets = '2018';
     % 2020 - uses automated AA version
     % 2018 - uses Janett's version from May 2018; 
 end
@@ -37,6 +37,7 @@ formatSpec = '%q%q%[^\n\r]';
 dataTable = struct();
 switch whatDrugTargets
     case '2018'
+        tic
         % use drug targets assigned by Janette in 05/2018
         for k = 1:numDiseases
             whatDisease = whatDiseases{k};
@@ -84,9 +85,12 @@ switch whatDrugTargets
             numDrugs = length(dataArray{1});
             fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
         end
+        toc
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
-        dataTable = give_drugTargets();
+        % it takes ~10s to run, so load the pre-computed data here
+        % dataTable = give_drugTargets();
+        load('DataOutput/drugTargets_2020.mat', 'dataTable'); 
 end
 
 %-------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-function drugTargets = give_drugTargets()
+function dataTable = give_drugTargets()
+
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
 disorders = {'ADHD', 'BIP', 'cardiology', 'diabetes', 'gastro', 'MDD', 'pulmonary', 'SCZ'};
@@ -9,7 +10,7 @@ drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
 %targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
 targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
-drugTargets = struct;
+dataTable = struct;
 
 for d = 1:length(disorders)
     
@@ -60,8 +61,10 @@ for d = 1:length(disorders)
         
     end
     % put it in the same format as Ben did before: structure of tables
-    drugTargets.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
+    dataTable.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
     fprintf(1,'%s has %u drugs\n',disorders{d},length(listDrugs));
 end
+
+save('DataOutput/drugTargets_2020.mat', 'dataTable')
 
 end

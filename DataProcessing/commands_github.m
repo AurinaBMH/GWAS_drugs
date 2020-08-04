@@ -41,7 +41,7 @@ for t=1:length(similarityTypes)
         whatProperty = 'P';
     end
     
-    DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold)
+    DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold); 
     figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
     print(gcf,figureName,'-dpng','-r300');
     
