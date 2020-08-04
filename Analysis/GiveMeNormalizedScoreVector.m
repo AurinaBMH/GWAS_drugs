@@ -48,6 +48,8 @@ case 'GWAS'
     else
         geneWeights = geneScores.(similarityType).(whatProperty);
     end
+    case 'randomDrug'
+        
     
 end
 

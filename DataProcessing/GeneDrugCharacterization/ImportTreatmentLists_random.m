@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets)
+function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists_random(normalizeWithinDrugs, whatDrugTargets, numRand)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -19,8 +19,8 @@ end
 %-------------------------------------------------------------------------------
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
-whatDiseases = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
-numDiseases = length(whatDiseases);
+whatDiseases = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes', 'random'};
+numDiseases = length(whatDiseases)-1;
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------

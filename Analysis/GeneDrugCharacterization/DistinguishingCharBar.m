@@ -28,6 +28,8 @@ whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gas
 
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
+elseif strcmp(whatNull, 'randomDrug')
+    [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true);
 end
 addNull = true;
 
@@ -161,11 +163,17 @@ for i = 1:numDiseases_GWAS
                             
                         end
                         
-                    case 'randomDrug' % is the actual match higher than a match with random gene score assignment
+                    case 'randomDrugShuffle' % is the actual match higher than a match with random gene score assignment
                         % Shuffle weights taken from each drug list individually
                         drugScores_DIS = drugScores(:,l);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
+                    case 'randomDrug' % for each disease get a random set of drugs that is the same size as 
+                        % real list of drugs, e.g. for SCZ select 45 drugs; 
+                        % select random drugs
+                        give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs); 
+                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
+                        
                 end
             end
             % Compute p-values: based on separate nulls
