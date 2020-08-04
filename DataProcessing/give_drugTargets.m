@@ -1,4 +1,4 @@
-function data = give_drugTargets()
+function drugTargets = give_drugTargets()
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
 disorders = {'ADHD', 'BIP', 'cardiology', 'diabetes', 'gastro', 'MDD', 'pulmonary', 'SCZ'};
@@ -9,7 +9,7 @@ drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
 %targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
 targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
-data = struct;
+drugTargets = struct;
 
 for d = 1:length(disorders)
     
@@ -23,6 +23,8 @@ for d = 1:length(disorders)
     % MDD:  +esketamine and brexanolone
     
     listDrugs = readcell(sprintf('data/TREATMENTlists/Drug_list_disorders/treatment_list_%s.txt', disorders{d}));
+    drugName = cell(length(listDrugs),1); 
+    targetCOMB = cell(length(listDrugs),1);
     
     for i = 1:length(listDrugs)
         
@@ -41,18 +43,25 @@ for d = 1:length(disorders)
         targetBANKlist = string(give_drugTargets_drugBank(vocabularyBANK, targetsBANK, listDrugs{i})); 
         
         % combine both and select unique genes
-        targetCOMB = vertcat(targetREPlist, targetBANKlist);
+        targetCOMB_s = vertcat(targetREPlist, targetBANKlist);
+        targetCOMB_s(strcmp(targetCOMB_s,"")) = [];
+        
         % in case there are differences in cases, make all upper and only the select unique
-        [~, ia] = unique(upper(targetCOMB));
-        targetCOMB = targetCOMB(ia);
+        [~, ia] = unique(upper(targetCOMB_s));
+        targetCOMB_s = targetCOMB_s(ia);
+        
+        % combine all into one strin to be compatible with Ben's old script
+        targetCOMB_s = strjoin(targetCOMB_s,',');
         
         % remove some characters to make it a viable structure field
-        drugName = erase(listDrugs{i}, {'-', '+', '/','\', ')', '('}); 
-        data.(disorders{d}).(drugName) = targetCOMB'; 
+        drugName{i} = erase(listDrugs{i}, {'-', '+', '/','\', ')', '('}); 
+        targetCOMB{i} = targetCOMB_s; 
+
         
     end
-    
-    
+    % put it in the same format as Ben did before: structure of tables
+    drugTargets.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
+    fprintf(1,'%s has %u drugs\n',disorders{d},length(listDrugs));
 end
 
 end
