@@ -59,7 +59,6 @@ colors = cbrewer('div', 'RdBu', 64);
 colors = flipud(colors);
 figure; set(gcf,'color','w');
 imagesc(r); axis('square')
-grid on
 colormap(colors);
 
 yticks(1:numGWAS);
