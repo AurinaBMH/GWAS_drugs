@@ -1,4 +1,4 @@
-function [geneWeightsGWAS_ALL, drugScores_ord] = give_GWASandDRUG_scores(whatGWAS)
+function [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS)
 
 whatThreshold = 'BF'; 
 similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
@@ -26,6 +26,7 @@ takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
 
 numScores = length(find(contains(similarityTypes,'PPI')))*length(PPImeasures_names)+length(find(~contains(similarityTypes,'PPI')));
 geneWeightsGWAS = cell(numScores,1);
+measureNames = cell(numScores,1);
 k=1;
 for s=1:length(similarityTypes)
     if contains(similarityTypes{s},'PPI')
@@ -33,6 +34,7 @@ for s=1:length(similarityTypes)
             
             whatProperty = PPImeasures_names{p};
             [geneNamesGWAS,geneWeightsGWAS{k}] = GiveMeNormalizedScoreVector(whatGWAS,'GWAS',similarityTypes{s},whatProperty, whatThreshold);
+            measureNames{k} = [similarityTypes{s}, whatProperty]; 
             k=k+1;
         end
     else
@@ -42,12 +44,13 @@ for s=1:length(similarityTypes)
             whatProperty = 'r';
         end
         [geneNamesGWAS,geneWeightsGWAS{k}] = GiveMeNormalizedScoreVector(whatGWAS,'GWAS',similarityTypes{s},whatProperty, whatThreshold);
+        measureNames{k} = [similarityTypes{s}, whatProperty]; 
         k=k+1;
     end
 end
 
 % Combine two datasets on overlap:
-[geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
+[~,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
 geneWeightsGWAS_ord = cell(length(geneWeightsGWAS),1); 
 for k=1:length(geneWeightsGWAS)
     
