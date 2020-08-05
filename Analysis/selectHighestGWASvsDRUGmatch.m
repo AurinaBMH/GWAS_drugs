@@ -9,7 +9,7 @@ whatNull = 'randomDisease';
 for d = 1:length(whatDiseases_GWAS)
     % input requires cell
     whatDisease_GWAS{1} =  whatDiseases_GWAS{d};
-    compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull); 
+    [diseaseResultsR, diseaseResultsP] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull); 
     
     figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, whatDisease_GWAS{1}, whatNull);
     print(gcf,figureName,'-dpng','-r300');

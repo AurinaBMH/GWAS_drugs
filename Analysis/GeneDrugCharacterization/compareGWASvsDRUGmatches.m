@@ -1,4 +1,4 @@
-function [diseaseResultsR, diseaseResultsP] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
+function [diseaseResultsR, diseaseResultsP, similarityTypes,ALLmeasures] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
 
 if nargin <2
     whatNull = 'randomDisease';

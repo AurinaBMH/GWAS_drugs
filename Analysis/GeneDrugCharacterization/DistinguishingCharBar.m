@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -163,7 +163,7 @@ for i = 1:numDiseases_GWAS
                             
                         end
                         
-                    case 'randomDrugShuffle' % is the actual match higher than a match with random gene score assignment
+                    case 'randomTarget' % is the actual match higher than a match with random gene score assignment
                         % Shuffle weights taken from each drug list individually
                         drugScores_DIS = drugScores(:,l);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
