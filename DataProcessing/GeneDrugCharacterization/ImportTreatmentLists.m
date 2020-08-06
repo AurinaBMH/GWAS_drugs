@@ -7,7 +7,7 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 2
-    whatDrugTargets = '2018';
+    whatDrugTargets = '2020';
     % 2020 - uses automated AA version
     % 2018 - uses Janett's version from May 2018; 
 end

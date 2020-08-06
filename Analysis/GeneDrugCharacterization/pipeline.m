@@ -20,6 +20,7 @@ end
 params = SetDefaultParams();
 doWeighted = params.doWeighted;
 geneScore = params.geneScore; 
+whatDrugTargets = params.whatDrugTargets; 
 
 %===============================================================================
 % LOAD DATA
@@ -29,7 +30,7 @@ geneScore = params.geneScore;
 % Restrict our characterization to genes associated with (any) drug-treatment:
 %-------------------------------------------------------------------------------
 % List of all genes with drug targets in Drugbank are in **gene_ATC_matrix.csv**
-indicatorTable = ImportTreatmentLists(false);
+indicatorTable = ImportTreatmentLists(false, whatDrugTargets);
 allUniqueGenes = indicatorTable.Properties.RowNames;
 numUniqueGenes = length(allUniqueGenes);
 fprintf(1,'Analyzing %u genes that have drug targets in our list\n',numUniqueGenes);

@@ -20,10 +20,12 @@ if nargin < 4
     end
 end
 if nargin <5
-     whatThreshold = 'BF'; 
+     whatThreshold = 'BF';
      fprintf('using %s threshold by DEFAULT\n', whatThreshold)
 end
 whatNorm = 2;
+params = SetDefaultParams();
+
 % this norm here doesn't matter as much, when computing the dot-product,
 % scores are re-normalized, so that's where it matters
 % but lley's use consistent
@@ -37,12 +39,12 @@ case 'Drug'
     geneWeights = indicatorTable.(whatDisease);
 case 'GWAS'
     % Load data:
-    fileName = sprintf('resultsTable_%s_%s.mat',whatDisease, whatThreshold);
+    fileName = sprintf('resultsTable_%s_%s_%s.mat',whatDisease, whatThreshold, params.whatDrugTargets);
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
 
-    
+
     if strcmp(similarityType, 'AllenMeanCoexpMapped') || strcmp(similarityType, 'AllenMeanCoexpeQTLbrain')
         geneWeights = geneScores.(similarityType);
     else
@@ -53,6 +55,6 @@ end
 
 %-------------------------------------------------------------------------------
 % Normalize (non-NaN elements) to unit vector as 2-norm:
-geneWeightsNorm = normalizeScoreVector(geneWeights, whatNorm); 
+geneWeightsNorm = normalizeScoreVector(geneWeights, whatNorm);
 
 end
