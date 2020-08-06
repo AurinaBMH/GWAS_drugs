@@ -4,7 +4,7 @@
 
 % Diseases with SNP info, etc.:
 whatDiseases = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
-whatThreshold='FDR'; 
+whatThreshold='BF'; 
 % load information on genes mapped using different methods
 load('GWAS_disordersMAGMA.mat')
 params = SetDefaultParams();

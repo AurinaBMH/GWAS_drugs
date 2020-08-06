@@ -84,9 +84,12 @@ end
 % Initialize variables:
 numGenesChar = length(genesChar);
 numPPIneighbors = cell(numSteps,1);
+gwasPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
 weiPPIneighbors = cell(numSteps,1);
 expWeiPPIneighbors = cell(numSteps,1);
+weigwasPPIneighbors = cell(numSteps,1);
+expWeigwasPPIneighbors = cell(numSteps,1);
 hasPath = cell(numSteps,1);
 meanPPIDistance = nan(numGenesChar,1);
 medianPPIDistance = nan(numGenesChar,1);
@@ -97,6 +100,9 @@ for k = 1:numSteps
     percPPIneighbors{k} = nan(numGenesChar,1);
     weiPPIneighbors{k} = zeros(numGenesChar,1);
     expWeiPPIneighbors{k} = zeros(numGenesChar,1);
+    weigwasPPIneighbors{k} = zeros(numGenesChar,1);
+    expWeigwasPPIneighbors{k} = zeros(numGenesChar,1);
+    gwasPPIneighbors{k} = nan(numGenesChar,1);
 end
 
 %-------------------------------------------------------------------------------
@@ -126,6 +132,8 @@ for i = 1:numGenesChar
     for k = 1:numSteps
         % (i) Don't distinguish neighbors by pathlength (take union):
         iskStepNeighbor = (PPIN.distMatrix(PPI_index,:) <= k);
+        
+        % Sum of the number of labeled genes that are within k steps (maximum score is the number of labeled genes)
 
         numNeighbors = sum(iskStepNeighbor);
         if numNeighbors==0
@@ -144,10 +152,15 @@ for i = 1:numGenesChar
                 evidenceWeightContext = sum(hasPath{k}(PPI_index,isInContext));
                 evidenceWeightTotal = sum(hasPath{k}(PPI_index,isNeighbor));
                 percPPIneighbors{k}(i) = evidenceWeightContext/evidenceWeightTotal;
+
             else
                 % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
                 percPPIneighbors{k}(i) = 100*mean(isInContext);
+                
+                % how many labeled (fromGWAS) neighbors a gene has / # of all labeled genes
+                gwasPPIneighbors{k}(i) = sum(isInContext)/numContextGenes;
                 % fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
+                
             end
         end
 
@@ -155,9 +168,17 @@ for i = 1:numGenesChar
         for kk = 1:k
             iskkStepNeighbor = (PPIN.distMatrix(PPI_index,:) == k);
             prop_kk_neighbors = 100*mean(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes));
+            propgwas_kk_neighbors = sum(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes))/numContextGenes; 
             if ~isnan(prop_kk_neighbors)
                 weiPPIneighbors{k}(i) = weiPPIneighbors{k}(i) + prop_kk_neighbors/kk;
                 expWeiPPIneighbors{k}(i) = expWeiPPIneighbors{k}(i) + prop_kk_neighbors/factorial(kk);
+                weigwasPPIneighbors{k}(i) = weigwasPPIneighbors{k}(i) + propgwas_kk_neighbors/kk; 
+                expWeigwasPPIneighbors{k}(i) = weigwasPPIneighbors{k}(i) + propgwas_kk_neighbors/factorial(kk);
+                                
+                %Weighted sum of the distance to each labeled gene: e.g., 
+                %if gene 1 is 1 step away, it gets scored 1 from this, 
+                %then gene 2 is 3 steps away, it gets scored 1/3! for this gene, then gene 3, 4, ? 
+                %So the maximum score is all genes are 1 step away. Can normalize by this.
             end
         end
     end
