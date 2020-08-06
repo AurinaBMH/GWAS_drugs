@@ -6,7 +6,7 @@ function RNADOMdrugs = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs
 % it as an additional disease
 
 % e.g. for ADHD, it selects 18 random drugs and so on. 
-
+params = SetDefaultParams();
 % find the number of drugs selected for that disease
 numDrugs = size(disorderDrugs.(diseaseName),1); 
 
@@ -18,7 +18,7 @@ drugs_rand = allDrugs(INDrand,:);
 normalizeWithinDrugs = true;
 % this is a modified version of the original ImportTreatmentLists that adds random set as a separate disease
 % need to keep other idseases as well, so the list of targets is complete
-indicatorTable = ImportTreatmentLists_random(normalizeWithinDrugs, drugs_rand);
+indicatorTable = ImportTreatmentLists_random(normalizeWithinDrugs, drugs_rand, params.whatDrugTargets);
 geneWeights = indicatorTable.('RANDOM');
 
 % Normalize (non-NaN elements) to unit vector as 2-norm:
