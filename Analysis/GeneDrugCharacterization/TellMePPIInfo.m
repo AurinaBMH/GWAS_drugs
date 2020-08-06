@@ -200,6 +200,12 @@ for k = 1:numSteps
     geneStats.(sprintf('percPPIneighbors%u',k)) = percPPIneighbors{k};
     geneStats.(sprintf('weiPPIneighbors%u',k)) = weiPPIneighbors{k};
     geneStats.(sprintf('expWeiPPIneighbors%u',k)) = expWeiPPIneighbors{k};
+    
+    geneStats.(sprintf('gwasPPIneighbors%u',k)) = gwasPPIneighbors{k};
+    geneStats.(sprintf('weigwasPPIneighbors%u',k)) = weigwasPPIneighbors{k};
+    geneStats.(sprintf('expWeigwasPPIneighbors%u',k)) = expWeigwasPPIneighbors{k};
+    geneStats.(sprintf('gwasPPIneighbors%u',k)) = gwasPPIneighbors{k};
+
 end
 geneStats.medianPPIDistance = medianPPIDistance;
 geneStats.meanPPIDistance = meanPPIDistance;
