@@ -10,14 +10,14 @@ whatNull = 'randomDrug';
 diseaseResultsR = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 diseaseResultsP = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 
-for d = 1:length(whatDiseases_GWAS)
+for dg = 1:length(whatDiseases_GWAS)
   for dt = 1:length(whatDiseases_Treatment)
     % input requires cell
-    whatDisease_GWAS{1} =  whatDiseases_GWAS{d};
+    whatDisease_GWAS{1} =  whatDiseases_GWAS{dg};
     Dname = whatDiseases_Treatment{dt};
-    [diseaseResultsR{d, dt}, diseaseResultsP{d, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull, Dname);
+    [diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull, Dname);
 
-    figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, whatDisease_GWAS{1}, whatNull);
+    figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, Dname, whatNull);
     print(gcf,figureName,'-dpng','-r300');
   end
 end

@@ -34,7 +34,7 @@ params = SetDefaultParams();
 switch whatMeasurement
 case 'Drug'
     normalizeWithinDrugs = true;
-    indicatorTable = ImportTreatmentLists(normalizeWithinDrugs);
+    indicatorTable = ImportTreatmentLists(normalizeWithinDrugs, params.whatDrugTargets);
     geneNames = indicatorTable.Row;
     geneWeights = indicatorTable.(whatDisease);
 case 'GWAS'
