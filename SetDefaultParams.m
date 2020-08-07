@@ -29,5 +29,5 @@ params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 % How to select genes for PPI mapping
 %-------------------------------------------------------------------------------
 params.whatThreshold = 'BF'; 
-params.whatDrugTargets = '2020';
+params.whatDrugTargets = '2018';
 end

@@ -2,8 +2,9 @@
 % combination that gives the strongest match between GWAS and drugs.
 clear all; close all;
 
+params = SetDefaultParams(); 
 % first run all diseases with itself
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
+whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'}; %'AD'};
 whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 whatNull = 'randomDrug';
 
@@ -11,19 +12,20 @@ diseaseResultsR = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment)
 diseaseResultsP = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 
 for dg = 1:length(whatDiseases_GWAS)
-  for dt = 1:length(whatDiseases_Treatment)
+%  for dt = 1:length(whatDiseases_Treatment)
     % input requires cell
     whatDisease_GWAS{1} =  whatDiseases_GWAS{dg};
-    Dname = whatDiseases_Treatment{dt};
-    [diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull, Dname);
-
-    figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, Dname, whatNull);
+    %Dname = whatDiseases_Treatment{dt};
+    %[diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull, Dname);
+    [diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull);
+    %figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, Dname, whatNull);
+    figureName = sprintf('figures/GWAS%s_vs_drug_%s_%stargets', whatDisease_GWAS{1}, whatNull, params.whatDrugTargets);
     print(gcf,figureName,'-dpng','-r300');
-  end
+%  end
 end
 
 % rows are GWAS lists, columns are drugs
-fileName = sprintf('DataOutput/GWASvsDRUGS_%s'. whatNull)
+fileName = sprintf('DataOutput/GWASvsDRUGS_%s.mat'. whatNull)
 save(fileName, 'diseaseResultsR', 'diseaseResultsP', 'whatDiseases_GWAS', 'whatDiseases_Treatment')
 
 % for PPI select all 1 and 2 neighbor measures

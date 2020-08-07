@@ -32,6 +32,7 @@ if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 elseif strcmp(whatNull, 'randomDrug')
     [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);
+    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment'); 
 end
 addNull = true;
 
@@ -172,7 +173,9 @@ for i = 1:numDiseases_GWAS
                     case 'randomDrug' % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % and get a normalized score vector for this list of drugs as if it's a separate disease
-                        drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
+                        %drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
+                        % load pre-computed nulls
+                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k); 
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
 
                 end
