@@ -1,4 +1,4 @@
-function [coef_lasso, coef_linear] = compare_lasso_coef(whatDiseases_GWAS)
+function [coef_lasso, coef_linear, sigMeasures] = compare_lasso_coef(whatDiseases_GWAS)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
