@@ -35,6 +35,7 @@ for i = 1:numGWAS
     % try lasso, in most cases, all values are set to 0, so not much use of that
     [B, FitInfo] = lasso(geneWeightsGWAS_ALL,drugScores_ord, 'CV',10);
     lassoPlot(B,FitInfo,'PlotType','CV');
+    title(sprintf('%s',whatDiseases_GWAS{i}))
     idxLambda1SE = FitInfo.Index1SE;
     idxLambdaMinMSE = FitInfo.IndexMinMSE;
     coef_lasso{i,1} = B(:,idxLambda1SE);
@@ -51,6 +52,7 @@ whatRegressions = {'linear', 'lasso'};
 for tt = 1:length(whatRegressions)
     whatRegression = whatRegressions{tt};
     r = nan(numGWAS, numGWAS);
+    p = nan(numGWAS, numGWAS);
     figure; set(gcf,'color','w');
     i=1;
     for p1 = 1:numGWAS
@@ -60,7 +62,7 @@ for tt = 1:length(whatRegressions)
             switch whatRegression
                 case 'linear'
                     [~, i1, i2] = intersect(coef_linear{p1,2}, coef_linear{p2,2});
-                    r(p1,p2) = corr(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2), 'rows', 'complete', 'type', 'Spearman');
+                    [r(p1,p2), p(p1, p2)] = corr(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2), 'rows', 'complete', 'type', 'Spearman');
                     subplot(numGWAS, numGWAS,indPlot(i));
                     scatter(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2));
                     xlabel(whatDiseases_GWAS{p1})
@@ -70,7 +72,7 @@ for tt = 1:length(whatRegressions)
                 case 'lasso'
                     
                     [~, i1, i2] = intersect(coef_lasso{p1,3}, coef_lasso{p2,3});
-                    r(p1,p2) = corr(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2), 'rows', 'complete', 'type', 'Spearman');
+                    [r(p1,p2), p(p1, p2)] = corr(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2), 'rows', 'complete', 'type', 'Spearman');
                     subplot(numGWAS, numGWAS,indPlot(i));
                     scatter(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2));
                     xlabel(whatDiseases_GWAS{p1})
@@ -88,6 +90,10 @@ for tt = 1:length(whatRegressions)
     figure; set(gcf,'color','w');
     imagesc(r); axis('square')
     colormap(colors);
+    
+    hold on;
+    % plot p-values on top
+    plot_matrixValues(p)
     
     yticks(1:numGWAS);
     yticklabels(whatDiseases_GWAS)
