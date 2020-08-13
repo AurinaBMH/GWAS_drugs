@@ -169,7 +169,7 @@ for i = 1:numGenesChar
                 percPPIneighbors{k}(i) = 100*mean(isInContext);
                 % for common neighbors use the union of both lists
                 all_neighbors = length(unique(vertcat(PPI_neighbors_gene,PPI_neighborsK{k})));
-                percCOMMONneighbors{k}(i) = sum(isInContextNeighbors)/all_neighbors; 
+                percCOMMONneighbors{k}(i) = 100*(sum(isInContextNeighbors)/all_neighbors); 
                 % how many labeled (fromGWAS) neighbors a gene has / # of all labeled genes
                 gwasPPIneighbors{k}(i) = sum(isInContext)/numContextGenes;
                 % fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
