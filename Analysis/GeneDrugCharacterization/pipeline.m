@@ -130,6 +130,9 @@ numSteps = 6;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,900,numSteps);
 
+% we can do the same for PPI mapping treating GWAS hit k-step neighbors as
+% context genes; 
+
 % (*) weighted: - weighted PPI distances are not calculated for now
 % numSteps = 6;
 

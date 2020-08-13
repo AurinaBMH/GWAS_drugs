@@ -87,6 +87,8 @@ numPPIneighbors = cell(numSteps,1);
 gwasPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
 weiPPIneighbors = cell(numSteps,1);
+numCOMMONneighbors = cell(numSteps,1);
+percCOMMONneighbors = cell(numSteps,1);
 expWeiPPIneighbors = cell(numSteps,1);
 weigwasPPIneighbors = cell(numSteps,1);
 expWeigwasPPIneighbors = cell(numSteps,1);
@@ -100,6 +102,8 @@ for k = 1:numSteps
     percPPIneighbors{k} = nan(numGenesChar,1);
     weiPPIneighbors{k} = zeros(numGenesChar,1);
     expWeiPPIneighbors{k} = zeros(numGenesChar,1);
+    numCOMMONneighbors{k} = nan(numGenesChar,1);
+    percCOMMONneighbors{k} = nan(numGenesChar,1);
     weigwasPPIneighbors{k} = zeros(numGenesChar,1);
     expWeigwasPPIneighbors{k} = zeros(numGenesChar,1);
     gwasPPIneighbors{k} = nan(numGenesChar,1);
@@ -112,6 +116,9 @@ end
 % Match using "protein" nomenclature, mapped during processing steps above
 fprintf(1,'Characterizing the properties of %u difference genes in the context of %u genes\n',...
                         numGenesChar,numContextGenes);
+% for a selected GWAS list, find a list of k-step neighbors
+PPI_neighborsK = find_PPIneighbors(PPIN, contextGenes, numSteps); 
+
 for i = 1:numGenesChar
     gene_i = genesChar{i};
     protein_i = allUniqueProteins{i};
@@ -142,9 +149,13 @@ for i = 1:numGenesChar
         else
             PPI_neighbors_gene = PPIN.geneNames(iskStepNeighbor);
             isInContext = ismember(PPI_neighbors_gene,contextGenes);
-
+            % find common neighbors instead of GWAS hits, use a list of the
+            % neighbors of GWAS hits at a selected k threshold PPI_neighborsK{k}
+            isInContextNeighbors = ismember(PPI_neighbors_gene,PPI_neighborsK{k});
+            
             % How many k-step neighbors are in the context/disease list?:
             numPPIneighbors{k}(i) = sum(isInContext);
+            numCOMMONneighbors{k}(i) = sum(isInContextNeighbors);
 
             if doWeighted
                 % What aggregrate evidence weight spread across 1-step neighbors are on the context list?:
@@ -156,7 +167,9 @@ for i = 1:numGenesChar
             else
                 % As a percentage of the number of neighbors (~penalizes genes with many neighbors):
                 percPPIneighbors{k}(i) = 100*mean(isInContext);
-                
+                % for common neighbors use the union of both lists
+                all_neighbors = length(unique(vertcat(PPI_neighbors_gene,PPI_neighborsK{k})));
+                percCOMMONneighbors{k}(i) = sum(isInContextNeighbors)/all_neighbors; 
                 % how many labeled (fromGWAS) neighbors a gene has / # of all labeled genes
                 gwasPPIneighbors{k}(i) = sum(isInContext)/numContextGenes;
                 % fprintf(1,'%s: %u/%u neighbors from context\n',protein_i,numPPIneighbors1(i),numNeighbors);
@@ -200,6 +213,9 @@ for k = 1:numSteps
     geneStats.(sprintf('percPPIneighbors%u',k)) = percPPIneighbors{k};
     geneStats.(sprintf('weiPPIneighbors%u',k)) = weiPPIneighbors{k};
     geneStats.(sprintf('expWeiPPIneighbors%u',k)) = expWeiPPIneighbors{k};
+    
+    geneStats.(sprintf('numCOMMONneighbors%u',k)) = numCOMMONneighbors{k};
+    geneStats.(sprintf('percCOMMONneighbors%u',k)) = percCOMMONneighbors{k};
     
     geneStats.(sprintf('gwasPPIneighbors%u',k)) = gwasPPIneighbors{k};
     geneStats.(sprintf('weigwasPPIneighbors%u',k)) = weigwasPPIneighbors{k};
