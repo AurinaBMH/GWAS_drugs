@@ -72,8 +72,14 @@ for tt = 1:length(whatRegressions)
                 case 'lasso'
                     
                     [~, i1, i2] = intersect(coef_lasso{p1,3}, coef_lasso{p2,3});
+                    % correlate only values that are non-zeros in at least one instance
+%                     i11 = find(coef_lasso{p1,2}(i1)); 
+%                     i22 = find(coef_lasso{p2,2}(i2)); 
+%                     I = intersect(i11, i22); 
+%                     [r(p1,p2), p(p1, p2)] = corr(coef_lasso{p1,2}(I), coef_lasso{p2,2}(I), 'rows', 'complete', 'type', 'Spearman');
                     [r(p1,p2), p(p1, p2)] = corr(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2), 'rows', 'complete', 'type', 'Spearman');
                     subplot(numGWAS, numGWAS,indPlot(i));
+                    %scatter(coef_lasso{p1,2}(I), coef_lasso{p2,2}(I));
                     scatter(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2));
                     xlabel(whatDiseases_GWAS{p1})
                     ylabel(whatDiseases_GWAS{p2})
