@@ -20,7 +20,7 @@ GenerateResultsTables;
 
 % loop over all mapping methods and save the results to file, so can compare; 
 % load ADHD as example to select mapping methods
-load('resultsTable_ADHD_BF.mat', 'geneScores')
+load('resultsTable_ADHD_BF_2020.mat', 'geneScores')
 similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400',...
     'PPI_mapped_th0', 'PPI_mapped_th400',...
@@ -33,7 +33,7 @@ for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
         
-        whatProperty = 'percPPIneighbors1';
+        whatProperty = 'percCOMMONneighbors1';
 
     elseif contains(similarityTypes{t},'Allen')
         whatProperty = 'r';
@@ -42,8 +42,8 @@ for t=1:length(similarityTypes)
     end
     
     DistinguishingCharBar(similarityTypes{t},whatProperty, whatNull, whatThreshold); 
-%     figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
-%     print(gcf,figureName,'-dpng','-r300');
+    figureName = sprintf('figures/GWASdrug_%s_%s_%s_%s', similarityTypes{t},whatProperty, whatNull, whatThreshold);
+    print(gcf,figureName,'-dpng','-r300');
     
     
 end

@@ -10,7 +10,7 @@ if nargin <3
 end
 
 if nargin <4
-    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1','gwasPPIneighbors1', 'weiPPIneighbors1','expWeiPPIneighbors1', 'weigwasPPIneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'gwasPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'weigwasPPIneighbors2'};
+    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1','gwasPPIneighbors1', 'weiPPIneighbors1','expWeiPPIneighbors1', 'weigwasPPIneighbors1', 'numCOMMONneighbors1','percCOMMONneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'gwasPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'weigwasPPIneighbors2', 'numCOMMONneighbors2','percCOMMONneighbors2'};
 end
 
 if nargin<5
