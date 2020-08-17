@@ -8,7 +8,7 @@ function [minLim,maxLim] = plot_nullDistribution(nullScores, rhos, plotWhere)
 
 
 [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
-ff = 0.8*ff/max(ff);
+ff = 0.5*ff/max(ff);
 
 plot(ones(2,1)*(plotWhere)+ff,x,'k');
 plot(ones(2,1)*(plotWhere)-ff,x,'k');

@@ -1,7 +1,7 @@
 % GenerateResultsTables
 % Idea is to run through pipeline for each disease, and save results tables
 % for each:
-
+clear all; close all; 
 % Diseases with SNP info, etc.:
 whatDiseases = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
 whatThreshold='BF'; 

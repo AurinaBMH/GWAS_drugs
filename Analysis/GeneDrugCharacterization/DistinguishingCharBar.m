@@ -32,7 +32,7 @@ if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 elseif strcmp(whatNull, 'randomDrug')
     [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);
-    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment'); 
+    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment');
 end
 addNull = true;
 
@@ -55,7 +55,7 @@ if doPlot
     sgtitle(sprintf('%s, %s',similarityType, whatProperty))
     ax = cell(numDiseases_GWAS,1);
     if length(whatDiseases_GWAS)>3
-    f.Position = [471,945,1830,318];
+        f.Position = [471,945,1830,318];
     end
 end
 rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
@@ -64,15 +64,15 @@ pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
-
+    
     % Combine two datasets on overlap:
     [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
     geneWeightsGWAS = geneWeightsGWAS(ia);
     drugScores = drugScoresAll(ib,:);
-
+    
     fprintf(1,'%u matching (/%u %s GWAS); (/%u with treatment weights)\n',...
         length(ia),length(geneWeightsGWAS),whatDisease,length(drugScores));
-
+    
     %-------------------------------------------------------------------------------
     % Get scores for the property of interest:
     rhos = zeros(numDiseases_Treatment,1);
@@ -83,15 +83,15 @@ for i = 1:numDiseases_GWAS
             warning('Issue with %s-%s',whatDiseases_Treatment{k},whatDisease)
         end
     end
-
+    
     rhosALL(:,i) = rhos;
-
+    
     % Generate null distributions:
     numNulls = 500;
     isSig = zeros(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
     all_nullScores = cell(numDiseases_Treatment,1);
-
+    
     if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
         % one single set of nulls for the whole analysis
         nullScores = zeros(numNulls,1);
@@ -109,10 +109,10 @@ for i = 1:numDiseases_GWAS
                 case 'randomPsychDisease'
                     % Shuffle weights taken from a random
                     % psychiatric disorders or non-psychiatric disease (pooled nulls):
-
+                    
                     psychDIS = contains(whatDiseases_Treatment, 'ADHD') | contains(whatDiseases_Treatment, 'BIP') | ...
                         contains(whatDiseases_Treatment, 'SCZ') | contains(whatDiseases_Treatment, 'MDD');
-
+                    
                     % find columns for psychiatric drug lists
                     if strcmp(whatDisease, 'ADHD') || strcmp(whatDisease,'MDD2') || ...
                             strcmp(whatDisease, 'SCZ') || strcmp(whatDisease, 'BIP2')
@@ -120,7 +120,7 @@ for i = 1:numDiseases_GWAS
                     else
                         selectDIS_IND = find(psychDIS==0);
                     end
-
+                    
                     num_DIS = length(selectDIS_IND);
                     diseaseInd = selectDIS_IND(randi(num_DIS,1));
                     geneWeightsRand = drugScores(:,diseaseInd);
@@ -132,40 +132,40 @@ for i = 1:numDiseases_GWAS
             isSig(k) = (mean(rhos(k) < nullScores) < 0.05);
             pVals(k) = mean(rhos(k) < nullScores);
         end
-
+        
     else
-
+        
         for l = 1:numDiseases_Treatment
             nullScores = zeros(numNulls,1);
             for k = 1:numNulls
                 % separate set of nulls for each drug target list
                 switch whatNull
-
+                    
                     case 'randomGene' % is the actual match higher than a match with completely random genes
                         if ~contains(similarityType, 'PPI') && ~contains(similarityType, 'Allen')
                             % for this null, load all available scores for genes
                             % select a random set of genes from GWAS scores - keep
                             % drugs the same, randomise GWAS scores; This is
                             % suitable only for MAGMA-based  methods;
-
+                            
                             switch whatProperty
                                 case 'P'
                                     geneWeightsGWAS_all = -log10(DISORDERlist.(similarityType).(whatDisease).(whatProperty));
                                 otherwise
                                     geneWeightsGWAS_all = DISORDERlist.(similarityType).(whatDisease).(whatProperty);
                             end
-
+                            
                             geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
                             % normalizde the weights, by default this used
                             % norm-1, but mabe should be chnaged to norm2?
                             geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand);
                             nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm);
                         else
-
+                            
                             warning('% null is not compatible with %s\n', whatNull, whatNull)
-
+                            
                         end
-
+                        
                     case 'randomTarget' % is the actual match higher than a match with random gene score assignment
                         % Shuffle weights taken from each drug list individually
                         drugScores_DIS = drugScores(:,l);
@@ -176,34 +176,35 @@ for i = 1:numDiseases_GWAS
                         % and get a normalized score vector for this list of drugs as if it's a separate disease
                         %drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
                         % load pre-computed nulls
-                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k); 
+                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
-
+                        
                 end
             end
             % Compute p-values: based on separate nulls
             isSig(l) = (mean(rhos(l) < nullScores) < 0.05);
             pVals(l) = mean(rhos(l) < nullScores);
-            % save separate nulls 
-            all_nullScores{l} = nullScores; 
+            % save separate nulls
+            all_nullScores{l} = nullScores;
         end
     end
-
+    
     pValsALL(:,i) = pVals;
-
+    
     % Sort:
     [rhos,ix] = sort(rhos,'descend');
-
+    
     %---------------------------------------------------------------------------
     if doPlot
         ax{i} = subplot(1,numDiseases_GWAS,i); hold on
         b = bar(rhos);
-
+        
         if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
             if addNull && ~all(isnan(nullScores))
                 
                 % function to plot nulls
-                [minLim,maxLim] = plot_nullDistribution(nullScores, rhos); 
+                % this will plot the distribution at the end of baf chart
+                [minLim,maxLim] = plot_nullDistribution(nullScores, rhos, numDiseases_Treatment+1);
                 
                 ax{i}.XTick = 1:numDiseases_Treatment+1;
                 ax{i}.XTickLabel = {whatDiseases_Treatment{ix},'null'};
@@ -213,22 +214,40 @@ for i = 1:numDiseases_GWAS
                 end
                 
             else
-
+                
                 ax{i}.XTick = 1:numDiseases_Treatment;
                 ax{i}.XTickLabel = whatDiseases_Treatment(ix);
-
+                
             end
-
+            
         else
             
             % for other nulls plot distributions on each bar
+            minLim = zeros(numDiseases_Treatment,1); 
+            maxLim = zeros(numDiseases_Treatment,1); 
             
+            for nn = 1:numDiseases_Treatment
+                nullScores_selected = all_nullScores{nn};
+                
+                if addNull && ~all(isnan(nullScores_selected))
+                    
+                    % function to plot nulls
+                    % this will plot the distribution at the end of baf chart
+                    [minLim(nn),maxLim(nn)] = plot_nullDistribution(nullScores, rhos, nn);
+                    
+                end
+ 
+            end
+            
+            if range(rhos) > 0
+                ax{i}.YLim = [min(minLim),max(maxLim)];
+            end
             ax{i}.XTick = 1:numDiseases_Treatment;
             ax{i}.XTickLabel = whatDiseases_Treatment(ix);
-
+            
         end
-
-
+        
+        
         ax{i}.XTickLabelRotation = 45;
         xlabel('Disease treatment')
         ylabel(sprintf('%s similarity',whatScore))
@@ -239,10 +258,10 @@ for i = 1:numDiseases_GWAS
         end
         b.CData = cMapGeneric(ix,:);
         b.FaceColor = 'flat';
-
+        
         linkaxes([ax{:}],'y');
     end
-
-
+    
+    
 end
 end
