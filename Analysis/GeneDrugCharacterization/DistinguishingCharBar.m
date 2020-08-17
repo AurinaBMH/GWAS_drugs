@@ -90,6 +90,7 @@ for i = 1:numDiseases_GWAS
     numNulls = 500;
     isSig = zeros(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
+    all_nullScores = cell(numDiseases_Treatment,1);
 
     if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
         % one single set of nulls for the whole analysis
@@ -183,6 +184,8 @@ for i = 1:numDiseases_GWAS
             % Compute p-values: based on separate nulls
             isSig(l) = (mean(rhos(l) < nullScores) < 0.05);
             pVals(l) = mean(rhos(l) < nullScores);
+            % save separate nulls 
+            all_nullScores{l} = nullScores; 
         end
     end
 
@@ -198,31 +201,17 @@ for i = 1:numDiseases_GWAS
 
         if strcmp(whatNull, 'randomWeight') || strcmp(whatNull, 'randomDisease') || strcmp(whatNull, 'randomPsychDisease')
             if addNull && ~all(isnan(nullScores))
-                % Add null distribution:
-                [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
-                ff = 0.8*ff/max(ff);
-                plot(ones(2,1)*(numDiseases_Treatment+1)+ff,x,'k');
-                plot(ones(2,1)*(numDiseases_Treatment+1)-ff,x,'k');
+                
+                % function to plot nulls
+                [minLim,maxLim] = plot_nullDistribution(nullScores, rhos); 
+                
                 ax{i}.XTick = 1:numDiseases_Treatment+1;
                 ax{i}.XTickLabel = {whatDiseases_Treatment{ix},'null'};
-                % Add horizontal lines to aid comparison to null:
-                null_p50 = quantile(nullScores,0.5);
-                plot([1,numDiseases_Treatment+1],ones(2,1)*null_p50,':k')
-                null_p95 = quantile(nullScores,0.95);
-                plot([1,numDiseases_Treatment+1],ones(2,1)*null_p95,'--k')
+                
                 if range(rhos) > 0
-                    maxLim = max(rhos)*1.1;
-                    if maxLim < null_p95
-                        maxLim = null_p95*1.1;
-                    end
-                    minLim = min(rhos)*0.9;
-                    null_p10 = quantile(nullScores,0.1);
-                    if minLim > null_p10
-                        minLim = null_p10*0.9;
-                    end
                     ax{i}.YLim = [minLim,maxLim];
                 end
-
+                
             else
 
                 ax{i}.XTick = 1:numDiseases_Treatment;
@@ -231,9 +220,11 @@ for i = 1:numDiseases_GWAS
             end
 
         else
-
+            
+            % for other nulls plot distributions on each bar
+            
             ax{i}.XTick = 1:numDiseases_Treatment;
-            ax{i}.XTickLabel = {whatDiseases_Treatment{ix}};
+            ax{i}.XTickLabel = whatDiseases_Treatment(ix);
 
         end
 
