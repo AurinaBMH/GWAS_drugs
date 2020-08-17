@@ -1,9 +1,9 @@
 function T = give_drugTargets_drugBank(vocabulary, targets, drugName)
 % this function finds drug targets for selected drug based on drugBank database
 
-INDvoc = find(contains(lower(vocabulary.CommonName), lower(drugName)), 1);
+INDvoc = find(strcmpi(vocabulary.CommonName, drugName), 1);
 if isempty(INDvoc)
-    INDvoc = find(contains(lower(vocabulary.Synonyms), lower(drugName)), 1);
+    INDvoc = find(find(strcmpi(vocabulary.Synonyms,drugName)), 1);
 end
 
 T = [];
