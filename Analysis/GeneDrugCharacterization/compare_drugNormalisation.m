@@ -1,6 +1,7 @@
 % look for correlations between drug-normalised and non-normalised scores;
 function compare_drugNormalisation()
 
+% this function compares normalisation
 [indicatorTableF] = ImportTreatmentLists(false);
 [indicatorTableT] = ImportTreatmentLists(true);
 geneNamesF = indicatorTableF.Row;
