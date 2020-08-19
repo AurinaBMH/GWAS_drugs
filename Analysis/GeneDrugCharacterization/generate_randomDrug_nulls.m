@@ -1,5 +1,11 @@
- 
 function generate_randomDrug_nulls()
+ 
+% this function generates a set of random nulls by selecting the selected
+% numnber of genes each time; Overall, the nulls for different numbers of
+% drugs are very similar, could use only one null with the average number
+% of drugs for comparison to all, but for now making a separate null for
+% each drug list; 
+
 numNulls = 5000; 
 whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 params = SetDefaultParams();

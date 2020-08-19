@@ -8,7 +8,7 @@ params = SetDefaultParams();
 %whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
 whatDiseases_GWAS = {'MDD2', 'SCZ', 'BIP2'}; %'AD'};
 whatDiseases_Treatment = {'BIP','SCZ','MDD'};
-whatNull = 'randomDrug';
+whatNull = 'randomDisease';
 
 diseaseResultsR = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 diseaseResultsP = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
