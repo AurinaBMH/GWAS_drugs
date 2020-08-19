@@ -1,4 +1,7 @@
-function dataTable = give_drugTargets()
+function dataTable = give_drugTargets(whatTargets)
+if nargin < 1
+    whatTargets = 'active'; 
+end
 
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
@@ -8,8 +11,13 @@ drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/
 
 % load drugBank database files
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
-%targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
-targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
+%
+switch whatTargets
+    case 'active'
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
+    case 'all'
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
+end
 dataTable = struct;
 
 for d = 1:length(disorders)
@@ -75,7 +83,7 @@ for d = 1:length(disorders)
     dataTable.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
     fprintf(1,'%s has %u drugs\n',disorders{d},length(drugName));
 end
-
-save('DataOutput/drugTargets_2020.mat', 'dataTable')
+fileName = sprintf('DataOutput/drugTargets_%s_2020.mat', whatTargets); 
+save(fileName, 'dataTable'); 
 
 end
