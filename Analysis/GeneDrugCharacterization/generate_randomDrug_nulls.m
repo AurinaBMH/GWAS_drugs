@@ -26,6 +26,13 @@ for i = 1:length(whatDiseases_Treatment)
     RANDOMdrugs_treatment{i} = RANDOMdrugs;
 end
 
-fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrug.mat', numNulls, params.whatDrugTargets); 
+
+%switch whatTargets
+    %case 'all'
+        %fileName = sprintf('DataOutput/nulls_%d_%stargets_all_randomDrug.mat', numNulls,params.whatDrugTargets); 
+    %case 'active'
+        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrug.mat', numNulls,params.whatDrugTargets); 
+%end
+
 save(fileName, 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'params');
 end

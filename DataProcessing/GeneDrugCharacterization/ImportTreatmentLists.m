@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets)
+function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets, whatTargets)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -7,10 +7,15 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 2
-    whatDrugTargets = '2020';
+    whatDrugTargets = '2020'; 
+    whatTargets = 'active'; 
     % 2020 - uses automated AA version
     % 2018 - uses Janett's version from May 2018; 
 end
+if nargin < 3
+    whatTargets = 'active'; 
+end
+
 
 if normalizeWithinDrugs
     fprintf(1,'Weighting genes equally within a drug...\n');
@@ -90,7 +95,13 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-        load('DataOutput/drugTargets_2020.mat', 'dataTable'); 
+        switch whatTargets
+            case 'all'
+                fileName = 'DataOutput/drugTargets_all_2020.mat'; 
+            case 'active'
+                fileName = 'DataOutput/drugTargets_2020.mat';
+        end
+        load(fileName, 'dataTable'); 
 end
 % make a table of all mentioned drugs with their targets keeping only unique ones 
 DT = cell(numDiseases,1); 

@@ -83,7 +83,16 @@ for d = 1:length(disorders)
     dataTable.(disorders{d}) = table(drugName, targetCOMB,'VariableNames',{'Name','Target'});
     fprintf(1,'%s has %u drugs\n',disorders{d},length(drugName));
 end
-fileName = sprintf('DataOutput/drugTargets_%s_2020.mat', whatTargets); 
+
+% active is default - will not have a not in the name, all will have a flag
+% in the file name
+switch whatTargets
+    case 'all'
+        fileName = sprintf('DataOutput/drugTargets_%s_2020.mat', whatTargets);
+    case 'active'
+        fileName = 'DataOutput/drugTargets_2020.mat';
+end
+        
 save(fileName, 'dataTable'); 
 
 end
