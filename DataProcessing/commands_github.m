@@ -96,7 +96,7 @@ whatProperty = {'P', 'percPPIneighbors1'};
 
 
 for D = 1:length(whatDiseaseGWAS)
-figure; 
+figure('color','w'); 
     for T = 1:length(similarityType)
         subplot(length(similarityType),1,T);
         data = VisualizeWeightingVectors_GWASvsDRUG(whatDiseaseGWAS{D}, whatDiseaseDRUG{D}, similarityType{T}, whatProperty{T}, false);
