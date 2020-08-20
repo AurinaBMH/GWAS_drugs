@@ -31,7 +31,8 @@ whatScore = params.whatScore;
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 elseif strcmp(whatNull, 'randomDrug')
-    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment');
+    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    geneNames_nulls = geneNames; 
 end
 addNull = true;
 
@@ -65,7 +66,7 @@ for i = 1:numDiseases_GWAS
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
     
     % Combine two datasets on overlap:
-    [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
+    [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug);
     geneWeightsGWAS = geneWeightsGWAS(ia);
     drugScores = drugScoresAll(ib,:);
     
@@ -175,8 +176,11 @@ for i = 1:numDiseases_GWAS
                         % and get a normalized score vector for this list of drugs as if it's a separate disease
                         %drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
                         % load pre-computed nulls
-                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
-                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
+                        [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
+                        drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
+                        %drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
+                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
+                        %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(:));
                         
                 end
             end
@@ -192,6 +196,7 @@ for i = 1:numDiseases_GWAS
     
     % Sort:
     [rhos,ix] = sort(rhos,'descend');
+    all_nullScores = all_nullScores(ix); 
     
     %---------------------------------------------------------------------------
     if doPlot
@@ -202,7 +207,7 @@ for i = 1:numDiseases_GWAS
             if addNull && ~all(isnan(nullScores))
                 
                 % function to plot nulls
-                % this will plot the distribution at the end of baf chart
+                % this will plot the distribution at the end of bar chart for pulled nulls
                 [minLim,maxLim] = plot_nullDistribution(nullScores, rhos, numDiseases_Treatment+1);
                 
                 ax{i}.XTick = 1:numDiseases_Treatment+1;
@@ -226,13 +231,13 @@ for i = 1:numDiseases_GWAS
             maxLim = zeros(numDiseases_Treatment,1); 
             
             for nn = 1:numDiseases_Treatment
-                nullScores_selected = all_nullScores{nn};
                 
                 if addNull && ~all(isnan(nullScores_selected))
                     
                     % function to plot nulls
                     % this will plot the distribution at the end of baf chart
-                    [minLim(nn),maxLim(nn)] = plot_nullDistribution(nullScores, rhos, nn);
+                    % all_nullScores are now reordered to correspond ro rhos 
+                    [minLim(nn),maxLim(nn)] = plot_nullDistribution(all_nullScores{nn}, rhos, nn);
                     
                 end
  

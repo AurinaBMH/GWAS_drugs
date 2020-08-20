@@ -21,7 +21,7 @@ RANDOMdrugs_treatment = cell(length(whatDiseases_Treatment),1);
 for i = 1:length(whatDiseases_Treatment)
     for j = 1:numNulls
         diseaseName = whatDiseases_Treatment{i}; 
-        RANDOMdrugs(:,j) = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs);
+        [RANDOMdrugs(:,j), geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs);
     end
     RANDOMdrugs_treatment{i} = RANDOMdrugs;
 end
@@ -34,5 +34,5 @@ end
         fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrug.mat', numNulls,params.whatDrugTargets); 
 %end
 
-save(fileName, 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'params');
+save(fileName, 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames', 'params');
 end

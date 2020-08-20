@@ -1,4 +1,4 @@
-function RNADOMdrugs = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs)
+function [RNADOMdrugs, geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs)
 % This function for a selected disease: 
 % 1. finds a number of drugs for that disease
 % 2. selects a random set of drugs (same size)
@@ -24,6 +24,7 @@ geneWeights = indicatorTable.('RANDOM');
 % Normalize (non-NaN elements) to unit vector as 2-norm:
 whatNorm = 2; 
 RNADOMdrugs = normalizeScoreVector(geneWeights, whatNorm); 
+geneNames = indicatorTable.Row; 
 
 end
 
