@@ -202,8 +202,8 @@ percIndicatorTable = array2table(propMatrix,'RowNames',allGenes,...
     'VariableNames',whatDiseases);
 
 % Sort the table:
-[~,ix] = sort(meanRow,'descend');
-indicatorTable = indicatorTable(ix,:);
-percIndicatorTable = percIndicatorTable(ix,:);
+% [~,ix] = sort(meanRow,'descend');
+% indicatorTable = indicatorTable(ix,:);
+% percIndicatorTable = percIndicatorTable(ix,:);
 
 end

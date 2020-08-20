@@ -31,7 +31,6 @@ whatScore = params.whatScore;
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 elseif strcmp(whatNull, 'randomDrug')
-    [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);
     load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment');
 end
 addNull = true;
@@ -87,7 +86,7 @@ for i = 1:numDiseases_GWAS
     rhosALL(:,i) = rhos;
     
     % Generate null distributions:
-    numNulls = 500;
+    numNulls = 1000; 
     isSig = zeros(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
     all_nullScores = cell(numDiseases_Treatment,1);

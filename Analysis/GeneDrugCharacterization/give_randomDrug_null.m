@@ -17,7 +17,7 @@ drugs_rand = allDrugs(INDrand,:);
 
 normalizeWithinDrugs = true;
 % this is a modified version of the original ImportTreatmentLists that adds random set as a separate disease
-% need to keep other idseases as well, so the list of targets is complete
+% need to keep other dseases as well, so the list of targets is complete
 indicatorTable = ImportTreatmentLists_random(normalizeWithinDrugs, drugs_rand, params.whatDrugTargets);
 geneWeights = indicatorTable.('RANDOM');
 
