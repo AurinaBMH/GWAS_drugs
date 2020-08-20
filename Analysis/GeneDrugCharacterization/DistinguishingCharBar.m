@@ -231,13 +231,13 @@ for i = 1:numDiseases_GWAS
             maxLim = zeros(numDiseases_Treatment,1); 
             
             for nn = 1:numDiseases_Treatment
-                
+                nullScores_selected = all_nullScores{nn}; 
                 if addNull && ~all(isnan(nullScores_selected))
                     
                     % function to plot nulls
                     % this will plot the distribution at the end of baf chart
                     % all_nullScores are now reordered to correspond ro rhos 
-                    [minLim(nn),maxLim(nn)] = plot_nullDistribution(all_nullScores{nn}, rhos, nn);
+                    [minLim(nn),maxLim(nn)] = plot_nullDistribution(nullScores_selected, rhos, nn);
                     
                 end
  
