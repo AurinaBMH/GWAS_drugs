@@ -1,12 +1,26 @@
-function [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS)
+function [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
 
 whatThreshold = 'BF'; 
+
+switch whatMeasures
+    case 'all'
 similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
         'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
         'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
         'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900', ...
         'eQTLHeart_Left_Ventricle', 'eQTLLiver', 'eQTLWhole_Blood', 'eQTLbrain'};
-PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1','weiPPIneighbors1','expWeiPPIneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2'};    
+PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1', 'numCOMMONneighbors1', 'percCOMMONneighbors1', ...
+    'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2', 'expWeiPPIneighbors2'};  
+
+    case 'reduced'
+similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
+        'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
+        'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
+        'PPI_mapped_th600', 'PPI_mapped_th900', 'eQTLbrain'};
+PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};   
+end
+    
+ 
 
 whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
 whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','cardiology','diabetes'};
@@ -50,15 +64,15 @@ for s=1:length(similarityTypes)
 end
 
 % Combine two datasets on overlap:
-[~,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug,'stable');
+[~,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug);
+
 geneWeightsGWAS_ord = cell(length(geneWeightsGWAS),1); 
 for k=1:length(geneWeightsGWAS)
     
     geneWeightsGWAS_ord{k} = geneWeightsGWAS{k}(ia,:);
     
 end
-drugScores_ord = drugScoresAll(ib,:);
-drugScores_ord = drugScores_ord(:,takeVal);
+drugScores_ord = drugScoresAll(ib,takeVal);
 
 geneWeightsGWAS_ALL = horzcat(geneWeightsGWAS_ord{:}); 
 
