@@ -176,11 +176,11 @@ for i = 1:numDiseases_GWAS
                         % and get a normalized score vector for this list of drugs as if it's a separate disease
                         %drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
                         % load pre-computed nulls
-                        [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
-                        drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
-                        %drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
-                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
-                        %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(:));
+%                         [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
+%                         drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
+                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
+                        %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
+                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(:));
                         
                 end
             end

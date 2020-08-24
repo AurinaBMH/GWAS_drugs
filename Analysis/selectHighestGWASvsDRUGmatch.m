@@ -4,11 +4,30 @@ clear all; close all;
 
 params = SetDefaultParams(); 
 % first run all diseases with itself
-%whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'}; %'AD'};
-%whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','pulmonary','cardiology','gastro','diabetes'};
-whatDiseases_GWAS = {'MDD2', 'SCZ', 'BIP2'}; %'AD'};
+whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'}; %'AD'};
+whatNull = 'randomDrug';
+
+for dg = 1:length(whatDiseases_GWAS)
+    
+    whatDisease_GWAS{1} =  whatDiseases_GWAS{dg};
+    
+    compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull);
+    
+    % this is for one
+    figureName = sprintf('figures/GWAS%s_vs_drug_%s_%stargets', whatDisease_GWAS{1}, whatNull, params.whatDrugTargets);
+    print(gcf,figureName,'-dpng','-r300');
+    
+end
+
+% rows are GWAS lists, columns are drugs
+fileName = sprintf('DataOutput/GWASvsDRUGS_%s.mat', whatNull); 
+save(fileName, 'diseaseResultsR', 'diseaseResultsP', 'whatDiseases_GWAS', 'whatDiseases_Treatment')
+
+% run pairs of diseases
+
+whatDiseases_GWAS = {'MDD2', 'SCZ', 'BIP2'}; 
 whatDiseases_Treatment = {'BIP','SCZ','MDD'};
-whatNull = 'randomDisease';
+whatNull = 'randomDrug';
 
 diseaseResultsR = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 diseaseResultsP = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
@@ -19,17 +38,19 @@ for dg = 1:length(whatDiseases_GWAS)
     whatDisease_GWAS{1} =  whatDiseases_GWAS{dg};
     Dname = whatDiseases_Treatment{dt};
     [diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull, Dname);
-    %[diseaseResultsR{dg, dt}, diseaseResultsP{dg, dt}] = compareGWASvsDRUGmatches(whatDisease_GWAS, whatNull);
+    
     % this is for one
     figureName = sprintf('figures/GWAS%s_vs_drug%s_%s', whatDisease_GWAS{1}, Dname, whatNull);
-    %figureName = sprintf('figures/GWAS%s_vs_drug_%s_%stargets', whatDisease_GWAS{1}, whatNull, params.whatDrugTargets);
     print(gcf,figureName,'-dpng','-r300');
+    
   end
 end
 
 % rows are GWAS lists, columns are drugs
 fileName = sprintf('DataOutput/GWASvsDRUGS_%s.mat', whatNull); 
 save(fileName, 'diseaseResultsR', 'diseaseResultsP', 'whatDiseases_GWAS', 'whatDiseases_Treatment')
+
+
 
 % for PPI select all 1 and 2 neighbor measures
 % whatDiseases_GWAS = {'BIP2'};
