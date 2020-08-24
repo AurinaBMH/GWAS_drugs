@@ -3,6 +3,7 @@ function [coef_lasso, coef_linear, sigMeasures] = compare_lasso_coef(whatDisease
 %y - response: drug score
 if nargin < 1
     whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
+    whatMeasures = 'reduced';
 end
 
 numGWAS = length(whatDiseases_GWAS);
@@ -14,7 +15,7 @@ sigMeasures = cell(numGWAS,2);
 for i = 1:numGWAS
     
     whatGWAS = whatDiseases_GWAS{i};
-    [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS);
+    [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures);
     
     % remove rows that are all NaN and measure names
     INDnan = find(all(isnan(geneWeightsGWAS_ALL),1));
@@ -33,13 +34,14 @@ for i = 1:numGWAS
     end
     
     % try lasso, in most cases, all values are set to 0, so not much use of that
-    [B, FitInfo] = lasso(geneWeightsGWAS_ALL,drugScores_ord, 'CV',10);
+    [B, FitInfo] = lasso(geneWeightsGWAS_ALL,drugScores_ord, 'CV',10, 'PredictorNames',measureNames);
     lassoPlot(B,FitInfo,'PlotType','CV');
     title(sprintf('%s',whatDiseases_GWAS{i}))
     idxLambda1SE = FitInfo.Index1SE;
     idxLambdaMinMSE = FitInfo.IndexMinMSE;
     coef_lasso{i,1} = B(:,idxLambda1SE);
-    coef_lasso{i,2} = B(:,idxLambdaMinMSE);
+    %coef_lasso{i,2} = B(:,idxLambdaMinMSE);
+    coef_lasso{i,2} = B(:,50);
     coef_lasso{i,3} = measureNames;
     
     legend('show') % Show legend
