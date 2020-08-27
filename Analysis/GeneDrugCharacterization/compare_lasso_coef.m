@@ -1,14 +1,17 @@
-function [coef_lasso, coef_linear, sigMeasures] = compare_lasso_coef(whatDiseases_GWAS)
+function [coef_lasso, coef_linear, sigMeasures] = compare_lasso_coef(whatMeasures, whatDiseases_GWAS)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
+    whatMeasures = 'reduced'; % 'reduced' or 'all'; 
+end
+
+if nargin < 2
     whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
-    whatMeasures = 'reduced';
 end
 
 numGWAS = length(whatDiseases_GWAS);
-coef_lasso = cell(numGWAS,3);
-coef_linear = cell(numGWAS,2);
+coef_lasso = cell(numGWAS,4);
+coef_linear = cell(numGWAS,4);
 sigMeasures = cell(numGWAS,2);
 
 % run lasso for each GWAS
@@ -26,6 +29,10 @@ for i = 1:numGWAS
     mdl = fitlm(geneWeightsGWAS_ALL,drugScores_ord);
     coef_linear{i,1} = mdl.Coefficients(2:end,:); % don't take intercept
     coef_linear{i,2} = measureNames;
+    A = anova(mdl,'summary'); 
+    coef_linear{i,3} = A.F(2); 
+    coef_linear{i,4} = A.pValue(2); 
+
     % find whihc p<0.05
     kk = find(mdl.Coefficients.pValue<0.05);
     if ~isempty(kk)
@@ -37,55 +44,65 @@ for i = 1:numGWAS
     [B, FitInfo] = lasso(geneWeightsGWAS_ALL,drugScores_ord, 'CV',10, 'PredictorNames',measureNames);
     lassoPlot(B,FitInfo,'PlotType','CV');
     title(sprintf('%s',whatDiseases_GWAS{i}))
-    idxLambda1SE = FitInfo.Index1SE;
-    idxLambdaMinMSE = FitInfo.IndexMinMSE;
-    coef_lasso{i,1} = B(:,idxLambda1SE);
-    %coef_lasso{i,2} = B(:,idxLambdaMinMSE);
+    
+    coef_lasso{i,1} = B(:,FitInfo.IndexMinMSE);
     coef_lasso{i,2} = B(:,50);
     coef_lasso{i,3} = measureNames;
+    coef_lasso{i,4} = FitInfo.DF(FitInfo.IndexMinMSE);% number of parameters left at minSE 
     
-    legend('show') % Show legend
+    legend('show')
 end
 
 
-indPlot = find(tril(ones(numGWAS, numGWAS),-1));
+%indPlot = find(tril(ones(numGWAS, numGWAS)));
 whatRegressions = {'linear', 'lasso'};
 
 for tt = 1:length(whatRegressions)
     whatRegression = whatRegressions{tt};
     r = nan(numGWAS, numGWAS);
     p = nan(numGWAS, numGWAS);
-    figure; set(gcf,'color','w');
-    i=1;
+    %figure; set(gcf,'color','w');
+    %i=1;
     for p1 = 1:numGWAS
-        for p2 = p1+1:numGWAS
+        for p2 = p1:numGWAS
             
             %find measures that are common for each pair
             switch whatRegression
                 case 'linear'
-                    [~, i1, i2] = intersect(coef_linear{p1,2}, coef_linear{p2,2});
-                    [r(p1,p2), p(p1, p2)] = corr(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2), 'rows', 'complete', 'type', 'Spearman');
-                    subplot(numGWAS, numGWAS,indPlot(i));
-                    scatter(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2));
-                    xlabel(whatDiseases_GWAS{p1})
-                    ylabel(whatDiseases_GWAS{p2})
-                    i=i+1;
+                    if p1~=p2
+                        
+                        [~, i1, i2] = intersect(coef_linear{p1,2}, coef_linear{p2,2});
+                        [r(p1,p2), p(p1, p2)] = corr(coef_linear{p1,1}.Estimate(i1), coef_linear{p2,1}.Estimate(i2), 'rows', 'complete', 'type', 'Spearman');
+                        
+                    else
+                        
+                        r(p1,p2) = 0; % give a score of 0, so it doesn't disturb the scale; 
+                        p(p1,p2) = coef_linear{p1,4};
+                        
+                    end
+                    %subplot(numGWAS, numGWAS,indPlot(i));
+                    %scatter(coef_linear{p1,1}.tStat(i1), coef_linear{p2,1}.tStat(i2));
+                    %xlabel(whatDiseases_GWAS{p1})
+                    %ylabel(whatDiseases_GWAS{p2})
+                    %i=i+1;
                     
                 case 'lasso'
                     
+                    if p1~=p2
+                        
                     [~, i1, i2] = intersect(coef_lasso{p1,3}, coef_lasso{p2,3});
-                    % correlate only values that are non-zeros in at least one instance
-%                     i11 = find(coef_lasso{p1,2}(i1)); 
-%                     i22 = find(coef_lasso{p2,2}(i2)); 
-%                     I = intersect(i11, i22); 
-%                     [r(p1,p2), p(p1, p2)] = corr(coef_lasso{p1,2}(I), coef_lasso{p2,2}(I), 'rows', 'complete', 'type', 'Spearman');
                     [r(p1,p2), p(p1, p2)] = corr(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2), 'rows', 'complete', 'type', 'Spearman');
-                    subplot(numGWAS, numGWAS,indPlot(i));
-                    %scatter(coef_lasso{p1,2}(I), coef_lasso{p2,2}(I));
-                    scatter(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2));
-                    xlabel(whatDiseases_GWAS{p1})
-                    ylabel(whatDiseases_GWAS{p2})
-                    i=i+1;
+%                     subplot(numGWAS, numGWAS,indPlot(i));
+%                     scatter(coef_lasso{p1,2}(i1), coef_lasso{p2,2}(i2));
+%                     xlabel(whatDiseases_GWAS{p1})
+%                     ylabel(whatDiseases_GWAS{p2})
+%                     i=i+1;
+                    else
+                        
+                        r(p1,p2) = 0; % give a score of 0, so it doesn't disturb the scale; 
+                        p(p1,p2) = coef_lasso{p1,4}; % this is a number of non-zero parameters at minSE
+                        
+                    end
                     
             end
         end
