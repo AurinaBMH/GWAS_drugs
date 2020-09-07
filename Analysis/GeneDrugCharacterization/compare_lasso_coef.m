@@ -44,18 +44,28 @@ for i = 1:numGWAS
     [B, FitInfo] = lasso(geneWeightsGWAS_ALL,drugScores_ord, 'CV',10, 'PredictorNames',measureNames);
     lassoPlot(B,FitInfo,'PlotType','CV');
     title(sprintf('%s',whatDiseases_GWAS{i}))
+    legend('show')
+    
     
     coef_lasso{i,1} = B(:,FitInfo.IndexMinMSE);
     coef_lasso{i,2} = B(:,50);
     coef_lasso{i,3} = measureNames;
     coef_lasso{i,4} = FitInfo.DF(FitInfo.IndexMinMSE);% number of parameters left at minSE 
+
+    % try PLS
+    geneWeightsGWAS_ALL(isnan(geneWeightsGWAS_ALL)) = 0;
+    [XL,yl,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(geneWeightsGWAS_ALL,drugScores_ord,size(geneWeightsGWAS_ALL,2));
+    stats.W(:,1); 
     
-    legend('show')
+    figure; plot(1:size(geneWeightsGWAS_ALL,2),cumsum(100*PCTVAR(2,:)),'-bo');
+    xlabel('Number of PLS components');
+    ylabel('Percent Variance Explained in y');
+    title(sprintf('%s', whatGWAS))
 end
 
 
 %indPlot = find(tril(ones(numGWAS, numGWAS)));
-whatRegressions = {'linear', 'lasso'};
+whatRegressions = {'linear', 'lasso', 'PLS'};
 
 for tt = 1:length(whatRegressions)
     whatRegression = whatRegressions{tt};
@@ -103,6 +113,7 @@ for tt = 1:length(whatRegressions)
                         p(p1,p2) = coef_lasso{p1,4}; % this is a number of non-zero parameters at minSE
                         
                     end
+                
                     
             end
         end
