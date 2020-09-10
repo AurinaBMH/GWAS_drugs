@@ -111,22 +111,22 @@ end
 % (ii) Include genes that are brain eQTLs 
 
 % (*) binarized at zero evidence threshold:
-numSteps = 5;
+numSteps = 3;
 geneScores.PPI_mapped_th0 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,0,numSteps);
 geneScores.PPI_eQTLbrain_th0 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,0,numSteps);
 
 % (*) binarized at an evidence threshold of 0.4:
-numSteps = 6;
+numSteps = 3;
 geneScores.PPI_mapped_th400 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,400,numSteps);
 geneScores.PPI_eQTLbrain_th400 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,400,numSteps);
 
 % (*) binarized at an evidence threshold of 0.6:
-numSteps = 6;
+numSteps = 3;
 geneScores.PPI_mapped_th600 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,600,numSteps);
 geneScores.PPI_eQTLbrain_th600 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,600,numSteps);
 
 % (*) Binarized at an evidence threshold of 0.9:
-numSteps = 6;
+numSteps = 3;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,900,numSteps);
 
