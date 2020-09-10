@@ -27,7 +27,7 @@ similarityTypes = setdiff(fieldnames(geneScores), {'gene', 'params',...
     'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'});
 
 whatThreshold = 'BF'; 
-whatNull = 'randomTarget'; 
+whatNull = 'randomDrug'; 
 
 for t=1:length(similarityTypes)
     

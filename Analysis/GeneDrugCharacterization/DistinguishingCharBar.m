@@ -10,7 +10,7 @@ if nargin < 2
     % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
 if nargin < 3
-    whatNull = 'randomDisease';
+    whatNull = 'randomDrug';
 end
 if nargin <4
     whatThreshold = 'BF';

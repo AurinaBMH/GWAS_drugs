@@ -1,7 +1,7 @@
 function [diseaseResultsR, diseaseResultsP, similarityTypes,ALLmeasures] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
 
 if nargin <2
-    whatNull = 'randomDisease';
+    whatNull = 'randomDrug';
 end
 
 if nargin <3
@@ -10,20 +10,19 @@ if nargin <3
 end
 
 if nargin <4
-    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1', 'weiPPIneighbors1','expWeiPPIneighbors1', 'numCOMMONneighbors1','percCOMMONneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'numCOMMONneighbors2','percCOMMONneighbors2'};
+    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1', 'numPPIneighbors2','percPPIneighbors2'};
+    %{'weiPPIneighbors1','expWeiPPIneighbors1', 'numCOMMONneighbors1','percCOMMONneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'numCOMMONneighbors2','percCOMMONneighbors2'}
 end
 
 if nargin<5
-    similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
-        'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
-        'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
-        'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900', ...
-        'eQTLHeart_Left_Ventricle', 'eQTLLiver', 'eQTLWhole_Blood', 'eQTLbrain'};
+    params = SetDefaultParams();
+    PPIbased = {'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
+        'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900'}; 
+    AHBAbased = {'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'}; 
+    similarityTypes = [params.whatANNOT, AHBAbased, PPIbased]; 
+   
 end
 
-if strcmp(Dname, 'HF')
-    Dname = 'cardiology';
-end
 Dname = Dname(isstrprop(Dname,'alpha'));
 
 % measures for non PPI mappings
