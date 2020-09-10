@@ -1791,7 +1791,7 @@ switch whichMap
             153, 153, 153]; % 9 class
         cmapOut = cmapOut(1:numGrads,:);
     case 'set2'
-        if numGrads > 8, numGrads = 8; end
+        if numGrads > 10, numGrads = 10; end
         cmapOut = [102, 194, 165;
             252, 141, 98;
             141, 160, 203;
@@ -1799,7 +1799,9 @@ switch whichMap
             166, 216, 84;
             255, 217, 47;
             229, 196, 148;
-            179, 179, 179]; % 8 class
+            179, 179, 179; 
+            77, 146, 33;
+            39, 100, 25]; % 10 class
         cmapOut = cmapOut(1:numGrads,:);
     case 'set3'
         if numGrads > 12, numGrads = 12; end
