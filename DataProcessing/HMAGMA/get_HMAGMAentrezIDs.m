@@ -4,11 +4,14 @@
 clear all;
 close all;
 
-Disorders = {'ADHD', 'AUT', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'AD'};
-whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'};
+Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
+whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
+    'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle', 'eQTLPancreas', ...
+    'eQTLSmall_Intestine_Terminal_Ileum', 'eQTLColon_Transverse' 'eQTLColon_Sigmoid', 'eQTLAdipose_Subcutaneous' 'eQTLAdipose_Visceral_Omentum'};
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro',
-% eMAGMA: 'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle'
+% eMAGMA psychENCODE: 'eQTLbrain'; 
+% eMAGMA GTEx: 'Small_Intestine_Terminal_Ileum' 'Pancreas' 'Whole_Blood' 'Liver' 'Heart_Left_Ventricle' 'Colon_Transverse' 'Colon_Sigmoid' 'Adipose_Subcutaneous' 'Adipose_Visceral_Omentum'
 
 % load gene ID matching file and select genes that have entrezIDs
 entrezID = importGENEIDfile('data/GWASlists/BIOMART_geneIDs.txt');
@@ -32,7 +35,9 @@ for D=1:length(Disorders)
         fileName = sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes.txt', Disorders{D}, whatANNOT{A});
 
         %GTEx - based files have genes labeled with entrezIDs, other with stable IDs
-        isGTEx = strcmp(whatANNOT{A}, 'eQTLWhole_Blood') || strcmp(whatANNOT{A}, 'eQTLLiver') || strcmp(whatANNOT{A}, 'eQTLHeart_Left_Ventricle');
+        isGTEx = strcmp(whatANNOT{A}, 'eQTLWhole_Blood') || strcmp(whatANNOT{A}, 'eQTLLiver') || strcmp(whatANNOT{A}, 'eQTLHeart_Left_Ventricle') || ...
+            strcmp(whatANNOT{A}, 'eQTLPancreas') || strcmp(whatANNOT{A}, 'eQTLSmall_Intestine_Terminal_Ileum') || strcmp(whatANNOT{A}, 'eQTLColon_Transverse') || ...
+            strcmp(whatANNOT{A}, 'eQTLColon_Sigmoid') || strcmp(whatANNOT{A}, 'eQTLAdipose_Subcutaneous') || strcmp(whatANNOT{A}, 'eQTLAdipose_Visceral_Omentum');
 
         if isGTEx
             mapLIST = importeMAGMAGTExfile(fileName);
