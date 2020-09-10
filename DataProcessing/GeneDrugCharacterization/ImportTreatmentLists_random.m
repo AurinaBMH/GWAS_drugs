@@ -24,7 +24,8 @@ end
 %-------------------------------------------------------------------------------
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
-whatDiseases = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary', 'RANDOM'};
+params = SetDefaultParams();
+whatDiseases = [params.whatDiseases_Treatment,'RANDOM'];
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 

@@ -33,7 +33,7 @@ for t=1:length(similarityTypes)
     
     if contains(similarityTypes{t},'PPI')
         
-        whatProperty = 'percCOMMONneighbors1';
+        whatProperty = 'percPPIneighbors1';
 
     elseif contains(similarityTypes{t},'Allen')
         whatProperty = 'r';

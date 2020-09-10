@@ -5,7 +5,9 @@ end
 
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
-disorders = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
+params = SetDefaultParams();
+disorders = params.whatDiseases_Treatment;
+
 % import Drug repurposing hub
 drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/Drug_repurposing_hub_database_20200730.txt');
 

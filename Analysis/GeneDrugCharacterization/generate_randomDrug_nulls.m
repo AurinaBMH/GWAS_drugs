@@ -7,8 +7,8 @@ function generate_randomDrug_nulls()
 % each drug list; 
 
 numNulls = 5000; 
-whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
 params = SetDefaultParams();
+whatDiseases_Treatment = params.whatDiseases_Treatment; 
 
 [geneNamesGWAS,~] = GiveMeNormalizedScoreVector('ADHD','GWAS','MAGMAdefault',params.geneScore, params.whatThreshold);
 [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);

@@ -17,15 +17,17 @@ if nargin <4
 end
 
 if nargin<5
-    whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
+    params = SetDefaultParams();
+    whatDiseases_GWAS = params.whatGWAS;
 end
 
 if nargin<6
     doPlot = true;
 end
 
-whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
 params = SetDefaultParams();
+whatDiseases_Treatment = params.whatDiseases_Treatment; 
+
 whatScore = params.whatScore;
 
 if strcmp(whatNull, 'randomGene')

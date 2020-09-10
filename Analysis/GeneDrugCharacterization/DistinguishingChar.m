@@ -42,7 +42,7 @@ propsToCompare = {'numGWASMapped','numLDSNPs','percPPIneighbors1DiseaseMapped',.
 normalizeWithinDrugs = true; % weight genes lower if they occur in drugs with large numbers of gene targets
 [indicatorTable,percIndicatorTable] = ImportTreatmentLists(normalizeWithinDrugs);
 
-whatDiseases = {'ADHD','BIP','SZP','MDD','pulmonary','cardiology','gastro','diabetes'};
+whatDiseases = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
 numDiseases = length(whatDiseases);
 
 %-------------------------------------------------------------------------------

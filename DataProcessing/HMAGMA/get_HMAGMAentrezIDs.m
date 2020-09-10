@@ -4,10 +4,10 @@
 clear all;
 close all;
 
-Disorders = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
-whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
-    'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle', 'eQTLPancreas', ...
-    'eQTLSmall_Intestine_Terminal_Ileum', 'eQTLColon_Transverse' 'eQTLColon_Sigmoid', 'eQTLAdipose_Subcutaneous' 'eQTLAdipose_Visceral_Omentum'};
+params = SetDefaultParams();
+Disorders = params.whatGWAS; 
+whatANNOT = params.whatANNOT; 
+
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro',
 % eMAGMA psychENCODE: 'eQTLbrain'; 
