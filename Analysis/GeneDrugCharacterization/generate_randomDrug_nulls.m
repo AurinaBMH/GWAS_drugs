@@ -1,5 +1,7 @@
-function generate_randomDrug_nulls()
- 
+function generate_randomDrug_nulls(whatSelection)
+if nargin<1
+    whatSelection = 'proportional'; 
+end
 % this function generates a set of random nulls by selecting the selected
 % numnber of genes each time; Overall, the nulls for different numbers of
 % drugs are very similar, could use only one null with the average number
@@ -21,7 +23,9 @@ RANDOMdrugs_treatment = cell(length(whatDiseases_Treatment),1);
 for i = 1:length(whatDiseases_Treatment)
     for j = 1:numNulls
         diseaseName = whatDiseases_Treatment{i}; 
-        [RANDOMdrugs(:,j), geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs);
+
+        [RANDOMdrugs(:,j), geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs, whatSelection);
+
     end
     RANDOMdrugs_treatment{i} = RANDOMdrugs;
 end
