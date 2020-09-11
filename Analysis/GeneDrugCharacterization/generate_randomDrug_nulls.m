@@ -31,12 +31,12 @@ for i = 1:length(whatDiseases_Treatment)
 end
 
 
-%switch whatTargets
-    %case 'all'
-        %fileName = sprintf('DataOutput/nulls_%d_%stargets_all_randomDrug.mat', numNulls,params.whatDrugTargets); 
-    %case 'active'
-        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrug.mat', numNulls,params.whatDrugTargets); 
-%end
+switch whatSelection
+    case 'random'
+        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugR.mat', numNulls,params.whatDrugTargets); 
+    case 'proportional'
+        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugP.mat', numNulls,params.whatDrugTargets); 
+end
 
 save(fileName, 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames', 'params');
 end

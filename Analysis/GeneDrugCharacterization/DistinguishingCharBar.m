@@ -10,7 +10,7 @@ if nargin < 2
     % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
 if nargin < 3
-    whatNull = 'randomDrug';
+    whatNull = 'randomDrugP';
 end
 if nargin <4
     whatThreshold = 'BF';
@@ -32,8 +32,11 @@ whatScore = params.whatScore;
 
 if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
-elseif strcmp(whatNull, 'randomDrug')
-    load(sprintf('nulls_5000_%stargets_randomDrug.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+elseif strcmp(whatNull, 'randomDrugR')
+    load(sprintf('nulls_5000_%stargets_randomDrugR.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    geneNames_nulls = geneNames; 
+elseif strcmp(whatNull, 'randomDrugP')
+    load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     geneNames_nulls = geneNames; 
 end
 addNull = true;
@@ -173,16 +176,15 @@ for i = 1:numDiseases_GWAS
                         drugScores_DIS = drugScores(:,l);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
-                    case 'randomDrug' % for each disease get a random set of drugs that is the same size as
+                    case {'randomDrugP','randomDrugR'}  % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
-                        % and get a normalized score vector for this list of drugs as if it's a separate disease
-                        %drugScores_DIS = give_randomDrug_null(whatDiseases_Treatment{l}, disorderDrugs, allDrugs);
                         % load pre-computed nulls
-%                         [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
-%                         drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
+                        % the order of genes is the same in GWAS and nulls
+                        % [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
+                        %  drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
                         drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
                         %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
-                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(:));
+                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
                         
                 end
             end
