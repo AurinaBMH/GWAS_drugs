@@ -19,13 +19,16 @@ numDrugs = size(disorderDrugs.(diseaseName),1);
 switch whatSelection
     case 'random'
         % now select the same number of drugs at random from the list without replacement
-        INDrand = randsample(1:size(allDrugs,1),numDrugs, false);
+        INDrand = datasample(1:size(allDrugs,1), numDrugs,'Replace',false);
     case 'proportional'
         drugPROB = zeros(size(allDrugs,1),1);
         numDisorders = length(fields(disorderDrugs));
         whatDisorders = fields(disorderDrugs);
         % for each drug, make a probability value of being selected as a
         % proportion of total number of drugs for that disorder
+        % this way the probability to select a drug from a particular
+        % disorder is equal, so the selected drugs are not over-sampling
+        % disorders with long lists of drugs; 
         
         % for each drug, find how many times it's mentioned:
         % 1. if only once, give a score 1/numdisorderDrugs for that disorder
@@ -52,7 +55,10 @@ switch whatSelection
             
         end
         
-        INDrand = randsample(1:size(allDrugs,1), numDrugs,true, drugPROB);
+        % repeat until all drugs are taken only once - to make it without
+        % replacement
+        INDrand = datasample(1:size(allDrugs,1), numDrugs,'Replace',false,'Weights',drugPROB); 
+ 
 end
 % make a table for those selected drugs
 drugs_rand = allDrugs(INDrand,:); 
