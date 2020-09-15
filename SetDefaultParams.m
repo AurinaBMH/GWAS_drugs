@@ -6,6 +6,8 @@ function params = SetDefaultParams()
 % Whether to use evidence scores as a proxy weight for network:
 params.doWeighted = true;
 
+params.whatNorm = 2; 
+
 % Evidence threshold for including PPI interactions in binary analyses:
 params.PPINevidenceThreshold = 0;
 
