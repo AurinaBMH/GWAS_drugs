@@ -1,37 +1,27 @@
 function [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
 
 whatThreshold = 'BF'; 
+params = SetDefaultParams();
 
 switch whatMeasures
     case 'all'
-similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
-        'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
-        'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
-        'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900', ...
-        'eQTLHeart_Left_Ventricle', 'eQTLLiver', 'eQTLWhole_Blood', 'eQTLbrain'};
-PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1', 'numCOMMONneighbors1', 'percCOMMONneighbors1', ...
-    'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2', 'expWeiPPIneighbors2'};  
+similarityTypes = [{'AllenMeanCoexpMapped'}, {'AllenMeanCoexpeQTLbrain'}, ...
+        {'PPI_eQTLbrain_th0'}, {'PPI_eQTLbrain_th400'}, {'PPI_eQTLbrain_th600'}, {'PPI_eQTLbrain_th900'}, ...
+        {'PPI_mapped_th0'}, {'PPI_mapped_th400'}, {'PPI_mapped_th600'}, {'PPI_mapped_th900'}, ...
+        params.whatANNOT(:)'];
+PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};  
 
     case 'reduced'
-%similarityTypes = {'Adult_brain', 'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain', ...
-%        'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
-%        'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
-%        'PPI_mapped_th600', 'PPI_mapped_th900', 'eQTLbrain'};
-similarityTypes = {'Adult_brain', 'Astro', 'Fetal_brain', 'MAGMAdefault', 'Neuro', ...
-        'PPI_eQTLbrain_th900', 'PPI_mapped_th900', 'eQTLbrain'};
+similarityTypes = {'Adult_brain', 'MAGMAdefault', 'eQTLbrain','AllenMeanCoexpMapped', ...
+        'PPI_mapped_th900', 'PPI_eQTLbrain_th400','eQTLLiver', 'eQTLPancreas', 'eQTLColon_Transverse', 'eQTLHeart_Left_Ventricle'}';
 PPImeasures_names = {'percPPIneighbors1'};   
 end
     
  
-
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'};
-whatDiseases_Treatment = {'ADHD','BIP','SCZ','MDD','cardiology','diabetes'};
-
+whatDiseases_GWAS =params.whatGWAS; 
+whatDiseases_Treatment = params.whatDiseases_Treatment; 
 
 Dname = whatDiseases_GWAS{1};
-if strcmp(Dname, 'HF')
-    Dname = 'cardiology';
-end
 Dname = Dname(isstrprop(Dname,'alpha'));
 takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
 
