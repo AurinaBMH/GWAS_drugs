@@ -4,8 +4,8 @@ clear all; close all;
 
 params = SetDefaultParams(); 
 % first run all diseases with itself
-whatDiseases_GWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF'}; %'AD'};
-whatNull = 'randomDrug';
+whatDiseases_GWAS = params.whatGWAS; 
+whatNull = 'randomDrugP';
 
 for dg = 1:length(whatDiseases_GWAS)
     
@@ -19,15 +19,12 @@ for dg = 1:length(whatDiseases_GWAS)
     
 end
 
-% rows are GWAS lists, columns are drugs
-fileName = sprintf('DataOutput/GWASvsDRUGS_%s.mat', whatNull); 
-save(fileName, 'diseaseResultsR', 'diseaseResultsP', 'whatDiseases_GWAS', 'whatDiseases_Treatment')
 
 % run pairs of diseases
 
 whatDiseases_GWAS = {'MDD2', 'SCZ', 'BIP2'}; 
 whatDiseases_Treatment = {'BIP','SCZ','MDD'};
-whatNull = 'randomDrug';
+whatNull = 'randomDrugP';
 
 diseaseResultsR = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
 diseaseResultsP = cell(length(whatDiseases_GWAS), length(whatDiseases_Treatment));
@@ -45,6 +42,7 @@ for dg = 1:length(whatDiseases_GWAS)
     
   end
 end
+
 
 % rows are GWAS lists, columns are drugs
 fileName = sprintf('DataOutput/GWASvsDRUGS_%s.mat', whatNull); 

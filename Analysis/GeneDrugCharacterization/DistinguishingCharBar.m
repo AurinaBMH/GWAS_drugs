@@ -199,8 +199,11 @@ for i = 1:numDiseases_GWAS
     pValsALL(:,i) = pVals;
     
     % Sort:
-    [rhos,ix] = sort(rhos,'descend');
+    [~, ix] = sort(pVals, 'ascend'); 
+    %[rhos,ix] = sort(rhos,'descend');
     all_nullScores = all_nullScores(ix); 
+    rhos = rhos(ix); 
+    
     
     %---------------------------------------------------------------------------
     if doPlot
