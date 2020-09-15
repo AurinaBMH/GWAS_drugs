@@ -1,13 +1,14 @@
-function [coef_lasso, coef_linear, sigMeasures] = compare_optimizedScores(whatMeasures)
+function compare_optimizedScores(whatMeasures)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
-    whatMeasures = 'reduced'; % 'reduced' or 'all'; 
+    whatMeasures = 'all'; % 'reduced' or 'all';
 end
 
+whatNull = 'randomDrugP';
 params = SetDefaultParams();
-whatDiseases_GWAS = params.whatGWAS; 
-whatNorm = params.whatNorm; 
+whatDiseases_GWAS = params.whatGWAS;
+whatNorm = params.whatNorm;
 
 numGWAS = length(whatDiseases_GWAS);
 
@@ -15,29 +16,57 @@ numGWAS = length(whatDiseases_GWAS);
 for i = 1:numGWAS
     
     whatGWAS = whatDiseases_GWAS{i};
-    [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures);
+    [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names] = give_GWASandDRUG_scores(whatGWAS, whatMeasures);
     
     % remove rows that are all NaN and measure names
-    INDnan = find(all(isnan(geneWeightsGWAS_ALL),1));
+    INDnan = all(isnan(geneWeightsGWAS_ALL),1);
     geneWeightsGWAS_ALL(:, INDnan) = [];
-    measureNames(INDnan) = [];
+    
     
     % plot randomNullP-based p-values for each mapping method
+    Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));
     
+    [~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({whatGWAS}, whatNull, Dname, PPImeasures_names, similarityTypes);
+    Pvals_mapp = -log10(diseaseResultsP(~isnan(diseaseResultsP(:))))';
+    [Pvals_mapp,sIND]  = unique(Pvals_mapp);
     
+    colors = zeros(length(Pvals_mapp), 3); 
+    for tt=1:length(Pvals_mapp)
+        if contains(measureNames{tt}, 'PPI')
+            colors(tt,:) = [33/255,102/255,172/255];
+        elseif contains(measureNames{tt}, 'Allen')
+            colors(tt,:) = [.45 .45 .45];
+        elseif contains(measureNames{tt}, 'eQTL')
+            colors(tt,:) = [153/255,213/255,148/255];
+        else
+            colors(tt,:) = [254/255,224/255,139/255];
+        end
+    end
+    
+    figure('color','w', 'Position', [100 100 500 500]);
+    
+    for ww = 1:length(Pvals_mapp)
+    plot([Pvals_mapp(ww); Pvals_mapp(ww)], repmat(ylim',1,size(Pvals_mapp,2)), 'LineWidth', 2, 'Color', colors(ww,:))
+    hold on;
+    end
+    
+    xlabel('-log10(P)');
+    title(sprintf('%s', whatGWAS)); 
+    hold on;
+
     % apply linear regression
     mdl = fitlm(geneWeightsGWAS_ALL,drugScores_ord);
-    ypred = predict(mdl,geneWeightsGWAS_ALL); 
-    
+    ypred = predict(mdl,geneWeightsGWAS_ALL);
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
+    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, whatNull);
+    pPLOT = -log10(Pval_comb);
+    
     % plot randomNullP-based p-value for combined measure
-    
-    
+    plot([pPLOT; pPLOT], repmat(ylim',1,size(pPLOT,2)), 'LineWidth', 2, 'Color', [227/255,74/255,51/255]);
     
 end
 
 end
-    
-    
-    
+
+

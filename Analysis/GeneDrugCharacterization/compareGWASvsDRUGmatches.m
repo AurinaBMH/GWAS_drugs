@@ -1,7 +1,7 @@
-function [diseaseResultsR, diseaseResultsP, similarityTypes,ALLmeasures] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
+function [diseaseResultsR, diseaseResultsP, similarityTypes,ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
 
 if nargin <2
-    whatNull = 'randomDrug';
+    whatNull = 'randomDrugP';
 end
 
 if nargin <3
@@ -10,7 +10,7 @@ if nargin <3
 end
 
 if nargin <4
-    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1', 'numPPIneighbors2','percPPIneighbors2'};
+    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'}; %, 'numPPIneighbors2','percPPIneighbors2'};
     %{'weiPPIneighbors1','expWeiPPIneighbors1', 'numCOMMONneighbors1','percCOMMONneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'numCOMMONneighbors2','percCOMMONneighbors2'}
 end
 
@@ -88,6 +88,10 @@ end
 
 ALLmeasures = horzcat(OTHERmeasures_names, PPImeasures_names);
 similarityTypes_label = strrep(similarityTypes(:),'_',' '); % remove _ for plotting
+
+measureNames = aggregate_names(similarityTypes, PPImeasures_names); 
+measureNames = measureNames'; 
+
 colors = cbrewer('seq', 'Reds', 64);
 
 figure; set(gcf,'color','w');

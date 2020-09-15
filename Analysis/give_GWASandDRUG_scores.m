@@ -1,4 +1,4 @@
-function [geneWeightsGWAS_ALL, drugScores_ord, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
+function [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
 
 whatThreshold = 'BF'; 
 params = SetDefaultParams();
