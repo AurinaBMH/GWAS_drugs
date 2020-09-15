@@ -1,15 +1,17 @@
 % correlate and group all measures
 function correlate_geneMeasures(disorder)
+
 if nargin<1
     disorder = 'DIABETES';
 end
 
+% load data
 fileName = sprintf('resultsTable_%s_BF_2020.mat', disorder);
 load(fileName, 'geneScores');
 
 % get all measures
 measures = setdiff(fieldnames(geneScores), {'params', 'gene'});
-measureNames = {'numPPIneighbors1', 'percPPIneighbors1', 'numPPIneighbors2', 'percPPIneighbors2'};
+measureNames = {'numPPIneighbors1', 'percPPIneighbors1'}; %'numPPIneighbors2', 'percPPIneighbors2'};
 
 % make a vector of all measures
 p=1;
@@ -29,6 +31,7 @@ for k=1:length(measures)
     end
 end
 
+% calculate correlations between each pair
 r = zeros(length(MN));
 p = zeros(length(MN));
 for i=1:length(MN)
@@ -52,9 +55,9 @@ for i=1:length(MN)
         
     end
 end
-
+% reorder
 r=r+r';
-r(boolean(eye(size(r,1)))) = NaN;
+r(boolean(eye(size(r,1)))) = 1;
 ord = BF_ClusterReorder(r);
 RR = r(ord, ord);
 PP = p(ord, ord);
@@ -70,6 +73,7 @@ end
 % reorder based on clustered matrix
 Mnames = Mnames(ord);
 
+% plot
 colors = cbrewer('div', 'RdBu', 64);
 colors = flipud(colors);
 figure('color','w', 'Position', [100 100 1200 1200]);
