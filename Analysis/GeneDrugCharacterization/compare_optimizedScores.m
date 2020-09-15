@@ -22,36 +22,40 @@ for i = 1:numGWAS
     INDnan = all(isnan(geneWeightsGWAS_ALL),1);
     geneWeightsGWAS_ALL(:, INDnan) = [];
     
-    
     % plot randomNullP-based p-values for each mapping method
     Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));
     
     [~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({whatGWAS}, whatNull, Dname, PPImeasures_names, similarityTypes);
+    close all; 
+    
     Pvals_mapp = -log10(diseaseResultsP(~isnan(diseaseResultsP(:))))';
     [Pvals_mapp,sIND]  = unique(Pvals_mapp);
+    measureNames = measureNames(sIND); 
     
     colors = zeros(length(Pvals_mapp), 3); 
     for tt=1:length(Pvals_mapp)
         if contains(measureNames{tt}, 'PPI')
-            colors(tt,:) = [33/255,102/255,172/255];
+            colors(tt,:) = [50/255,136/255,189/255]; % blue
         elseif contains(measureNames{tt}, 'Allen')
-            colors(tt,:) = [.45 .45 .45];
+            colors(tt,:) = [.45 .45 .45]; % grey
         elseif contains(measureNames{tt}, 'eQTL')
-            colors(tt,:) = [153/255,213/255,148/255];
-        else
-            colors(tt,:) = [254/255,224/255,139/255];
+            colors(tt,:) = [153/255,213/255,148/255]; % green
+        else % chromatin and MAGMAdefault
+            colors(tt,:) = [254/255,224/255,139/255]; % yellow
         end
     end
     
     figure('color','w', 'Position', [100 100 500 500]);
     
     for ww = 1:length(Pvals_mapp)
-    plot([Pvals_mapp(ww); Pvals_mapp(ww)], repmat(ylim',1,size(Pvals_mapp,2)), 'LineWidth', 2, 'Color', colors(ww,:))
+    plot([Pvals_mapp(ww); Pvals_mapp(ww)], repmat(ylim',1,size(Pvals_mapp,2)), ...
+        'LineWidth', 3, 'Color', colors(ww,:), 'LineStyle', ':')
     hold on;
     end
     
     xlabel('-log10(P)');
     title(sprintf('%s', whatGWAS)); 
+    xlim([0 3])
     hold on;
 
     % apply linear regression
@@ -63,8 +67,12 @@ for i = 1:numGWAS
     pPLOT = -log10(Pval_comb);
     
     % plot randomNullP-based p-value for combined measure
-    plot([pPLOT; pPLOT], repmat(ylim',1,size(pPLOT,2)), 'LineWidth', 2, 'Color', [227/255,74/255,51/255]);
+    plot([pPLOT; pPLOT], repmat(ylim',1,size(pPLOT,2)), 'LineWidth', 3, 'Color', [227/255,74/255,51/255]);
     
+    
+    % save to file
+    figureName = sprintf('figures/%s_compareOptimised_%s', whatGWAS, whatMeasures);
+    print(gcf,figureName,'-dpng','-r300');
 end
 
 end
