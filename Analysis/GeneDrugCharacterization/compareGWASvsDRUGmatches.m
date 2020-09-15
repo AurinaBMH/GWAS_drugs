@@ -89,7 +89,7 @@ end
 ALLmeasures = horzcat(OTHERmeasures_names, PPImeasures_names);
 similarityTypes_label = strrep(similarityTypes(:),'_',' '); % remove _ for plotting
 
-measureNames = aggregate_names(similarityTypes, PPImeasures_names); 
+measureNames = aggregate_names(diseaseResultsP, similarityTypes, ALLmeasures); 
 measureNames = measureNames'; 
 
 colors = cbrewer('seq', 'Reds', 64);

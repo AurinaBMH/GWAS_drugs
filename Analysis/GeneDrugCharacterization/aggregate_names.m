@@ -1,4 +1,7 @@
-function measureNames = aggregate_names(similarityTypes, PPImeasures_names)
+function measureNames = aggregate_names(diseaseResultsP, similarityTypes, PPImeasures_names)
+
+% for every non-nan value, get their measure name
+
 
 k=1;
 for s=1:length(similarityTypes)

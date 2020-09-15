@@ -55,7 +55,7 @@ for i = 1:numGWAS
     
     xlabel('-log10(P)');
     title(sprintf('%s', whatGWAS)); 
-    xlim([0 3])
+    xlim([0 3.5])
     hold on;
 
     % apply linear regression
