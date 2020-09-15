@@ -57,10 +57,19 @@ for i=1:length(MN)
 end
 % reorder
 r=r+r';
-r(boolean(eye(size(r,1)))) = 1;
+r(boolean(eye(size(r,1)))) = NaN;
+
+r1 = all(isnan(r),2); 
+r2 = all(isnan(r),1); 
+
+r(:,r1) = []; 
+r(r2,:) = []; 
+
+MN(r1) = []; 
+
 ord = BF_ClusterReorder(r);
 RR = r(ord, ord);
-PP = p(ord, ord);
+%PP = p(ord, ord);
 
 
 % combine measure names
