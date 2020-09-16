@@ -1,4 +1,5 @@
 function pVals = compare_to_null(whatGWAS, geneWeightsGWAS, drugScores_DIS, whatNull)
+
 if nargin < 4
     whatNull = 'randomDrugP';
 end
@@ -12,6 +13,7 @@ elseif strcmp(whatNull, 'randomDrugP')
     load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
 end
 
+% choose null for the corresponding disorder
 [~, l] = intersect(whatDiseases_Treatment,whatGWAS); 
 % Generate null distributions:
 numNulls = 1000;
