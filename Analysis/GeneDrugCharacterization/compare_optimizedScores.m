@@ -1,4 +1,4 @@
-function compare_optimizedScores(whatMeasures)
+function compare_optimizedScores(whatMeasures, whatDisorders)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
@@ -59,7 +59,7 @@ for i = 1:numGWAS
     hold on;
 
     % apply linear regression
-    mdl = fitlm(geneWeightsGWAS_ALL,drugScores_ord);
+    mdl = fitlm(geneWeightsGWAS_ALL,drugScores_ord);    
     ypred = predict(mdl,geneWeightsGWAS_ALL);
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
