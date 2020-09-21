@@ -55,7 +55,7 @@ for i = 1:numGWAS
     
     xlabel('-log10(P)');
     title(sprintf('%s', whatGWAS)); 
-    xlim([0 3.5])
+    xlim([0 4])
     hold on;
 
     % apply linear regression
@@ -64,6 +64,9 @@ for i = 1:numGWAS
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
     Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, whatNull);
+    if Pval_comb==0
+        Pval_comb = 1/params.numNull;
+    end
     pPLOT = -log10(Pval_comb);
     
     % plot randomNullP-based p-value for combined measure
