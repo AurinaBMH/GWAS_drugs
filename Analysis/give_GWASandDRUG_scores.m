@@ -12,20 +12,17 @@ similarityTypes = [{'AllenMeanCoexpMapped'}, {'AllenMeanCoexpeQTLbrain'}, ...
 PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};  
 
     case 'reduced'
-similarityTypes = {'Adult_brain', 'MAGMAdefault', 'eQTLbrain','AllenMeanCoexpMapped', ...
-        'PPI_mapped_th900', 'PPI_eQTLbrain_th400','eQTLLiver', 'eQTLPancreas', 'eQTLColon_Transverse', 'eQTLHeart_Left_Ventricle'}';
+        similarityTypes = {'Fetal_brain', 'MAGMAdefault', 'PPI_mapped_th900', 'eQTLPancreas', 'eQTLColon_Sigmoid', 'eQTLHeart_Left_Ventricle'}';
+%similarityTypes = {'Adult_brain', 'MAGMAdefault', 'eQTLbrain','AllenMeanCoexpMapped', ...
+%        'PPI_mapped_th900', 'PPI_eQTLbrain_th400','eQTLLiver', 'eQTLPancreas', 'eQTLColon_Transverse', 'eQTLHeart_Left_Ventricle'}';
 PPImeasures_names = {'percPPIneighbors1'};   
 end
     
- 
-whatDiseases_GWAS =params.whatGWAS; 
+
 whatDiseases_Treatment = params.whatDiseases_Treatment; 
 
-Dname = whatDiseases_GWAS{1};
-Dname = Dname(isstrprop(Dname,'alpha'));
+Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));
 takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
-
-
 %-------------------------------------------------------------------------------
 % Load treatment weights of each gene implicated in each disorder:
 [geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors(whatDiseases_Treatment,'Drug');
@@ -67,8 +64,6 @@ end
 drugScores_ord = drugScoresAll(ib,takeVal);
 
 geneWeightsGWAS_ALL = horzcat(geneWeightsGWAS_ord{:}); 
-
-% make a vector of names for GWAS measures; 
 
 end
 
