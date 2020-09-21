@@ -12,7 +12,7 @@ switch whatMeasures
         PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
         
     case 'reduced'
-        similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'}';
+        similarityTypes = {'MAGMAdefault', 'PPI_mapped_th900', 'eQTLbrain', 'AllenMeanCoexpMapped'}';
         PPImeasures_names = {'percPPIneighbors1'};
 end
     
