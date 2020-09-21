@@ -26,9 +26,11 @@ geneWeightsGWAS_ALL_test(:, INDnan) = [];
 % plot randomNullP-based p-values for each mapping method
 Dname = disorderTest(isstrprop(disorderTest,'alpha'));
 
-[~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({disorderTest}, whatNull, Dname, PPImeasures_names, similarityTypes);
+[diseaseResultsR, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({disorderTest}, whatNull, Dname, PPImeasures_names, similarityTypes);
 close all;
-
+% replace p=0 to the lowest possible with this number of nulls to avoid InF
+% in plotting
+diseaseResultsP(diseaseResultsP==0) = 1/params.numNull; 
 Pvals_mapp = -log10(diseaseResultsP(~isnan(diseaseResultsP(:))))';
 [Pvals_mapp,sIND]  = unique(Pvals_mapp);
 measureNames = measureNames(sIND);
