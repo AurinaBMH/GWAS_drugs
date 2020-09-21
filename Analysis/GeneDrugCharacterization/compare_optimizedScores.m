@@ -1,4 +1,4 @@
-function compare_optimizedScores(whatMeasures, whatDisorders)
+function compare_optimizedScores(whatMeasures)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1

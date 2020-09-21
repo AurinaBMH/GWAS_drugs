@@ -92,7 +92,7 @@ for i = 1:numDiseases_GWAS
     rhosALL(:,i) = rhos;
     
     % Generate null distributions:
-    numNulls = 1000; 
+    numNulls = params.numNull; 
     isSig = zeros(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
     all_nullScores = cell(numDiseases_Treatment,1);

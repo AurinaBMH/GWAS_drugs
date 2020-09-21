@@ -16,7 +16,7 @@ end
 % choose null for the corresponding disorder
 [~, l] = intersect(whatDiseases_Treatment,whatGWAS); 
 % Generate null distributions:
-numNulls = 1000;
+numNulls = params.numNull; 
 rhos = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
 nullScores = zeros(numNulls,1);
 
@@ -29,8 +29,8 @@ nullScores = zeros(numNulls,1);
                 nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                 % randomise v1 within ComputeDotProduct
             case {'randomDrugP','randomDrugR'}  % for each disease get a random set of drugs that is the same size as
-                drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
-                nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
+                drugScores_DISrand = RANDOMdrugs_treatment{l}(:,k);
+                nullScores(k) = ComputeDotProduct(drugScores_DISrand,geneWeightsGWAS);
                 
         end
     end
