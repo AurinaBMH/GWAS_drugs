@@ -5,17 +5,15 @@ params = SetDefaultParams();
 
 switch whatMeasures
     case 'all'
-similarityTypes = [{'AllenMeanCoexpMapped'}, {'AllenMeanCoexpeQTLbrain'}, ...
-        {'PPI_eQTLbrain_th0'}, {'PPI_eQTLbrain_th400'}, {'PPI_eQTLbrain_th600'}, {'PPI_eQTLbrain_th900'}, ...
-        {'PPI_mapped_th0'}, {'PPI_mapped_th400'}, {'PPI_mapped_th600'}, {'PPI_mapped_th900'}, ...
-        params.whatANNOT(:)'];
-PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};  
-
+        similarityTypes = [{'AllenMeanCoexpMapped'}, {'AllenMeanCoexpeQTLbrain'}, ...
+            {'PPI_eQTLbrain_th0'}, {'PPI_eQTLbrain_th400'}, {'PPI_eQTLbrain_th600'}, {'PPI_eQTLbrain_th900'}, ...
+            {'PPI_mapped_th0'}, {'PPI_mapped_th400'}, {'PPI_mapped_th600'}, {'PPI_mapped_th900'}, ...
+            params.whatANNOT(:)'];
+        PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+        
     case 'reduced'
-        similarityTypes = {'Fetal_brain', 'MAGMAdefault', 'PPI_mapped_th900', 'eQTLPancreas', 'eQTLColon_Sigmoid', 'eQTLHeart_Left_Ventricle'}';
-%similarityTypes = {'Adult_brain', 'MAGMAdefault', 'eQTLbrain','AllenMeanCoexpMapped', ...
-%        'PPI_mapped_th900', 'PPI_eQTLbrain_th400','eQTLLiver', 'eQTLPancreas', 'eQTLColon_Transverse', 'eQTLHeart_Left_Ventricle'}';
-PPImeasures_names = {'percPPIneighbors1'};   
+        similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'}';
+        PPImeasures_names = {'percPPIneighbors1'};
 end
     
 
