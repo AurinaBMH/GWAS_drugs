@@ -42,7 +42,7 @@ for s=1:length(similarityTypes)
         for p=1:PPInum
             
             whatProperty = PPImeasures_names{p};
-            [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false);
+            [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes));
             % select rho and p values for a selected disorder
             
             takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
@@ -70,7 +70,7 @@ for s=1:length(similarityTypes)
             whatProperty = 'r';
         end
         
-        [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false);
+        [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes));
         takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
         
         colN = find(strcmp(OTHERmeasures_names,whatProperty));
