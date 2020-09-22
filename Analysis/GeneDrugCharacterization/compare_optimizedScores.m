@@ -79,13 +79,13 @@ for i = 1:numGWAS
     end
     pPLOT = -log10(Pval_comb);
     
-    measureNames{length(measureNames)+1} = 'Combined';
-    Pvals_mapp(length(Pvals_mapp)+1) = pPLOT;
+    measureTable = [measureNames; 'Combined'];
+    PvalsTable = [Pvals_mapp, pPLOT];
     
-    Ptable.(whatGWAS).measureName = measureNames;
-    Ptable.(whatGWAS).Pvals = Pvals_mapp;
+    Ptable.(whatGWAS).measureName = measureTable; 
+    Ptable.(whatGWAS).Pvals = PvalsTable; 
     
-    clearvars Pvals_mapp measureNames
+    clearvars measureTable PvalsTable
     
     % plot randomNullP-based p-value for combined measure
     if doPlot

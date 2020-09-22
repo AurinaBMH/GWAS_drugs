@@ -1,6 +1,8 @@
 % matching for psychiatric disorders
 clear all; close all; 
-similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'}; 
+similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
+similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
+
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %'BIPandSCZ'
 
 numGWAS = length(whatDiseases_GWAS); 
@@ -29,21 +31,29 @@ end
 [Ptable] = compare_optimizedScores(whatDiseases_GWAS, 'reduced', false); 
 
 f = figure('color','w', 'Position', [300, 300, 1500, 400]); 
-barColor = [31,120,180;
-            33,102,172; 
-            233,163,201;
-            252,141,89; 
-            178,24,43]; 
+% choose more diverging colours
+barColor = BF_getcmap('set5',5);  
 
 for i=1:numGWAS
-    ax{i} = subplot(1,numGWAS,i); hold on
-    b = bar(Ptable.(whatDiseases_GWAS{i}).Pvals);
     
-    b.CData = barColor; 
+    ax{i} = subplot(1,numGWAS,i); hold on
+    title(sprintf('%s', whatDiseases_GWAS{i}))
+    b = bar(Ptable.(whatDiseases_GWAS{i}).Pvals);
+    ylabel('-log10(P)')
+    set(gca,'FontSize', 14)
+    b.CData = barColor;
     b.FaceColor = 'flat';
+    
+    ax{i}.XTick = 1:length(similarityTypes)+1;
+    ax{i}.XTickLabel = [similarityTypes_label, 'Combined'];
+    ax{i}.XTickLabelRotation = 45;
     
 end
 
+% rescale axes
+linkaxes([ax{:}],'y');
+
+print(gcf,'figures/comparePvals','-dpng','-r300');
 
     
     

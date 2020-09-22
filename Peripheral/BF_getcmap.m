@@ -1845,6 +1845,14 @@ switch whichMap
             146,197,222]; % 10 class
         
         cmapOut = cmapOut(1:numGrads,:);
+    case 'set5'
+        if numGrads > 5, numGrads = 6; end
+        cmapOut = [31,120,180;
+            33,102,172; 
+            233,163,201;
+            252,141,89; 
+            178,24,43]; 
+        cmapOut = cmapOut(1:numGrads,:);
     otherwise
         error('Unknown color map specified: ''%s''',whichMap);
 end
