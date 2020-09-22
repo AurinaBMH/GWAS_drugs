@@ -28,7 +28,8 @@ for i = 1:numGenesChar
     allenIndex = strcmp(AllenGeneInfo.GeneSymbol,gene_i);
     if any(allenIndex)
         % Compute the coexpression values of this gene to the set of context genes:
-        coExpContext = geneCoexp(allenIndex,isContext);
+        % take the absolute values of coexpression
+        coExpContext = abs(geneCoexp(allenIndex,isContext));
         AllenMeanCoexp(i) = nanmean(coExpContext);
     else
         % This gene could not be matched to AHBA data
