@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -27,6 +27,7 @@ end
 
 params = SetDefaultParams();
 whatDiseases_Treatment = params.whatDiseases_Treatment; 
+whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
 
 whatScore = params.whatScore;
 
@@ -56,8 +57,8 @@ numDrugScores = length(drugScoresAll);
 
 %===============================================================================
 if doPlot
-    f = figure('color','w');
-    sgtitle(sprintf('%s, %s',similarityType, whatProperty))
+    f = figure('color','w', 'Position', [300, 300, 1500, 400]);
+    %sgtitle(sprintf('%s, %s',similarityType, whatProperty))
     ax = cell(numDiseases_GWAS,1);
     if length(whatDiseases_GWAS)>3
         f.Position = [471,945,1830,318];
@@ -134,7 +135,7 @@ for i = 1:numDiseases_GWAS
         end
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
-            isSig(k) = (mean(rhos(k) < nullScores) < 0.05);
+            isSig(k) = (mean(rhos(k) < nullScores) < 0.05/numMeasures);
             pVals(k) = mean(rhos(k) < nullScores);
         end
         
@@ -168,6 +169,7 @@ for i = 1:numDiseases_GWAS
                         else
                             
                             warning('% null is not compatible with %s\n', whatNull, whatNull)
+                            return
                             
                         end
                         
@@ -189,7 +191,7 @@ for i = 1:numDiseases_GWAS
                 end
             end
             % Compute p-values: based on separate nulls
-            isSig(l) = (mean(rhos(l) < nullScores) < 0.05);
+            isSig(l) = (mean(rhos(l) < nullScores) < 0.05/numMeasures);
             pVals(l) = mean(rhos(l) < nullScores);
             % save separate nulls
             all_nullScores{l} = nullScores;
@@ -199,8 +201,8 @@ for i = 1:numDiseases_GWAS
     pValsALL(:,i) = pVals;
     
     % Sort:
-    [~, ix] = sort(pVals, 'ascend'); 
-    %[rhos,ix] = sort(rhos,'descend');
+    %[~, ix] = sort(pVals, 'ascend'); 
+    [~,ix] = sort(rhos,'descend');
     all_nullScores = all_nullScores(ix); 
     rhos = rhos(ix); 
     
@@ -218,7 +220,7 @@ for i = 1:numDiseases_GWAS
                 [minLim,maxLim] = plot_nullDistribution(nullScores, rhos, numDiseases_Treatment+1);
                 
                 ax{i}.XTick = 1:numDiseases_Treatment+1;
-                ax{i}.XTickLabel = {whatDiseases_Treatment{ix},'null'};
+                ax{i}.XTickLabel = {whatDiseases_Treatment_label{ix},'null'};
                 
                 if range(rhos) > 0
                     ax{i}.YLim = [minLim,maxLim];
@@ -227,7 +229,7 @@ for i = 1:numDiseases_GWAS
             else
                 
                 ax{i}.XTick = 1:numDiseases_Treatment;
-                ax{i}.XTickLabel = whatDiseases_Treatment(ix);
+                ax{i}.XTickLabel = whatDiseases_Treatment_label(ix);
                 
             end
             
@@ -254,16 +256,18 @@ for i = 1:numDiseases_GWAS
                 ax{i}.YLim = [min(minLim),max(maxLim)];
             end
             ax{i}.XTick = 1:numDiseases_Treatment;
-            ax{i}.XTickLabel = whatDiseases_Treatment(ix);
+            ax{i}.XTickLabel = whatDiseases_Treatment_label(ix);
             
         end
         
         
         ax{i}.XTickLabelRotation = 45;
         xlabel('Disease treatment')
-        ylabel(sprintf('%s similarity',whatScore))
-        title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
-        cMapGeneric = BF_getcmap('set2',numDiseases_Treatment,false);
+        %ylabel(sprintf('%s similarity',whatScore))
+        ylabel({'GWAS-treatment', 'similarity'})
+        %title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
+        title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
+        cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false); 
         for k = find(~isSig)'
             cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
         end
@@ -271,6 +275,7 @@ for i = 1:numDiseases_GWAS
         b.FaceColor = 'flat';
         
         linkaxes([ax{:}],'y');
+        set(gca,'FontSize', 14)
     end
     
     
