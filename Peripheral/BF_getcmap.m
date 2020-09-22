@@ -1840,9 +1840,10 @@ switch whichMap
             135,135,135;
             253,174,97;
             171,217,233;
-            90,174,97; 
-            146,197,222; 
-            223,194,125;]; % 10 class
+            223,194,125;
+            53,151,143;
+            146,197,222]; % 10 class
+        
         cmapOut = cmapOut(1:numGrads,:);
     otherwise
         error('Unknown color map specified: ''%s''',whichMap);
