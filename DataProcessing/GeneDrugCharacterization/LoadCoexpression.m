@@ -21,6 +21,9 @@ fprintf(1,'Loading data from %s\n',fileName);
 load(fileName,'parcelExpression','probeInformation');
 fprintf(1,'Loaded; now calculating gene x gene coexpression\n ...');
 geneCoexp = corr(parcelExpression(:,2:end), 'type', 'Spearman', 'rows','complete');
+geneCoexp(logical(eye(size(geneCoexp)))) = NaN; 
+
+
 fprintf(1,' Done.\n');
 
 end
