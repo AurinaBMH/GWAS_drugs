@@ -8,7 +8,7 @@ function [minLim,maxLim] = plot_nullDistribution(nullScores, rhos, plotWhere)
 
 
 [ff,x] = ksdensity(nullScores,linspace(min(nullScores),max(nullScores),500),'function','pdf');
-ff = 0.5*ff/max(ff);
+ff = 0.4*ff/max(ff);
 
 plot(ones(2,1)*(plotWhere)+ff,x,'k');
 plot(ones(2,1)*(plotWhere)-ff,x,'k');
@@ -16,9 +16,9 @@ plot(ones(2,1)*(plotWhere)-ff,x,'k');
 
 % Add horizontal lines to aid comparison to null:
 null_p50 = quantile(nullScores,0.5);
-plot([1,plotWhere],ones(2,1)*null_p50,':k')
+%plot([1,plotWhere],ones(2,1)*null_p50,':k')
 null_p95 = quantile(nullScores,0.95);
-plot([1,plotWhere],ones(2,1)*null_p95,'--k')
+plot([plotWhere-0.5,plotWhere+0.5],ones(2,1)*null_p95,':k', 'LineWidth',2)
 if range(rhos) > 0
     maxLim = max(rhos)*1.1;
     if maxLim < null_p95

@@ -1,6 +1,7 @@
 % matching for psychiatric disorders
-similarityTypes = {'MAGMAdefault', 'PPI_mapped_th900', 'eQTLbrain', 'AllenMeanCoexpMapped'}; 
-whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; 
+clear all; close all; 
+similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'}; 
+whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %'BIPandSCZ'
 
 for s=1:length(similarityTypes)
     
@@ -14,6 +15,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS);
-    
+    [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(similarityTypes));
+    figureName = sprintf('figures/BarChart_%s', similarityTypes{s});
+    print(gcf,figureName,'-dpng','-r300');
 end
