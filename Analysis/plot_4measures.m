@@ -18,4 +18,5 @@ for s=1:length(similarityTypes)
     [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(similarityTypes));
     figureName = sprintf('figures/BarChart_%s', similarityTypes{s});
     print(gcf,figureName,'-dpng','-r300');
+    
 end

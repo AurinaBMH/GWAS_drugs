@@ -94,7 +94,8 @@ for i = 1:numDiseases_GWAS
     
     % Generate null distributions:
     numNulls = params.numNull; 
-    isSig = zeros(numDiseases_Treatment,1);
+    isSig_BF = false(numDiseases_Treatment,1);
+    isSig = false(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
     all_nullScores = cell(numDiseases_Treatment,1);
     
@@ -135,7 +136,8 @@ for i = 1:numDiseases_GWAS
         end
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
-            isSig(k) = (mean(rhos(k) < nullScores) < 0.05/numMeasures);
+            isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/numMeasures));
+            isSig(k) = logical((mean(rhos(k) < nullScores) < 0.05));
             pVals(k) = mean(rhos(k) < nullScores);
         end
         
@@ -191,7 +193,8 @@ for i = 1:numDiseases_GWAS
                 end
             end
             % Compute p-values: based on separate nulls
-            isSig(l) = (mean(rhos(l) < nullScores) < 0.05/numMeasures);
+            isSig_BF(l) = logical((mean(rhos(l) < nullScores) < 0.05/numMeasures));
+            isSig(l) = logical((mean(rhos(l) < nullScores) < 0.05));
             pVals(l) = mean(rhos(l) < nullScores);
             % save separate nulls
             all_nullScores{l} = nullScores;
@@ -268,10 +271,20 @@ for i = 1:numDiseases_GWAS
         %title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
         title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
         cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false); 
-        for k = find(~isSig)'
-            cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
+        cMapGeneric_n = cMapGeneric; 
+        
+        for k=1:length(isSig)
+            if ~isSig(k)
+                cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.99);
+            elseif ~isSig_BF(k) && isSig(k)
+                cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.85);
+            end
         end
-        b.CData = cMapGeneric(ix,:);
+
+%         for k = find(~isSig)'
+%             cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
+%         end
+        b.CData = cMapGeneric_n(ix,:);
         b.FaceColor = 'flat';
         
         linkaxes([ax{:}],'y');
