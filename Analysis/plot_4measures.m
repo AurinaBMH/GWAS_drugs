@@ -35,11 +35,7 @@ figureName = sprintf('figures/%s_geneMeasures_%s', whatMeasures);
 print(f,figureName,'-dpng','-r300');
 
 % does combinig scores improve matches?
-[Ptable] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, false); 
 
-% plot all measures in a single bar chart, order by p-value, colour by
-% type: 
-% PPI, Allen, eQTL, MAGMAh, Possition
 
 
 

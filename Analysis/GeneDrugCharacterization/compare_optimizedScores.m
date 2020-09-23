@@ -1,4 +1,4 @@
-function [Ptable] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, doPlot)
+function [Ptable, measureTable] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, doPlot)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
