@@ -1,5 +1,8 @@
 % correlate and group all measures
-function correlate_geneMeasures(disorder)
+function f = correlate_geneMeasures(disorder, select_measures)
+% select_measures - allPsych - relevant to psychiatric
+% select_measures - allBody - relevant to non-psychiatric
+% select_measures - all - all available
 
 if nargin<1
     disorder = 'DIABETES';
@@ -10,7 +13,18 @@ fileName = sprintf('resultsTable_%s_BF_2020.mat', disorder);
 load(fileName, 'geneScores');
 
 % get all measures
-measures = setdiff(fieldnames(geneScores), {'params', 'gene'});
+M = fieldnames(geneScores); 
+params = SetDefaultParams();
+
+switch select_measures
+    case 'allPsych'
+        measures = params.whatANNOT_psych';
+    case 'allBody'
+        measures = params.whatANNOT_body';
+    case 'all'
+        measures = setdiff(M, {'gene', 'params'}); 
+end
+
 measureNames = {'numPPIneighbors1', 'percPPIneighbors1'}; %'numPPIneighbors2', 'percPPIneighbors2'};
 
 % make a vector of all measures
@@ -85,7 +99,7 @@ Mnames = Mnames(ord);
 % plot
 colors = cbrewer('div', 'RdBu', 64);
 colors = flipud(colors);
-figure('color','w', 'Position', [100 100 1200 1200]);
+f = figure('color','w', 'Position', [100 100 1200 1200]);
 imagesc(RR); axis('square')
 colormap(colors);
 

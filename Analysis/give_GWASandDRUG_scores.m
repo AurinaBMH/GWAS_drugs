@@ -4,15 +4,16 @@ whatThreshold = 'BF';
 params = SetDefaultParams();
 
 switch whatMeasures
-    case 'all'
-        similarityTypes = [{'AllenMeanCoexpMapped'}, {'AllenMeanCoexpeQTLbrain'}, ...
-            {'PPI_eQTLbrain_th0'}, {'PPI_eQTLbrain_th400'}, {'PPI_eQTLbrain_th600'}, {'PPI_eQTLbrain_th900'}, ...
-            {'PPI_mapped_th0'}, {'PPI_mapped_th400'}, {'PPI_mapped_th600'}, {'PPI_mapped_th900'}, ...
-            params.whatANNOT(:)'];
+    case 'allPsych'
+        similarityTypes = params.whatANNOT_psych;
+        PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+        
+    case 'allBody'
+        similarityTypes = params.whatANNOT_body;
         PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
         
     case 'reduced'
-        similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'}';
+        similarityTypes = params.whatANNOT_reduced; 
         PPImeasures_names = {'percPPIneighbors1'};
 end
     
