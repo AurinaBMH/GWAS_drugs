@@ -1,4 +1,4 @@
-function [diseaseResultsR, diseaseResultsP, similarityTypes,ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
+function [diseaseResultsR, diseaseResultsP, similarityTypes, ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
 
 if nargin <2
     whatNull = 'randomDrugP';
@@ -10,16 +10,11 @@ if nargin <3
 end
 
 if nargin <4
-    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'}; %, 'numPPIneighbors2','percPPIneighbors2'};
-    %{'weiPPIneighbors1','expWeiPPIneighbors1', 'numCOMMONneighbors1','percCOMMONneighbors1', 'numPPIneighbors2','percPPIneighbors2', 'weiPPIneighbors2','expWeiPPIneighbors2', 'numCOMMONneighbors2','percCOMMONneighbors2'}
-end
+    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
 
 if nargin<5
     params = SetDefaultParams();
-    PPIbased = {'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
-        'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900'}; 
-    AHBAbased = {'AllenMeanCoexpMapped', 'AllenMeanCoexpeQTLbrain'}; 
-    similarityTypes = [params.whatANNOT, AHBAbased, PPIbased]; 
+    similarityTypes = params.whatANNOT_psych; 
    
 end
 

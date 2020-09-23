@@ -1,4 +1,4 @@
-function [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names, measureNames] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
+function [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names, measureNames, whatDiseases_Treatment] = give_GWASandDRUG_scores(whatGWAS, whatMeasures)
 
 whatThreshold = 'BF'; 
 params = SetDefaultParams();
@@ -7,18 +7,18 @@ switch whatMeasures
     case 'allPsych'
         similarityTypes = params.whatANNOT_psych;
         PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+        whatDiseases_Treatment = params.whatDiseases_Treatment; 
         
     case 'allBody'
         similarityTypes = params.whatANNOT_body;
         PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+        whatDiseases_Treatment = params.whatDiseases_Treatment_body; 
         
     case 'reduced'
         similarityTypes = params.whatANNOT_reduced; 
         PPImeasures_names = {'percPPIneighbors1'};
+        whatDiseases_Treatment = params.whatDiseases_Treatment; 
 end
-    
-
-whatDiseases_Treatment = params.whatDiseases_Treatment; 
 
 Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));
 takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);

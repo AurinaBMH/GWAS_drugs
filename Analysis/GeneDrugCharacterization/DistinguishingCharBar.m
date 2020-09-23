@@ -2,12 +2,9 @@ function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, gene
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
-    % {'MAGMAdefault';'Adult_brain';'Fetal_brain';'Neuro';'Astro';'eQTLbrain';'eQTLWhole_Blood';'eQTLLiver';'eQTLHeart_Left_Ventricle';'PPI_mapped_th0';'PPI_eQTLbrain_th0';'PPI_mapped_th400';'PPI_eQTLbrain_th400';'PPI_mapped_th600';'PPI_eQTLbrain_th600';'PPI_mapped_th900';'PPI_eQTLbrain_th900';'AllenMeanCoexpMapped';'AllenMeanCoexpeQTLbrain'}
 end
 if nargin < 2
     whatProperty = 'P';
-    % for MAGMA-based: {'ZSTAT';'P';'NSNPS';'NSNPSnorm'}
-    % for PPI-based: {'numPPIneighbors1';'percPPIneighbors1';'weiPPIneighbors1';'expWeiPPIneighbors1';'numPPIneighbors2';'percPPIneighbors2';'weiPPIneighbors2';'expWeiPPIneighbors2';'numPPIneighbors3';'percPPIneighbors3';'weiPPIneighbors3';'expWeiPPIneighbors3';'numPPIneighbors4';'percPPIneighbors4';'weiPPIneighbors4';'expWeiPPIneighbors4';'numPPIneighbors5';'percPPIneighbors5';'weiPPIneighbors5';'expWeiPPIneighbors5';'numPPIneighbors6';'percPPIneighbors6';'weiPPIneighbors6';'expWeiPPIneighbors6';'medianPPIDistance';'meanPPIDistance'}
 end
 if nargin < 3
     whatNull = 'randomDrugP';
@@ -25,11 +22,26 @@ if nargin<6
     doPlot = true;
 end
 
+if nargin < 7
+    numMeasures = length(similarityType); 
+end
+    
+params = SetDefaultParams();
+
+if contains(whatDiseases_GWAS, 'ADHD')
+    whatDiseases_Treatment_SEL = params.whatDiseases_Treatment;
+    whatDiseases_Treatment_label = params.whatDiseases_Treatment_label;
+else
+    whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body;
+    whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_body;
+end
+
+    
+
 %-------------------------------------------------------------------------------
 % Load in default parameters:
 params = SetDefaultParams();
-whatDiseases_Treatment_SEL = params.whatDiseases_Treatment;
-whatDiseases_Treatment_label = params.whatDiseases_Treatment_label;
+        
 whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
 whatScore = params.whatScore;
 %-------------------------------------------------------------------------------

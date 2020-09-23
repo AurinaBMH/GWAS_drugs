@@ -23,7 +23,7 @@ numGWAS = length(whatDiseases_GWAS);
 for i = 1:numGWAS
     
     whatGWAS = whatDiseases_GWAS{i};
-    [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names] = give_GWASandDRUG_scores(whatGWAS, whatMeasures);
+    [geneWeightsGWAS_ALL, drugScores_ord, similarityTypes, PPImeasures_names, ~, whatDiseases_Treatment] = give_GWASandDRUG_scores(whatGWAS, whatMeasures);
     
     % remove rows that are all NaN and measure names
     INDnan = all(isnan(geneWeightsGWAS_ALL),1);
@@ -84,8 +84,7 @@ for i = 1:numGWAS
     
     Ptable.(whatGWAS).measureName = measureTable; 
     Ptable.(whatGWAS).Pvals = PvalsTable; 
-    
-    clearvars measureTable PvalsTable
+   
     
     % plot randomNullP-based p-value for combined measure
     if doPlot

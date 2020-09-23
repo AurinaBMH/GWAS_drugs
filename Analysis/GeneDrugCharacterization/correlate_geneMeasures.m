@@ -1,11 +1,11 @@
 % correlate and group all measures
-function f = correlate_geneMeasures(disorder, select_measures)
+function [f, Mnames, Mnumbers] = correlate_geneMeasures(disorder, select_measures, plotSeparate)
 % select_measures - allPsych - relevant to psychiatric
 % select_measures - allBody - relevant to non-psychiatric
 % select_measures - all - all available
 
-if nargin<1
-    disorder = 'DIABETES';
+if nargin<3
+    plotSeparate = true; 
 end
 
 % load data
@@ -94,25 +94,31 @@ for tt=1:length(MN)
     Mnames{tt} = UU{1};
 end
 % reorder based on clustered matrix
+Mnumbers = 1:length(Mnames); 
 Mnames = Mnames(ord);
+Mnumbers = Mnumbers(ord); 
+
 
 % plot
 colors = cbrewer('div', 'RdBu', 64);
 colors = flipud(colors);
-f = figure('color','w', 'Position', [100 100 1200 1200]);
+if plotSeparate
+    f = figure('color','w', 'Position', [100 100 1200 1200]);
+end
 imagesc(RR); axis('square')
 colormap(colors);
 
 yticks(1:length(MN));
-yticklabels(Mnames)
+yticklabels(Mnumbers)
 
 xticks(1:length(MN));
-xticklabels(Mnames)
-xtickangle(45);
+xticklabels(Mnumbers)
+%xtickangle(45);
 
 caxis([-1 1])
 colorbar
 title(sprintf('%s', disorder))
+set(gca,'FontSize', 22)
 
 
 end
