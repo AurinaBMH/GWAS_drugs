@@ -37,13 +37,13 @@ params.whatTargets = 'active';
 
 params.numNull = 5000; 
 
-params.whatGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA', 'BIPandSCZ'};
+params.whatGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
 params.whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES'};
 params.whatDiseases_Treatment_label = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes'};
 
 % keep only psychiatric drugs+ diabetes
-%params.whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
-%params.whatDiseases_Treatment_label = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes', 'IBD', 'Heart failure', 'Rheumatoid arthritis', 'Gastroentherology', 'Pulmonology'};
+params.whatDiseases_Treatment_ALL = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES', 'IBD', 'HF', 'RA', 'gastro', 'pulmonary'};
+params.whatDiseases_Treatment_label_ALL = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes', 'IBD', 'Heart failure', 'Rheumatoid arthritis', 'Gastroentherology', 'Pulmonology'};
 
 params.whatANNOT = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
     'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle', 'eQTLPancreas', ...

@@ -26,8 +26,11 @@ if nargin<6
 end
 
 params = SetDefaultParams();
-whatDiseases_Treatment = params.whatDiseases_Treatment; 
+whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
 whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
+
+whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL; 
+whatDiseases_Treatment_label_ALL = params.whatDiseases_Treatment_label_ALL; 
 
 whatScore = params.whatScore;
 
@@ -35,11 +38,20 @@ if strcmp(whatNull, 'randomGene')
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
 elseif strcmp(whatNull, 'randomDrugR')
     load(sprintf('nulls_5000_%stargets_randomDrugR.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    geneNames_nulls = geneNames; 
+    %geneNames_nulls = geneNames; 
+    [~, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable'); 
+    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind); 
+    whatDiseases_Treatment = whatDiseases_Treatment(Tind); 
 elseif strcmp(whatNull, 'randomDrugP')
     load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    geneNames_nulls = geneNames; 
+    %geneNames_nulls = geneNames; 
+    [~, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable'); 
+    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind); 
+    whatDiseases_Treatment = whatDiseases_Treatment(Tind); 
+else
+    whatDiseases_Treatment = whatDiseases_Treatment_SEL; 
 end
+% select only relevant nulls
 addNull = true;
 
 %-------------------------------------------------------------------------------
@@ -52,7 +64,7 @@ numDiseases_GWAS = length(whatDiseases_GWAS);
 
 %-------------------------------------------------------------------------------
 % Load treatment weights of each gene implicated in each disorder:
-[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors(whatDiseases_Treatment,'Drug');
+[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors(whatDiseases_Treatment_ALL,'Drug');
 numDrugScores = length(drugScoresAll);
 
 %===============================================================================
@@ -83,7 +95,10 @@ for i = 1:numDiseases_GWAS
     % Get scores for the property of interest:
     rhos = zeros(numDiseases_Treatment,1);
     for k = 1:numDiseases_Treatment
-        geneWeights_treatment = drugScores(:,k);
+        % select drug list
+        kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k}); 
+        geneWeights_treatment = drugScores(:,kIND);
+        
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
         if isnan(rhos(k))
             warning('Issue with %s-%s',whatDiseases_Treatment{k},whatDisease)
@@ -144,6 +159,7 @@ for i = 1:numDiseases_GWAS
     else
         
         for l = 1:numDiseases_Treatment
+            lIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{l}); 
             nullScores = zeros(numNulls,1);
             for k = 1:numNulls
                 % separate set of nulls for each drug target list
@@ -167,7 +183,7 @@ for i = 1:numDiseases_GWAS
                             % normalizde the weights, by default this used
                             % norm-1, but mabe should be chnaged to norm2?
                             geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand);
-                            nullScores(k) = ComputeDotProduct(drugScores(:,l),geneWeightsGWAS_randNorm);
+                            nullScores(k) = ComputeDotProduct(drugScores(:,lIND),geneWeightsGWAS_randNorm);
                         else
                             
                             warning('% null is not compatible with %s\n', whatNull, whatNull)
@@ -177,7 +193,7 @@ for i = 1:numDiseases_GWAS
                         
                     case 'randomTarget' % is the actual match higher than a match with random gene score assignment
                         % Shuffle weights taken from each drug list individually
-                        drugScores_DIS = drugScores(:,l);
+                        drugScores_DIS = drugScores(:,lIND);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
                     case {'randomDrugP','randomDrugR'}  % for each disease get a random set of drugs that is the same size as
@@ -186,7 +202,7 @@ for i = 1:numDiseases_GWAS
                         % the order of genes is the same in GWAS and nulls
                         % [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
                         %  drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
-                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
+                        drugScores_DIS = RANDOMdrugs_treatment{lIND}(:,k);
                         %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
                         

@@ -26,7 +26,7 @@ end
 % drug as equally important for the efficacy of that drug:
 
 params = SetDefaultParams();
-whatDiseases = params.whatDiseases_Treatment; 
+whatDiseases = params.whatDiseases_Treatment_ALL; 
 
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
