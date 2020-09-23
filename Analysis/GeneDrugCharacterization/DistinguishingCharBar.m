@@ -25,45 +25,49 @@ if nargin<6
     doPlot = true;
 end
 
+%-------------------------------------------------------------------------------
+% Load in default parameters:
 params = SetDefaultParams();
-whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
-whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
-
-whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL; 
-whatDiseases_Treatment_label_ALL = params.whatDiseases_Treatment_label_ALL; 
-
+whatDiseases_Treatment_SEL = params.whatDiseases_Treatment;
+whatDiseases_Treatment_label = params.whatDiseases_Treatment_label;
+whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
 whatScore = params.whatScore;
+%-------------------------------------------------------------------------------
 
 if strcmp(whatNull, 'randomGene')
+    
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
+    
 elseif strcmp(whatNull, 'randomDrugR')
+    
     load(sprintf('nulls_5000_%stargets_randomDrugR.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    %geneNames_nulls = geneNames; 
-    [~, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable'); 
-    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind); 
-    whatDiseases_Treatment = whatDiseases_Treatment(Tind); 
+    %geneNames_nulls = geneNames;
+    % select nulls for drugs that will be visualised
+    [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+    
 elseif strcmp(whatNull, 'randomDrugP')
+    
     load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    %geneNames_nulls = geneNames; 
-    [~, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable'); 
-    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind); 
-    whatDiseases_Treatment = whatDiseases_Treatment(Tind); 
+    %geneNames_nulls = geneNames;
+    % select nulls for drugs that will be visualised
+    [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+    
 else
-    whatDiseases_Treatment = whatDiseases_Treatment_SEL; 
+    
+    whatDiseases_Treatment = whatDiseases_Treatment_SEL;
+    
 end
 % select only relevant nulls
 addNull = true;
 
-%-------------------------------------------------------------------------------
-% Load in default parameters:
-
-
-%-------------------------------------------------------------------------------
 numDiseases_Treatment = length(whatDiseases_Treatment);
 numDiseases_GWAS = length(whatDiseases_GWAS);
 
 %-------------------------------------------------------------------------------
 % Load treatment weights of each gene implicated in each disorder:
+% load drugs scores for all disorders, will select values from these
 [geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors(whatDiseases_Treatment_ALL,'Drug');
 numDrugScores = length(drugScoresAll);
 
@@ -96,7 +100,7 @@ for i = 1:numDiseases_GWAS
     rhos = zeros(numDiseases_Treatment,1);
     for k = 1:numDiseases_Treatment
         % select drug list
-        kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k}); 
+        kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k});
         geneWeights_treatment = drugScores(:,kIND);
         
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
@@ -108,7 +112,7 @@ for i = 1:numDiseases_GWAS
     rhosALL(:,i) = rhos;
     
     % Generate null distributions:
-    numNulls = params.numNull; 
+    numNulls = params.numNull;
     isSig_BF = false(numDiseases_Treatment,1);
     isSig = false(numDiseases_Treatment,1);
     pVals = zeros(numDiseases_Treatment,1);
@@ -159,7 +163,8 @@ for i = 1:numDiseases_GWAS
     else
         
         for l = 1:numDiseases_Treatment
-            lIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{l}); 
+            % select drugs from selected list
+            lIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{l});
             nullScores = zeros(numNulls,1);
             for k = 1:numNulls
                 % separate set of nulls for each drug target list
@@ -200,9 +205,12 @@ for i = 1:numDiseases_GWAS
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % load pre-computed nulls
                         % the order of genes is the same in GWAS and nulls
-                        % [~, ix, iy] = intersect(geneNames, geneNames_nulls); 
+                        % [~, ix, iy] = intersect(geneNames, geneNames_nulls);
                         %  drugScores_DIS = RANDOMdrugs_treatment{l}(iy,k);
-                        drugScores_DIS = RANDOMdrugs_treatment{lIND}(:,k);
+                        
+                        % using l, because RANDOMdrugs_treatment is already
+                        % reduced only to drugs that are being tested
+                        drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
                         %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
                         
@@ -220,10 +228,10 @@ for i = 1:numDiseases_GWAS
     pValsALL(:,i) = pVals;
     
     % Sort:
-    %[~, ix] = sort(pVals, 'ascend'); 
+    %[~, ix] = sort(pVals, 'ascend');
     [~,ix] = sort(rhos,'descend');
-    all_nullScores = all_nullScores(ix); 
-    rhos = rhos(ix); 
+    all_nullScores = all_nullScores(ix);
+    rhos = rhos(ix);
     
     
     %---------------------------------------------------------------------------
@@ -255,20 +263,20 @@ for i = 1:numDiseases_GWAS
         else
             
             % for other nulls plot distributions on each bar
-            minLim = zeros(numDiseases_Treatment,1); 
-            maxLim = zeros(numDiseases_Treatment,1); 
+            minLim = zeros(numDiseases_Treatment,1);
+            maxLim = zeros(numDiseases_Treatment,1);
             
             for nn = 1:numDiseases_Treatment
-                nullScores_selected = all_nullScores{nn}; 
+                nullScores_selected = all_nullScores{nn};
                 if addNull && ~all(isnan(nullScores_selected))
                     
                     % function to plot nulls
                     % this will plot the distribution at the end of baf chart
-                    % all_nullScores are now reordered to correspond ro rhos 
+                    % all_nullScores are now reordered to correspond ro rhos
                     [minLim(nn),maxLim(nn)] = plot_nullDistribution(nullScores_selected, rhos, nn);
                     
                 end
- 
+                
             end
             
             if range(rhos) > 0
@@ -286,8 +294,8 @@ for i = 1:numDiseases_GWAS
         ylabel({'GWAS-treatment', 'similarity'})
         %title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
         title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
-        cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false); 
-        cMapGeneric_n = cMapGeneric; 
+        cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false);
+        cMapGeneric_n = cMapGeneric;
         
         for k=1:length(isSig)
             if ~isSig(k)
@@ -296,10 +304,10 @@ for i = 1:numDiseases_GWAS
                 cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.85);
             end
         end
-
-%         for k = find(~isSig)'
-%             cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
-%         end
+        
+        %         for k = find(~isSig)'
+        %             cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
+        %         end
         b.CData = cMapGeneric_n(ix,:);
         b.FaceColor = 'flat';
         
