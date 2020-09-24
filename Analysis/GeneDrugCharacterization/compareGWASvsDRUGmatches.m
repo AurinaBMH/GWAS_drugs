@@ -8,22 +8,6 @@ if nargin <3
     Dname = whatDiseases_GWAS{1};
 end
 
-params = SetDefaultParams();
-
-switch whatMeasures
-    case 'allPsych'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
-        
-    case 'allBody'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body; 
-        
-    case 'reduced'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
-end
-
 Dname = Dname(isstrprop(Dname,'alpha'));
 
 % measures for non PPI mappings
@@ -43,7 +27,7 @@ for s=1:length(similarityTypes)
         for p=1:PPInum
             
             whatProperty = PPImeasures_names{p};
-            [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatDiseases_Treatment_SEL);
+            [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatMeasures);
             % select rho and p values for a selected disorder
             
             takeVal = contains(whatDiseases_Treatment_SEL, Dname, 'IgnoreCase',true);
@@ -71,7 +55,7 @@ for s=1:length(similarityTypes)
             whatProperty = 'r';
         end
         
-        [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatDiseases_Treatment_SEL);
+        [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatMeasures);
         takeVal = contains(whatDiseases_Treatment_SEL, Dname, 'IgnoreCase',true);
         
         colN = find(strcmp(OTHERmeasures_names,whatProperty));

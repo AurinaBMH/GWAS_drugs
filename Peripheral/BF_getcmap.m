@@ -1832,18 +1832,31 @@ switch whichMap
                         1, 1, 0];
         cmapOut = cmapOut(1:numGrads,:);
       case 'set4'
-        if numGrads > 10, numGrads = 10; end
+        if numGrads == 5
         cmapOut = [254,224,144;
             214,96,77;
             67,147,195;
             128,115,172;
-            135,135,135;
+            135,135,135];
+        elseif numGrads == 6
+         cmapOut = [135,135,135; 
             253,174,97;
             171,217,233;
             223,194,125;
             53,151,143;
             146,197,222]; % 10 class
-        
+        elseif numGrads == 10
+            cmapOut = [254,224,144;
+                214,96,77;
+                67,147,195;
+                128,115,172;
+                135,135,135;
+                253,174,97;
+                171,217,233;
+                223,194,125;
+                53,151,143;
+                146,197,222];
+        end
         cmapOut = cmapOut(1:numGrads,:);
     case 'set5'
         if numGrads > 5, numGrads = 6; end

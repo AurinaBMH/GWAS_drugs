@@ -1,12 +1,12 @@
 % matching for psychiatric disorders
 clear all; close all; 
+params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-
-whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %'BIPandSCZ'
+whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'};
+whatMeasures = 'allPsych';
 
 numGWAS = length(whatDiseases_GWAS); 
-
 
 for s=1:length(similarityTypes)
     
@@ -20,14 +20,14 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(similarityTypes));
-    figureName = sprintf('figures/BarChart_%s', similarityTypes{s});
+    [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(similarityTypes), whatMeasures);
+    figureName = sprintf('figures/BarChart_%s_%s', similarityTypes{s}, whatMeasures);
     print(gcf,figureName,'-dpng','-r300');
     
     
 end
 
-whatMeasures = 'allPsych'; 
+ 
 % plot correlation between different measures for one representative disorder
 %f = figure('color','w', 'Position', [300, 300, 2000, 1000]);
 for i=1:numGWAS

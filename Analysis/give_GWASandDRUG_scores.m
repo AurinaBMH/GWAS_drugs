@@ -18,6 +18,12 @@ switch whatMeasures
         similarityTypes = params.whatANNOT_reduced; 
         PPImeasures_names = {'percPPIneighbors1'};
         whatDiseases_Treatment = params.whatDiseases_Treatment; 
+        
+    case 'all'
+        similarityTypes = params.whatANNOT_all; 
+        PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+        whatDiseases_Treatment = params.whatDiseases_Treatment_label_ALL; 
+        
 end
 
 Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));

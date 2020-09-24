@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatDiseases_Treatment_SEL)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -32,6 +32,23 @@ params = SetDefaultParams();
 whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
 whatScore = params.whatScore;
 %-------------------------------------------------------------------------------
+
+switch whatMeasures
+    case {'allPsych', 'reduced'}
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
+        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
+    case 'allBody'
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body; 
+        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_body;
+        
+    case 'all'
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_label_ALL; 
+        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_ALL; 
+        
+end
 
 if strcmp(whatNull, 'randomGene')
     
@@ -303,10 +320,7 @@ for i = 1:numDiseases_GWAS
                 cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.85);
             end
         end
-        
-        %         for k = find(~isSig)'
-        %             cMapGeneric(k,:) = brighten(cMapGeneric(k,:),0.95);
-        %         end
+
         b.CData = cMapGeneric_n(ix,:);
         b.FaceColor = 'flat';
         
