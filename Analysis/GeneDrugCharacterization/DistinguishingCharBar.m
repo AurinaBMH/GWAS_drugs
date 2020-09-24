@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatDiseases_Treatment_SEL)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -9,39 +9,26 @@ end
 if nargin < 3
     whatNull = 'randomDrugP';
 end
-if nargin <4
+if nargin < 4
     whatThreshold = 'BF';
 end
 
-if nargin<5
+if nargin < 5
     params = SetDefaultParams();
     whatDiseases_GWAS = params.whatGWAS;
 end
 
-if nargin<6
+if nargin < 6
     doPlot = true;
 end
 
 if nargin < 7
     numMeasures = length(similarityType); 
 end
-    
-params = SetDefaultParams();
-
-if contains(whatDiseases_GWAS, 'ADHD')
-    whatDiseases_Treatment_SEL = params.whatDiseases_Treatment;
-    whatDiseases_Treatment_label = params.whatDiseases_Treatment_label;
-else
-    whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body;
-    whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_body;
-end
-
-    
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
-params = SetDefaultParams();
-        
+params = SetDefaultParams();    
 whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
 whatScore = params.whatScore;
 %-------------------------------------------------------------------------------

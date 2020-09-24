@@ -32,7 +32,7 @@ for i = 1:numGWAS
     % plot randomNullP-based p-values for each mapping method
     Dname = whatGWAS(isstrprop(whatGWAS,'alpha'));
     
-    [~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({whatGWAS}, whatNull, Dname, PPImeasures_names, similarityTypes);
+    [~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({whatGWAS}, whatNull, Dname, similarityTypes, PPImeasures_names, whatMeasures);
     close all;
     
     Pvals_mapp = -log10(diseaseResultsP(~isnan(diseaseResultsP(:))))';

@@ -41,7 +41,7 @@ end
 
 % does combinig scores improve matches?
 plotHow = 'horizontal'; 
-f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, false, plotHow); 
+f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, true, plotHow); 
 figureName = sprintf('figures/compareMeasures_%s_%s', whatMeasures, plotHow);
 print(f,figureName,'-dpng','-r300');
 

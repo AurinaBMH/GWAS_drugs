@@ -1,5 +1,4 @@
-function [diseaseResultsR, diseaseResultsP, similarityTypes, ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, PPImeasures_names, similarityTypes)
-
+function [diseaseResultsR, diseaseResultsP, similarityTypes, ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, similarityTypes, PPImeasures_names, whatMeasures)
 if nargin <2
     whatNull = 'randomDrugP';
 end
@@ -9,13 +8,20 @@ if nargin <3
     Dname = whatDiseases_GWAS{1};
 end
 
-if nargin <4
-    PPImeasures_names = {'numPPIneighbors1','percPPIneighbors1'};
+params = SetDefaultParams();
 
-if nargin<5
-    params = SetDefaultParams();
-    similarityTypes = params.whatANNOT_psych; 
-   
+switch whatMeasures
+    case 'allPsych'
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
+        
+    case 'allBody'
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body; 
+        
+    case 'reduced'
+
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
 end
 
 Dname = Dname(isstrprop(Dname,'alpha'));
@@ -37,10 +43,10 @@ for s=1:length(similarityTypes)
         for p=1:PPInum
             
             whatProperty = PPImeasures_names{p};
-            [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes));
+            [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatDiseases_Treatment_SEL);
             % select rho and p values for a selected disorder
             
-            takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
+            takeVal = contains(whatDiseases_Treatment_SEL, Dname, 'IgnoreCase',true);
             
             diseaseResultsR(s,p+OTHERnum) = rhos(takeVal);
             diseaseResultsP(s,p+OTHERnum) = pVals(takeVal);
@@ -65,8 +71,8 @@ for s=1:length(similarityTypes)
             whatProperty = 'r';
         end
         
-        [rhos ,pVals, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes));
-        takeVal = contains(whatDiseases_Treatment, Dname, 'IgnoreCase',true);
+        [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatDiseases_Treatment_SEL);
+        takeVal = contains(whatDiseases_Treatment_SEL, Dname, 'IgnoreCase',true);
         
         colN = find(strcmp(OTHERmeasures_names,whatProperty));
         
