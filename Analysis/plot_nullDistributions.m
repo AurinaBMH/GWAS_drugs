@@ -1,4 +1,4 @@
-function plot_nullDistributions()
+function f = plot_nullDistributions()
 
 whatMeasures = 'allPsych';
 colPsy = [253,141,6]/255; 
@@ -33,6 +33,8 @@ histogram(N_scz_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWidth',
 histogram(N_scz_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
 plot([rho_SCZ_BIP rho_SCZ_BIP],[0 300], 'LineWidth', 3, 'Color', colLine)
 box off
+legend('All treatment null','Psychiatric treatment null')
+legend boxoff  
 
 xlabel('GWAS-treatment similarity')
 ylabel({'Count'})
@@ -52,11 +54,14 @@ histogram(N_diabetes_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWi
 histogram(N_diabetes_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
 plot([rho_DIABETES rho_DIABETES],[0 300], 'LineWidth', 3, 'Color', colLine)
 box off
+legend('All treatment null','Psychiatric treatment null')
+legend boxoff  
 
 xlabel('GWAS-treatment similarity')
 ylabel({'Count'})
 set(gca,'FontSize', 20)
 title('Diabetes')
+
 
 linkaxes([ax{:}],'y');
 linkaxes([ax{:}],'x');

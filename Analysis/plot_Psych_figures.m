@@ -47,7 +47,12 @@ f = plot_measureOverview(Pmatrix, T, similarityTypes_label);
 figureName = sprintf('figures/BarP_withinDisorder_%s', whatMeasures);
 print(gcf,figureName,'-dpng','-r300');
 
-
+% plot null distributions when chooseing from all and from psychiatric
+% drugs: in this example: use PPI-significant results: SCZ GWAS vs BIP
+% drugs and DIABETES vs DIABETES drugs
+f = plot_nullDistributions(); 
+figureName = 'figures/Null_distribution_comparison';
+print(f,figureName,'-dpng','-r300');
 
 
 
