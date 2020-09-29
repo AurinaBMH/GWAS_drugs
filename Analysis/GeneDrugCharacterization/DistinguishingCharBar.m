@@ -256,8 +256,8 @@ for i = 1:numDiseases_GWAS
     % Sort:
     %[~, ix] = sort(pVals, 'ascend');
     [~,ix] = sort(rhos,'descend');
-    all_nullScores = all_nullScores(ix);
     nullScoresALL{i} = all_nullScores; 
+    all_nullScores = all_nullScores(ix);
     rhos = rhos(ix);
     
     %---------------------------------------------------------------------------

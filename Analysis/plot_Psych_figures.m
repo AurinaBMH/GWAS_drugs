@@ -48,39 +48,6 @@ figureName = sprintf('figures/BarP_withinDisorder_%s', whatMeasures);
 print(gcf,figureName,'-dpng','-r300');
 
 
-% for several borderline matches plot null distributions and real data
-% based on all radnom drug nulls or only using psychiatric drug nulls; 
-typesNull = {'randomDrugP','randomDrugP_psych'}; 
-for t=1:length(typesNull)
-% for SCZ
-[SCZ_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, SCZ_null{t}] = ...
-    DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', {'SCZ'}, true, length(whatDiseases_GWAS), whatMeasures);
-
-% for DIABETES
-[DIABETES_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, DIABETES_null{t}] = ...
-    DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', {'DIABETES'}, true, length(whatDiseases_GWAS), whatMeasures);
-end
-
-% find BIP in SCZ list
-[~, IND_scz] = intersect(whatDiseases_Treatment,'BIP', 'stable');
-rho_SCZ_BIP = SCZ_rhosALL{1}(IND_scz); 
-N_scz_all = SCZ_null{1}{1}{IND_scz}; 
-N_scz_psy = SCZ_null{2}{1}{IND_scz};
-f = figure('color','w', 'Position', [300, 300, 800, 400]);
-histogram(N_scz_all); hold on; 
-histogram(N_scz_psy); hold on; 
-xline(rho_SCZ_BIP); 
-
-% find DIABETES in DIABETES list
-[~, IND_diabetes] = intersect(whatDiseases_Treatment,'DIABETES', 'stable');
-rho_DIABETES = DIABETES_rhosALL{1}(IND_diabetes); 
-N_diabetes_all = DIABETES_null{1}{1}{IND_diabetes}; 
-N_diabetes_psy = DIABETES_null{2}{1}{IND_diabetes};
-
-f = figure('color','w', 'Position', [300, 300, 800, 400]);
-histogram(N_diabetes_all); hold on; 
-histogram(N_diabetes_psy); hold on; 
-xline(rho_DIABETES); 
 
 
 
