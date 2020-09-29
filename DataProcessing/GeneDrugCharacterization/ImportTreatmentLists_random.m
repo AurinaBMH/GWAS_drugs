@@ -25,7 +25,7 @@ end
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
 params = SetDefaultParams();
-whatDiseases = [params.whatDiseases_Treatment,'RANDOM'];
+whatDiseases = [params.whatDiseases_Treatment_ALL,'RANDOM'];
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
@@ -202,9 +202,5 @@ indicatorTable = array2table(indicatorMatrix,'RowNames',allGenes,...
 percIndicatorTable = array2table(propMatrix,'RowNames',allGenes,...
     'VariableNames',whatDiseases);
 
-% Sort the table:
-% [~,ix] = sort(meanRow,'descend');
-% indicatorTable = indicatorTable(ix,:);
-% percIndicatorTable = percIndicatorTable(ix,:);
 
 end

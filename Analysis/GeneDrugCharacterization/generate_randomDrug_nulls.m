@@ -16,7 +16,6 @@ whatDiseases_Treatment = params.whatDiseases_Treatment;
 [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);
 
 numGenes = length(geneNamesGWAS); 
-
 RANDOMdrugs = zeros(numGenes, numNulls); 
 RANDOMdrugs_treatment = cell(length(whatDiseases_Treatment),1); 
 
@@ -24,6 +23,7 @@ for i = 1:length(whatDiseases_Treatment)
     for j = 1:numNulls
         diseaseName = whatDiseases_Treatment{i}; 
 
+        
         [RANDOMdrugs(:,j), geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs, whatSelection);
 
     end
