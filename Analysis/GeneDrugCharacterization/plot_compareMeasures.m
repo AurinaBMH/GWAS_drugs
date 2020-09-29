@@ -1,12 +1,9 @@
-function f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatV)
+function f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc)
 
 if nargin < 3
     recalc = false; 
 end
 
-if nargin < 4
-    whatV = 'horizontal';
-end
 
 if recalc
     [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, false);
@@ -40,12 +37,12 @@ for i=1:numDiseases_GWAS
     
     % reorder bars by size
     [pPlot, ix] = sort(Ptable.(whatDiseases_GWAS{i}).Pvals, 'descend');
-    switch whatV
-        case 'horizontal'
-            %ax{i} = subplot(1, numDiseases_GWAS, i);
-        case 'vertical'
-            %ax{i} = subplot(numDiseases_GWAS, 1, i);
-    end
+%     switch whatV
+%         case 'horizontal'
+%             %ax{i} = subplot(1, numDiseases_GWAS, i);
+%         case 'vertical'
+%             %ax{i} = subplot(numDiseases_GWAS, 1, i);
+%     end
     %hold on;
 
     b = bar(pPlot);
@@ -62,20 +59,23 @@ for i=1:numDiseases_GWAS
     b.EdgeColor = [1 1 1]; 
     box off; 
     
-    set(gca,'FontSize', 16)
+    set(gca,'FontSize', 20)
     
     ylabel('-log10(P)')
     title(sprintf('%s', whatDiseases_GWAS{i}))
     
     
-    if strcmp(whatV, 'vertical')
-        if i==numDiseases_GWAS
-            xlabel('Measures')
-        end
-    else
+    %if strcmp(whatV, 'vertical')
+    %    if i==numDiseases_GWAS
+    %        xlabel('Measures')
+    %    end
+    %else
         xlabel('Measures')
-    end
+    %end
     ylim([0 4]); 
+    
+    figureName = sprintf('figures/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
+    print(f,figureName,'-dpng','-r300');
 end
 
 %linkaxes([ax{:}],'y');

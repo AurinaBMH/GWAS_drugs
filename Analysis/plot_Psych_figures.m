@@ -62,10 +62,9 @@ end
 
 
 % does combinig scores improve matches?
-plotHow = 'vertical'; 
-f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, false, plotHow); 
-figureName = sprintf('figures/compareMeasures_%s_%s', whatMeasures, plotHow);
-print(f,figureName,'-dpng','-r300');
+DOrecalc = false; 
+f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
+
 
 
 
