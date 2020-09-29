@@ -66,8 +66,10 @@ end
 rho_SCZ_BIP = SCZ_rhosALL{1}(IND_scz); 
 N_scz_all = SCZ_null{1}{1}{IND_scz}; 
 N_scz_psy = SCZ_null{2}{1}{IND_scz};
-
-
+f = figure('color','w', 'Position', [300, 300, 800, 400]);
+histogram(N_scz_all); hold on; 
+histogram(N_scz_psy); hold on; 
+xline(rho_SCZ_BIP); 
 
 % find DIABETES in DIABETES list
 [~, IND_diabetes] = intersect(whatDiseases_Treatment,'DIABETES', 'stable');
@@ -75,6 +77,10 @@ rho_DIABETES = DIABETES_rhosALL{1}(IND_diabetes);
 N_diabetes_all = DIABETES_null{1}{1}{IND_diabetes}; 
 N_diabetes_psy = DIABETES_null{2}{1}{IND_diabetes};
 
+f = figure('color','w', 'Position', [300, 300, 800, 400]);
+histogram(N_diabetes_all); hold on; 
+histogram(N_diabetes_psy); hold on; 
+xline(rho_DIABETES); 
 
 
 
