@@ -7,6 +7,13 @@ whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'};
 whatMeasures = 'allPsych';
 
 numGWAS = length(whatDiseases_GWAS); 
+V = nan(length(similarityTypes), numGWAS); 
+
+% give names without numbers
+for i=1:length(whatDiseases_GWAS) 
+    name = whatDiseases_GWAS{i};
+    whatDiseases_GWAS_name{i} = name(isstrprop(name,'alpha')); 
+end
 
 for s=1:length(similarityTypes)
     
@@ -20,14 +27,30 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(similarityTypes), whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS)-1, whatMeasures);
+    % find corresponsing match
+    [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
+    % select disorder to itself - diagonal
+    Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
+
     figureName = sprintf('figures/BarChart_%s_%s', similarityTypes{s}, whatMeasures);
     print(gcf,figureName,'-dpng','-r300');
     
     
 end
 
- 
+f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
+figureName = sprintf('figures/BarP_withinDisorder_%s', whatMeasures);
+print(gcf,figureName,'-dpng','-r300');
+
+
+% for several borderline matches plot null distributions and real data
+% based on all radnom drug nulls or only using psychiatric drug nulls; 
+
+
+
+
+
 % plot correlation between different measures for one representative disorder
 %f = figure('color','w', 'Position', [300, 300, 2000, 1000]);
 for i=1:numGWAS

@@ -249,7 +249,6 @@ for i = 1:numDiseases_GWAS
     all_nullScores = all_nullScores(ix);
     rhos = rhos(ix);
     
-    
     %---------------------------------------------------------------------------
     if doPlot
         ax{i} = subplot(1,numDiseases_GWAS,i); hold on

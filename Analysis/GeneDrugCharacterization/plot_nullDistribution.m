@@ -20,14 +20,14 @@ null_p50 = quantile(nullScores,0.5);
 null_p95 = quantile(nullScores,0.95);
 plot([plotWhere-0.5,plotWhere+0.5],ones(2,1)*null_p95,':k', 'LineWidth',2)
 if range(rhos) > 0
-    maxLim = max(rhos)*1.1;
+    maxLim = max(rhos)*1.2;
     if maxLim < null_p95
-        maxLim = null_p95*1.1;
+        maxLim = null_p95*1.2;
     end
-    minLim = min(rhos)*0.9;
+    minLim = min(rhos)*0.8;
     null_p10 = quantile(nullScores,0.1);
     if minLim > null_p10
-        minLim = null_p10*0.9;
+        minLim = null_p10*0.8;
     end
     
 end
