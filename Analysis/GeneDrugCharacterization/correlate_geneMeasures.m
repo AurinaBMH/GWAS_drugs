@@ -1,5 +1,5 @@
 % correlate and group all measures
-function [f, Mnames, Mnumbers] = correlate_geneMeasures(disorder, select_measures, plotSeparate)
+function [f, Mnames, Mnumbers] = correlate_geneMeasures(disorder, whatMeasures, plotSeparate)
 % select_measures - allPsych - relevant to psychiatric
 % select_measures - allBody - relevant to non-psychiatric
 % select_measures - all - all available
@@ -16,7 +16,7 @@ load(fileName, 'geneScores');
 M = fieldnames(geneScores); 
 params = SetDefaultParams();
 
-switch select_measures
+switch whatMeasures
     case 'allPsych'
         measures = params.whatANNOT_psych';
     case 'allBody'
@@ -31,7 +31,7 @@ measureNames = {'numPPIneighbors1', 'percPPIneighbors1'}; %'numPPIneighbors2', '
 p=1;
 for k=1:length(measures)
     
-    if contains(measures{k}, 'Allen')
+    if contains(measures{k}, 'Allen') && contains(measures{k}, 'Mapped')
         MN{p} = {measures{k}};
         p=p+1;
     elseif contains(measures{k}, 'PPI')
@@ -88,15 +88,20 @@ RR = r(ord, ord);
 
 % combine measure names
 Mnames = cell(length(MN),1);
+
 for tt=1:length(MN)
     MN{tt} = strrep(MN{tt},'_',' ');
     UU = join(MN{tt}, '.');
     Mnames{tt} = UU{1};
 end
+    
+Mlabels = give_MeasureLabels(Mnames); 
+
 % reorder based on clustered matrix
 Mnumbers = 1:length(Mnames); 
 Mnames = Mnames(ord);
 Mnumbers = Mnumbers(ord); 
+Mlabels = Mlabels(ord); 
 
 
 % plot
@@ -109,11 +114,11 @@ imagesc(RR); axis('square')
 colormap(colors);
 
 yticks(1:length(MN));
-yticklabels(Mnumbers)
+yticklabels(Mlabels)
 
 xticks(1:length(MN));
-xticklabels(Mnumbers)
-%xtickangle(45);
+xticklabels(Mlabels)
+xtickangle(45);
 
 caxis([-1 1])
 colorbar
