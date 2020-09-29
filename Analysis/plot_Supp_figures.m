@@ -26,12 +26,6 @@ for s=1:length(similarityTypes)
     
 end
 
-
-
-
-
-
-
 % plot correlation between different measures for one representative disorder
 %f = figure('color','w', 'Position', [300, 300, 2000, 1000]);
 for i=1:numGWAS
@@ -44,7 +38,7 @@ end
 
 
 % does combinig scores improve matches?
-plotHow = 'horizontal'; 
-f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, true, plotHow); 
+plotHow = 'vertical'; 
+f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, false, plotHow); 
 figureName = sprintf('figures/compareMeasures_%s_%s', whatMeasures, plotHow);
 print(f,figureName,'-dpng','-r300');
