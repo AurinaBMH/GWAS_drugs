@@ -5,6 +5,8 @@ similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCo
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'};
 whatMeasures = 'allPsych';
+whatNull = 'randomDrugP'; 
+
 
 numGWAS = length(whatDiseases_GWAS); 
 V = nan(length(similarityTypes), numGWAS); 
@@ -14,6 +16,8 @@ for i=1:length(whatDiseases_GWAS)
     name = whatDiseases_GWAS{i};
     whatDiseases_GWAS_name{i} = name(isstrprop(name,'alpha')); 
 end
+
+nullScores = cell(length(similarityTypes),1); 
 
 for s=1:length(similarityTypes)
     
@@ -27,7 +31,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP', 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS)-1, whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS)-1, whatMeasures);
     % find corresponsing match
     [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
@@ -46,7 +50,30 @@ print(gcf,figureName,'-dpng','-r300');
 
 % for several borderline matches plot null distributions and real data
 % based on all radnom drug nulls or only using psychiatric drug nulls; 
+typesNull = {'randomDrugP','randomDrugP_psych'}; 
+for t=1:length(typesNull)
+% for SCZ
+[SCZ_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, SCZ_null{t}] = ...
+    DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', {'SCZ'}, true, length(whatDiseases_GWAS), whatMeasures);
 
+% for DIABETES
+[DIABETES_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, DIABETES_null{t}] = ...
+    DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', {'DIABETES'}, true, length(whatDiseases_GWAS), whatMeasures);
+end
+
+% find BIP in SCZ list
+[~, IND_scz] = intersect(whatDiseases_Treatment,'BIP', 'stable');
+rho_SCZ_BIP = SCZ_rhosALL{1}(IND_scz); 
+N_scz_all = SCZ_null{1}{1}{IND_scz}; 
+N_scz_psy = SCZ_null{2}{1}{IND_scz};
+
+
+
+% find DIABETES in DIABETES list
+[~, IND_diabetes] = intersect(whatDiseases_Treatment,'DIABETES', 'stable');
+rho_DIABETES = DIABETES_rhosALL{1}(IND_diabetes); 
+N_diabetes_all = DIABETES_null{1}{1}{IND_diabetes}; 
+N_diabetes_psy = DIABETES_null{2}{1}{IND_diabetes};
 
 
 

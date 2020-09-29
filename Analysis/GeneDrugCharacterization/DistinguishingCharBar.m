@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS, nullScoresALL] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -69,6 +69,14 @@ elseif strcmp(whatNull, 'randomDrugP')
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
     RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+elseif strcmp(whatNull, 'randomDrugP_psych')
+    
+    load(sprintf('nulls_5000_%stargets_randomDrugP_psych.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    %geneNames_nulls = geneNames;
+    % select nulls for drugs that will be visualised
+    [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+    
     
 else
     
@@ -98,7 +106,7 @@ if doPlot
 end
 rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
-
+nullScoresALL = cell(numDiseases_GWAS,1); 
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
@@ -217,7 +225,7 @@ for i = 1:numDiseases_GWAS
                         drugScores_DIS = drugScores(:,lIND);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
-                    case {'randomDrugP','randomDrugR'}  % for each disease get a random set of drugs that is the same size as
+                    case {'randomDrugP','randomDrugR','randomDrugP_psych'}  % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % load pre-computed nulls
                         % the order of genes is the same in GWAS and nulls
@@ -238,15 +246,18 @@ for i = 1:numDiseases_GWAS
             pVals(l) = mean(rhos(l) < nullScores);
             % save separate nulls
             all_nullScores{l} = nullScores;
+            
         end
     end
     
     pValsALL(:,i) = pVals;
     
+    
     % Sort:
     %[~, ix] = sort(pVals, 'ascend');
     [~,ix] = sort(rhos,'descend');
     all_nullScores = all_nullScores(ix);
+    nullScoresALL{i} = all_nullScores; 
     rhos = rhos(ix);
     
     %---------------------------------------------------------------------------
