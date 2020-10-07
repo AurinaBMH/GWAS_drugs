@@ -32,68 +32,9 @@ numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
-%% Initialize variables.
-delimiter = ',';
-startRow = 1;
-endRow = inf;
-%% Format for each line of text:
-%   column1: text (%q)
-%	column2: text (%q)
-% For more information, see the TEXTSCAN documentation.
-formatSpec = '%q%q%[^\n\r]';
 
 dataTable = struct();
 switch whatDrugTargets
-    case '2018'
-        tic
-        % use drug targets assigned by Janette in 05/2018
-        for k = 1:numDiseases
-            whatDisease = whatDiseases{k};
-            switch whatDisease
-                case 'ADHD'
-                    fileName = 'Treatment-list-ADHD-4thMay2018.csv';
-                case 'BIP'
-                    fileName = 'Treatment-list-BIP-7thMay2018.csv';
-                case 'SCZ'
-                    fileName = 'Treatment-list-SCZ-4thMay2018.csv';
-                case 'MDD'
-                    fileName = 'Treatment-list-MDD-7thMay2018.csv';
-                case 'pulmonary'
-                    fileName = 'Treatment-list-pulmonary-4thMay2018.csv';
-                case 'cardiology'
-                    fileName = 'Treatment-list-cardiology-4thMay2018.csv';
-                case 'gastro'
-                    fileName = 'Treatment-list-gastro-4thMay2018.csv';
-                case 'diabetes'
-                    fileName = 'Treatment-list-diabetes-25thMay2018.csv';
-                otherwise
-                    error('Unknown disease: ''%s''',whatDisease);
-            end
-            
-            %% Open the text file.
-            fileID = fopen(fileName,'r');
-            
-            %% Read columns of data according to the format.
-            % This call is based on the structure of the file used to generate this
-            % code. If an error occurs for a different file, try regenerating the code
-            % from the Import Tool.
-            dataArray = textscan(fileID, formatSpec, endRow(1)-startRow(1)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', 1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-            for block=2:length(startRow)
-                frewind(fileID);
-                dataArrayBlock = textscan(fileID, formatSpec, endRow(block)-startRow(block)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(block)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-                for col=1:length(dataArray)
-                    dataArray{col} = [dataArray{col};dataArrayBlock{col}];
-                end
-            end
-            fclose(fileID); % Close the text file
-            
-            % Create structure of tables:
-            dataTable.(whatDisease) = table(dataArray{1:end-1},'VariableNames',{'Name','Target'});
-            
-            numDrugs = length(dataArray{1});
-            fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
-        end
-        toc
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
@@ -105,6 +46,8 @@ switch whatDrugTargets
                 fileName = 'DataOutput/drugTargets_2020.mat';
         end
         load(fileName, 'dataTable'); 
+    case 'all_active'
+        
 end
 % make a table of all mentioned drugs with their targets keeping only unique ones 
 DT = cell(numDiseases,1); 
