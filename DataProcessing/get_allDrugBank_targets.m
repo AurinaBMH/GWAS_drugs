@@ -19,7 +19,8 @@ for i = 1:length(activeDrugs)
     % find drug name
     INDvoc = find(strcmpi(vocabularyBANK.DrugBankID, activeDrugs{i}), 1);
     
-    Name{i} = vocabularyBANK.CommonName(INDvoc);
+    % remove
+    Name{i} =  erase(vocabularyBANK.CommonName(INDvoc), {'-', '+', '/','\', ')', '('}); 
     Targets{i} = strjoin(targets,', ');
     
 end
