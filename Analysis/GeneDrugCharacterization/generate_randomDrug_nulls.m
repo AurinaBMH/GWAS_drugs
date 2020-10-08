@@ -10,7 +10,7 @@ end
 
 numNulls = 5000; 
 params = SetDefaultParams();
-whatDiseases_Treatment = params.whatDiseases_Treatment; 
+whatDiseases_Treatment = params.whatDiseases_Treatment_ALL; 
 
 [geneNamesGWAS,~] = GiveMeNormalizedScoreVector('ADHD','GWAS','MAGMAdefault',params.geneScore, params.whatThreshold);
 [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets);
