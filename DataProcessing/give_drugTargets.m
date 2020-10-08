@@ -1,16 +1,26 @@
-function dataTable = give_drugTargets(whatTargets)
+function dataTable = give_drugTargets(whatTargets, whatDatabase)
 if nargin < 1
     whatTargets = 'active'; 
 end
+if nargin < 2
+    whatDatabase = 'drugbank'; 
+end
+
+% currently the total list of genes is based on all pharmacologically
+% active targets, so including drug repurposing hub information is not
+% relevant - these genes will not be used. 
 
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
 params = SetDefaultParams();
-disorders = params.whatDiseases_Treatment;
+disorders = params.whatDiseases_Treatment_ALL;
 
 % import Drug repurposing hub
-drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/Drug_repurposing_hub_database_20200730.txt');
-
+if strcmp(whatDatabase, 'both')
+    drugREP = importDrug_rep_hub('data/TREATMENTlists/Drug_repurposing_hub_database/Drug_repurposing_hub_database_20200730.txt');
+    IND_Launched = contains(string(drugREP.clinical_phase), 'Launched');
+    drugREP = drugREP(IND_Launched,:);
+end
 % load drugBank database files
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
 %
@@ -20,6 +30,10 @@ switch whatTargets
     case 'all'
         targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
 end
+
+IND_human = contains(targetsBANK.Species, 'Humans'); 
+targetsBANK = targetsBANK(IND_human,:); 
+
 dataTable = struct;
 
 for d = 1:length(disorders)
@@ -34,17 +48,22 @@ for d = 1:length(disorders)
     targetCOMB = cell(length(listDrugs),1);
     k=1; 
     for i = 1:length(listDrugs)
-        
-        % get targets from hub
-        [~, INDrep] = intersect(drugREP.pert_iname, listDrugs{i});
-        % check in one database
-        if ~isempty(INDrep)
-            
-            targetREP = drugREP.target(INDrep);
-            targetREPlist = strsplit(targetREP, '|')';
+    
+        if strcmp(whatDatabase, 'both')
+            % get targets from hub
+            [~, INDrep] = intersect(drugREP.pert_iname, listDrugs{i});
+            % check in one database
+            if ~isempty(INDrep)
+                
+                targetREP = drugREP.target(INDrep);
+                targetREPlist = strsplit(targetREP, '|')';
+            else
+                
+                targetREPlist = string();
+            end
         else
-            
-            targetREPlist = string(); 
+            % assign an empty cell, Drug reporposing hub in not relevant;;
+            targetREPlist = [];
         end
         % get targets from Drug Bank
         targetBANKlist = string(give_drugTargets_drugBank(vocabularyBANK, targetsBANK, listDrugs{i})); 

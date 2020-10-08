@@ -1,8 +1,22 @@
-function allDrugs = get_allDrugBank_targets()
+function allDrugs = get_allDrugBank_targets(whatTargets)
+
+if nargin < 1
+    whatTargets = 'active'; 
+end
+
 % this function will get all drugs and their targets from
 % pharmacologically_active.csv file and aggregate those to allDrugs format
-targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
+switch whatTargets
+    case 'active'
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/pharmacologically_active.csv');
+    case 'all'
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_all_target_polypeptide_ids.csv/all.csv');
+end
 vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
+
+% keep only Human genes
+IND_human = contains(targetsBANK.Species, 'Humans'); 
+targetsBANK = targetsBANK(IND_human,:); 
 
 % find all drugs mentioned in the active target list
 activeDrugs = strjoin(targetsBANK.DrugIDs','; ');

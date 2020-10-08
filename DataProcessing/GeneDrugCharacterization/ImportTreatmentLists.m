@@ -120,8 +120,7 @@ end
 
 %-------------------------------------------------------------------------------
 % Process into a unique set of genes:
-% unique set of genes now consists of all available genes as active
-% DrugBank targets; 
+% unique set of genes now consists of all available genes as active DrugBank targets; 
 % allGenes = unique(vertcat(geneLists{:}));
 allGenes = strjoin(allDrugs.Target,', ');
 allGenes = unique(split(allGenes, ', '));
