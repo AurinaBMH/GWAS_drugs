@@ -33,7 +33,6 @@ numDiseases = length(whatDiseases);
 
 %-------------------------------------------------------------------------------
 
-dataTable = struct();
 switch whatDrugTargets
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
@@ -45,22 +44,24 @@ switch whatDrugTargets
             case 'active'
                 fileName = 'DataOutput/drugTargets_2020.mat';
         end
-        load(fileName, 'dataTable'); 
-    case 'all_active'
+        load(fileName, 'dataTable');
         
 end
-% make a table of all mentioned drugs with their targets keeping only unique ones 
-DT = cell(numDiseases,1); 
-for kk=1:numDiseases
-   DT{kk} = dataTable.(whatDiseases{kk}); 
-end 
 
-allDrugs = vertcat(DT{:}); 
-% remove drugs with non-existent targets
-allDrugs(strcmp(string(allDrugs.Target), ""),:) = [];  
-% select only unique drug names
-[~, INDunique] = unique(allDrugs.Name); 
-allDrugs = allDrugs(INDunique,:); 
+% get all drugs with active gene targets from DrugBank
+allDrugs = get_allDrugBank_targets(); 
+% make a table of all mentioned drugs with their targets keeping only unique ones 
+% DT = cell(numDiseases,1); 
+% for kk=1:numDiseases
+%    DT{kk} = dataTable.(whatDiseases{kk}); 
+% end 
+% 
+% allDrugs = vertcat(DT{:}); 
+% % remove drugs with non-existent targets
+% allDrugs(strcmp(string(allDrugs.Target), ""),:) = [];  
+% % select only unique drug names
+% [~, INDunique] = unique(allDrugs.Name); 
+% allDrugs = allDrugs(INDunique,:); 
 
 %-------------------------------------------------------------------------------
 % Get a list of all genes mentioned:
@@ -119,17 +120,21 @@ end
 
 %-------------------------------------------------------------------------------
 % Process into a unique set of genes:
-allGenes = unique(vertcat(geneLists{:}));
+% unique set of genes now consists of all available genes as active
+% DrugBank targets; 
+% allGenes = unique(vertcat(geneLists{:}));
+allGenes = strjoin(allDrugs.Target,', ');
+allGenes = unique(split(allGenes, ', '));
+allGenes = allGenes(~cellfun('isempty',allGenes));  
 numGenes = length(allGenes);
-fprintf(1,'%u genes assigned to at least one drug across our %u disorders\n',...
-    numGenes,numDiseases);
+fprintf(1,'There are %u pharmacologically genes in the DrugBank\n', numGenes);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table
 indicatorMatrix = zeros(numGenes,numDiseases);
 for i = 1:numGenes
     for j = 1:numDiseases
-        theGeneIsHere = strcmp(allGenes{i},geneLists{j});
+        theGeneIsHere = strcmpi(allGenes{i},geneLists{j});
         if any(theGeneIsHere)
             indicatorMatrix(i,j) = counts{j}(theGeneIsHere);
         end
