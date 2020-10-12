@@ -17,7 +17,7 @@ for k = 1:numDiseases
     whatDisease = whatDiseases{k};
     geneScores = pipeline(DISORDERlist, whatDisease, whatThreshold);
     % Save:
-    fileName = sprintf('resultsTable_%s_%s_%s.mat',whatDisease, whatThreshold, params.whatDrugTargets);
+    fileName = sprintf('resultsTable_%s_%s_%s_drugbank.mat',whatDisease, whatThreshold, params.whatDrugTargets);
     fileName = fullfile('DataOutput',fileName);
     save(fileName,'geneScores');
     fprintf(1,'Saved results to %s!!!\n\n\n',fileName);

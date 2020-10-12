@@ -10,7 +10,6 @@ if nargin < 2
     whatDrugTargets = '2020'; 
     whatTargets = 'active'; 
     % 2020 - uses automated AA version
-    % 2018 - uses Janett's version from May 2018; 
 end
 if nargin < 3
     whatTargets = 'active'; 
@@ -40,16 +39,16 @@ switch whatDrugTargets
         % dataTable = give_drugTargets();
         switch whatTargets
             case 'all'
-                fileName = 'DataOutput/drugTargets_all_2020.mat'; 
+                fileName = 'DataOutput/drugTargets_all_2020_drugbank.mat'; 
             case 'active'
-                fileName = 'DataOutput/drugTargets_2020.mat';
+                fileName = 'DataOutput/drugTargets_2020_drugbank.mat';
         end
         load(fileName, 'dataTable');
         
 end
 
 % get all drugs with active gene targets from DrugBank
-allDrugs = get_allDrugBank_targets(); 
+allDrugs = get_allDrugBank_targets('active'); 
 % make a table of all mentioned drugs with their targets keeping only unique ones 
 % DT = cell(numDiseases,1); 
 % for kk=1:numDiseases
@@ -126,7 +125,7 @@ allGenes = strjoin(allDrugs.Target,', ');
 allGenes = unique(split(allGenes, ', '));
 allGenes = allGenes(~cellfun('isempty',allGenes));  
 numGenes = length(allGenes);
-fprintf(1,'There are %u pharmacologically genes in the DrugBank\n', numGenes);
+fprintf(1,'There are %u pharmacologically active genes in the DrugBank\n', numGenes);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table
