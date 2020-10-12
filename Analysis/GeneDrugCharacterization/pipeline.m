@@ -130,15 +130,6 @@ numSteps = 3;
 geneScores.PPI_mapped_th900 = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,false,900,numSteps);
 geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,false,900,numSteps);
 
-% we can do the same for PPI mapping treating GWAS hit k-step neighbors as
-% context genes; 
-
-% (*) weighted: - weighted PPI distances are not calculated for now
-% numSteps = 6;
-
-%geneScores.PPI_mapped_weighted = TellMePPIInfo(allMappedDiseaseGenes,allUniqueGenes,true,numSteps);
-%geneScores.PPI_eQTLbrain_weighted = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqueGenes,true,numSteps);
-
 %-------------------------------------------------------------------------------
 % AHBA gene coexpression:
 %-------------------------------------------------------------------------------
@@ -153,65 +144,5 @@ geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrai
 
 % Now make a table
 geneScores.gene = allUniqueGenes;
-gene = allUniqueGenes;
-% resultsTable = table(gene,geneScores.PPI_mapped_weighted,numGWASMapped,numLDSNPs,percPPIneigh1Mapped,...
-%                         percPPIneigh1LD,AllenMeanCoexpMapped,AllenMeanCoexpLD);
-% % ,numSNPGenes,numEGenes_LD,numSNPGenes_LD,numLDeGeneseQTL,numLDSNPGeneseQTL); % matchingDrugsString
-%
-% % Sort by column, then by column, etc. in ordered hierarchy:
-% resultsTable = sortrows(resultsTable,{'numGWASMapped','numLDSNPs','percPPIneigh1Mapped',...
-%                 'percPPIneigh1LD','AllenMeanCoexpMapped',...
-%                 'AllenMeanCoexpLD'},'descend','MissingPlacement','last');
-
-
-%-------------------------------------------------------------------------------
-% Display just with custom columns
-% customColumns = {'gene','numGWASMapped','numLDSNPs','percPPIneigh1Mapped',...
-%                 'percPPIneigh1LD','AllenMeanCoexpMapped'}; % ,'matchingDrugsString'
-% display(resultsTable(1:40,ismember(resultsTable.Properties.VariableNames,customColumns)));
-
-%===============================================================================
-% for i = 1:numUniqueGenes
-%     gene_i = allUniqueGenes{i};
-%     fprintf(1,'[%u/%u]: %s (%s)\n',i,numUniqueGenes,gene_i,protein_i);
-%
-%     %-------------------------------------------------------------------------------
-%     % Preliminaries:
-%     %-------------------------------------------------------------------------------
-%     % (I assume this can be comprehensive given the data provided??? Maybe not??)
-%     theLDgenes = GiveMeLDGenes(gene_i,SNPGeneMap,LDRelateTable,allDiseaseSNPs);
-%     fprintf(1,'%u genes LD to the target\n',length(theLDgenes));
-%
-%
-%     %-------------------------------------------------------------------------------
-%     % Drugs, classes
-%     %-------------------------------------------------------------------------------
-%     % Match to drugs using geneDrugTable
-%     % assign class using drugClassTable
-%     % matchingDrugs = geneDrugTable.drugName(strcmp(geneDrugTable.geneName,gene_i));
-%     % assignClass = @(druggy)drugClassTable.whatClass(strcmp(drugClassTable.drugName,druggy));
-%     % matchingDrugsClass = cellfun(@(x)sprintf('%s(%s)',x,char(assignClass(x))),...
-%     %                     matchingDrugs,'UniformOutput',false);
-%     % matchingDrugsString{i} = BF_cat(matchingDrugsClass);
-% end
-
-
-%-------------------------------------------------------------------------------
-% Some basic stats as user info to screen:
-% fprintf(1,'%u genes have mapped and LD\n',sum(resultsTable.numLDSNPs > 0 & resultsTable.numGWASMapped > 0));
-% fprintf(1,'%u genes have mapped but no LD\n',sum(resultsTable.numLDSNPs==0 & resultsTable.numGWASMapped > 0));
-% fprintf(1,'%u genes have LD but no mapped\n',sum(resultsTable.numLDSNPs > 0 & resultsTable.numGWASMapped==0));
-% fprintf(1,'%u genes have eGene annotations\n',sum(resultsTable.numEGenes > 0));
-% fprintf(1,'%u genes have SNPgene annotations\n',sum(resultsTable.numSNPGenes > 0));
-% fprintf(1,'%u genes have eGene-LD annotations\n',sum(resultsTable.numEGenes_LD > 0));
-% fprintf(1,'%u genes have SNPgene-LD annotations\n',sum(resultsTable.numSNPGenes_LD > 0));
-% fprintf(1,'%u genes have LD-eGene annotations\n',sum(resultsTable.numEGenes_LD > 0));
-% fprintf(1,'%u genes have LD-SNPgene annotations\n',sum(resultsTable.numSNPGenes_LD > 0));
-
-%-------------------------------------------------------------------------------
-% Display full table:
-% display(resultsTable(1:60,:));
-
-
 
 end
