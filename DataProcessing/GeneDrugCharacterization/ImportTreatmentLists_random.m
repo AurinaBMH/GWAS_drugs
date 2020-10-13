@@ -10,7 +10,6 @@ if nargin < 3
     whatDrugTargets = '2020';
     whatTargets = 'active';
     % 2020 - uses automated AA version
-    % 2018 - uses Janett's version from May 2018; 
 end
 if nargin < 4
     whatTargets = 'active';
@@ -31,79 +30,22 @@ numDiseases = length(whatDiseases);
 
 %-------------------------------------------------------------------------------
 %% Initialize variables.
-delimiter = ',';
-startRow = 1;
-endRow = inf;
-%% Format for each line of text:
-%   column1: text (%q)
-%	column2: text (%q)
-% For more information, see the TEXTSCAN documentation.
-formatSpec = '%q%q%[^\n\r]';
-
-dataTable = struct();
 switch whatDrugTargets
-    case '2018'
-        % use drug targets assigned by Janette in 05/2018
-        for k = 1:numDiseases-1
-            whatDisease = whatDiseases{k};
-            switch whatDisease
-                case 'ADHD'
-                    fileName = 'Treatment-list-ADHD-4thMay2018.csv';
-                case 'BIP'
-                    fileName = 'Treatment-list-BIP-7thMay2018.csv';
-                case 'SCZ'
-                    fileName = 'Treatment-list-SCZ-4thMay2018.csv';
-                case 'MDD'
-                    fileName = 'Treatment-list-MDD-7thMay2018.csv';
-                case 'pulmonary'
-                    fileName = 'Treatment-list-pulmonary-4thMay2018.csv';
-                case 'cardiology'
-                    fileName = 'Treatment-list-cardiology-4thMay2018.csv';
-                case 'gastro'
-                    fileName = 'Treatment-list-gastro-4thMay2018.csv';
-                case 'diabetes'
-                    fileName = 'Treatment-list-diabetes-25thMay2018.csv';
-                otherwise
-                    error('Unknown disease: ''%s''',whatDisease);
-            end
-            
-            %% Open the text file.
-            fileID = fopen(fileName,'r');
-            
-            %% Read columns of data according to the format.
-            % This call is based on the structure of the file used to generate this
-            % code. If an error occurs for a different file, try regenerating the code
-            % from the Import Tool.
-            dataArray = textscan(fileID, formatSpec, endRow(1)-startRow(1)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', 1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-            for block=2:length(startRow)
-                frewind(fileID);
-                dataArrayBlock = textscan(fileID, formatSpec, endRow(block)-startRow(block)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(block)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-                for col=1:length(dataArray)
-                    dataArray{col} = [dataArray{col};dataArrayBlock{col}];
-                end
-            end
-            fclose(fileID); % Close the text file
-            
-            % Create structure of tables:
-            dataTable.(whatDisease) = table(dataArray{1:end-1},'VariableNames',{'Name','Target'});
-            
-            numDrugs = length(dataArray{1});
-            fprintf(1,'%s has %u drugs\n',whatDisease,numDrugs);
-        end
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
         switch whatTargets
             case 'all'
-                fileName = 'DataOutput/drugTargets_all_2020.mat';
+                fileName = 'DataOutput/drugTargets_all_2020_drugbank.mat';
             case 'active'
-                fileName = 'DataOutput/drugTargets_2020.mat';
+                fileName = 'DataOutput/drugTargets_2020_drugbank.mat';
         end
         load(fileName, 'dataTable'); 
 end
 % add drugs_rand to the dataTable
 dataTable.('RANDOM') = drugs_rand; 
+allDrugs = get_allDrugBank_targets('active'); 
 
 %-------------------------------------------------------------------------------
 % Get a list of all genes mentioned:
@@ -162,10 +104,11 @@ end
 
 %-------------------------------------------------------------------------------
 % Process into a unique set of genes:
-allGenes = unique(vertcat(geneLists{:}));
+allGenes = strjoin(allDrugs.Target,', ');
+allGenes = unique(split(allGenes, ', '));
+allGenes = allGenes(~cellfun('isempty',allGenes));  
 numGenes = length(allGenes);
-fprintf(1,'%u genes assigned to at least one drug across our %u disorders\n',...
-    numGenes,numDiseases);
+fprintf(1,'There are %u pharmacologically active genes in the DrugBank\n', numGenes);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table
