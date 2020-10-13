@@ -1,7 +1,7 @@
 function [RNADOMdrugs, geneNames] = give_randomDrug_null(diseaseName, disorderDrugs, allDrugs, whatSelection)
 
 if nargin<4
-    whatSelection = 'proportional'; 
+    whatSelection = 'drugbank'; 
 end
 
 % This function for a selected disease: 
@@ -17,10 +17,15 @@ params = SetDefaultParams();
 numDrugs = size(disorderDrugs.(diseaseName),1); 
 
 switch whatSelection
-    case 'random'
+    case {'random', 'drugbank'}
+        % random selection was used initially; drugbank uses all drugs from
+        % drugbank, but does not does not specify drug - to - disease
+        % pairs; 
         % now select the same number of drugs at random from the list without replacement
         INDrand = datasample(1:size(allDrugs,1), numDrugs,'Replace',false);
     case 'proportional'
+        % in this case all drugs are assigned to disorders and delected
+        % proportionally; 
         drugPROB = zeros(size(allDrugs,1),1);
         numDisorders = length(fields(disorderDrugs));
         whatDisorders = fields(disorderDrugs);
@@ -46,12 +51,14 @@ switch whatSelection
             
             % make a weight using 1/numDrugs in disorder
             whatDis = find(idx);
+            if ~isempty(whatDis)
             dpALL = 0;
             for dp = 1:length(whatDis)
                 dpSINGLE = 1/size(disorderDrugs.(whatDisorders{whatDis(dp)}),1);
                 dpALL = dpALL+dpSINGLE;
             end
             drugPROB(dr) = dpALL;
+            end
             
         end
         
