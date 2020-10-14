@@ -103,12 +103,9 @@ end
 
 % active is default - will not have a not in the name, all will have a flag
 % in the file name
-switch whatTargets
-    case 'all'
-        fileName = sprintf('DataOutput/drugTargets_%s_2020_%s.mat', whatTargets, whatDatabase);
-    case 'active'
-        fileName = sprintf('DataOutput/drugTargets_2020_%s.mat', whatDatabase);
-end
+
+fileName = sprintf('DataOutput/drugTargets_2020_%s_%s.mat', whatTargets, whatDatabase);
+
         
 save(fileName, 'dataTable'); 
 

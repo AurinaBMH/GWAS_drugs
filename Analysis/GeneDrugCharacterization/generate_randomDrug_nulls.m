@@ -35,7 +35,7 @@ switch whatSelection
     case 'proportional'
         fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugP.mat', numNulls,params.whatDrugTargets); 
     case 'proportionalPsych'
-        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugP_psych.mat', numNulls,params.whatDrugTargets); 
+        fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugP_drugbank_psych.mat', numNulls,params.whatDrugTargets); 
     case 'drugbank'
         fileName = sprintf('DataOutput/nulls_%d_%stargets_randomDrugR_drugbank.mat', numNulls,params.whatDrugTargets); 
 end

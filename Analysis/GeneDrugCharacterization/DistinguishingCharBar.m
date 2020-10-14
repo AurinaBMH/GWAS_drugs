@@ -7,7 +7,7 @@ if nargin < 2
     whatProperty = 'P';
 end
 if nargin < 3
-    whatNull = 'randomDrugP';
+    whatNull = 'randomDrugR_drugbank';
 end
 if nargin < 4
     whatThreshold = 'BF';
@@ -54,30 +54,40 @@ if strcmp(whatNull, 'randomGene')
     
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
     
-elseif strcmp(whatNull, 'randomDrugR')
+elseif strcmp(whatNull, 'randomDrugR') || strcmp(whatNull, 'randomDrugP') || ...
+        strcmp(whatNull, 'randomDrugP_drugbank_psych') || strcmp(whatNull, 'randomDrugR_drugbank')
+        
     
-    load(sprintf('nulls_5000_%stargets_randomDrugR.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    load(sprintf('nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
     RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
     
-elseif strcmp(whatNull, 'randomDrugP')
-    
-    load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    %geneNames_nulls = geneNames;
-    % select nulls for drugs that will be visualised
-    [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
-    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
-elseif strcmp(whatNull, 'randomDrugP_psych')
-    
-    load(sprintf('nulls_5000_%stargets_randomDrugP_psych.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-    %geneNames_nulls = geneNames;
-    % select nulls for drugs that will be visualised
-    [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
-    RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
-    
-    
+% elseif strcmp(whatNull, 'randomDrugP')
+%     
+%     load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+%     %geneNames_nulls = geneNames;
+%     % select nulls for drugs that will be visualised
+%     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+%     RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+%     
+% elseif strcmp(whatNull, 'randomDrugP_drugbank_psych')
+%     
+%     load(sprintf('nulls_5000_%stargets_randomDrugP_drugbank_psych.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+%     %geneNames_nulls = geneNames;
+%     % select nulls for drugs that will be visualised
+%     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+%     RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+%     
+% elseif strcmp(whatNull, 'randomDrugR_drugbank')
+%     
+%     load(sprintf('nulls_5000_%stargets_randomDrugR_drugbank.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+%     %geneNames_nulls = geneNames;
+%     % select nulls for drugs that will be visualised
+%     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');
+%     RANDOMdrugs_treatment = RANDOMdrugs_treatment(Tind);
+%     
 else
     
     whatDiseases_Treatment = whatDiseases_Treatment_SEL;
@@ -225,7 +235,7 @@ for i = 1:numDiseases_GWAS
                         drugScores_DIS = drugScores(:,lIND);
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                         % randomise v1 within ComputeDotProduct
-                    case {'randomDrugP','randomDrugR','randomDrugP_psych'}  % for each disease get a random set of drugs that is the same size as
+                    case {'randomDrugP','randomDrugR','randomDrugP_drugbank_psych', 'randomDrugR_drugbank'}  % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % load pre-computed nulls
                         % the order of genes is the same in GWAS and nulls

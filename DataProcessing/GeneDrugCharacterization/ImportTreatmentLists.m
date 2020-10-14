@@ -37,14 +37,10 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-        switch whatTargets
-            case 'all'
-                fileName = 'DataOutput/drugTargets_all_2020_drugbank.mat'; 
-            case 'active'
-                fileName = 'DataOutput/drugTargets_2020_drugbank.mat';
-        end
+
+        fileName = sprintf('DataOutput/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+
         load(fileName, 'dataTable');
-        
 end
 
 % get all drugs with active gene targets from DrugBank

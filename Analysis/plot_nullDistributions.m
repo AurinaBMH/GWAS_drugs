@@ -7,7 +7,7 @@ colLine = [252,78,42]/255;
 
 % for several borderline matches plot null distributions and real data
 % based on all radnom drug nulls or only using psychiatric drug nulls; 
-typesNull = {'randomDrugP','randomDrugP_psych'}; 
+typesNull = {'randomDrugR_drugbank','randomDrugP_drugbank_psych'}; 
 for t=1:length(typesNull)
 % for SCZ
 whatDiseases_GWAS = {'SCZ'}; 
