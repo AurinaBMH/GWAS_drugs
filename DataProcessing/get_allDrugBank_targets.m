@@ -1,7 +1,7 @@
 function allDrugs = get_allDrugBank_targets(whatTargets)
 
 if nargin < 1
-    whatTargets = 'active'; 
+    whatTargets = 'all'; 
 end
 
 % this function will get all drugs and their targets from

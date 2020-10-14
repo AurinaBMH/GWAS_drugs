@@ -8,11 +8,11 @@ if nargin < 1
 end
 if nargin < 3
     whatDrugTargets = '2020';
-    whatTargets = 'active';
+    whatTargets = 'all';
     % 2020 - uses automated AA version
 end
 if nargin < 4
-    whatTargets = 'active';
+    whatTargets = 'all';
 end
     
 
@@ -35,17 +35,15 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-        switch whatTargets
-            case 'all'
-                fileName = 'DataOutput/drugTargets_all_2020_drugbank.mat';
-            case 'active'
-                fileName = 'DataOutput/drugTargets_2020_drugbank.mat';
-        end
-        load(fileName, 'dataTable'); 
+
+        fileName = sprintf('DataOutput/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+
+        load(fileName, 'dataTable');
 end
+
 % add drugs_rand to the dataTable
 dataTable.('RANDOM') = drugs_rand; 
-allDrugs = get_allDrugBank_targets('active'); 
+allDrugs = get_allDrugBank_targets(whatTargets); 
 
 %-------------------------------------------------------------------------------
 % Get a list of all genes mentioned:

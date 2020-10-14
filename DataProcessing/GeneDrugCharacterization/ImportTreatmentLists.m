@@ -8,11 +8,11 @@ if nargin < 1
 end
 if nargin < 2
     whatDrugTargets = '2020'; 
-    whatTargets = 'active'; 
+    whatTargets = 'all'; 
     % 2020 - uses automated AA version
 end
 if nargin < 3
-    whatTargets = 'active'; 
+    whatTargets = 'all'; 
 end
 
 
@@ -44,7 +44,7 @@ switch whatDrugTargets
 end
 
 % get all drugs with active gene targets from DrugBank
-allDrugs = get_allDrugBank_targets('active'); 
+allDrugs = get_allDrugBank_targets(whatTargets); 
 % make a table of all mentioned drugs with their targets keeping only unique ones 
 % DT = cell(numDiseases,1); 
 % for kk=1:numDiseases
