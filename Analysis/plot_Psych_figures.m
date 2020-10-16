@@ -3,9 +3,9 @@ clear all; close all;
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'DIABETES'  'IBD'  'HF'  'RA'}; %{'ADHD','MDD2','SCZ','BIP2','DIABETES'};
-whatMeasures = 'allBody'; %'allPsych';
-whatNull = 'randomDrugR_drugbank'; 
+whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %{'DIABETES'  'IBD'  'HF'  'RA'}; %
+whatMeasures = 'allPsych'; % allBody'; %'
+whatNull = 'randomDrugR_a_drugbank'; 
 
 
 numGWAS = length(whatDiseases_GWAS); 
@@ -31,13 +31,13 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS), whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS)-1, whatMeasures);
     % find corresponsing match
     [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
-    figureName = sprintf('figures/BarChart_%s_%s', similarityTypes{s}, whatMeasures);
+    figureName = sprintf('figures/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
     
     
