@@ -5,7 +5,7 @@ similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCo
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %{'DIABETES'  'IBD'  'HF'  'RA'}; %
 whatMeasures = 'allPsych'; % allBody'; %'
-whatNull = 'randomDrugR_a_drugbank'; 
+whatNull = 'randomDrugR_all_drugbank'; 
 
 
 numGWAS = length(whatDiseases_GWAS); 
@@ -31,7 +31,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS)-1, whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS), whatMeasures);
     % find corresponsing match
     [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
@@ -44,7 +44,7 @@ for s=1:length(similarityTypes)
 end
 
 f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
-figureName = sprintf('figures/BarP_withinDisorder_%s', whatMeasures);
+figureName = sprintf('figures/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
 % plot null distributions when chooseing from all and from psychiatric
