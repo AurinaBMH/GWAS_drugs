@@ -23,7 +23,7 @@ if nargin < 6
 end
 
 if nargin < 7
-    numMeasures = length(similarityType); 
+    numMeasures = length(whatDiseases_GWAS); 
 end
 
 %-------------------------------------------------------------------------------
@@ -109,10 +109,17 @@ for i = 1:numDiseases_GWAS
     %-------------------------------------------------------------------------------
     % Get scores for the property of interest:
     rhos = zeros(numDiseases_Treatment,1);
+    
     for k = 1:numDiseases_Treatment
         % select drug list
         kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k});
         geneWeights_treatment = drugScores(:,kIND);
+%        figure;
+%        KK = find(geneWeights_treatment); 
+%        histogram(geneWeights_treatment(KK)); hold on; 
+% %         imagesc(geneWeights_treatment); 
+%         title(sprintf('%s', whatDiseases_Treatment{k}))
+%         caxis([0 0.2])
         
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
         if isnan(rhos(k))

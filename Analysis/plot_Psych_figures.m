@@ -3,8 +3,8 @@ clear all; close all;
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %{'DIABETES'  'IBD'  'HF'  'RA'}; %
-whatMeasures = 'allPsych'; % allBody'; %'
+whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; % {'DIABETES'  'IBD'  'HF'  'RA'}; %
+whatMeasures = 'allPsych'; % 'allBody'; %'
 whatNull = 'randomDrugR_all_drugbank'; 
 
 
