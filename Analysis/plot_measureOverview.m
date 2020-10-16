@@ -7,12 +7,12 @@ whatDiseases_Treatment_label = params.whatDiseases_Treatment_label(ord);
 
 f = figure('color','w', 'Position', [300, 300, 1500, 400]);
 ax = cell(size(Pmatrix,1),1);
-
-
 cMapGeneric = BF_getcmap('set4',size(Pmatrix,2),false);
-cMapGeneric_n = cMapGeneric;
 
 for l=1:size(Pmatrix,1)
+
+    cMapGeneric_n = cMapGeneric;
+
     Pplot = Pmatrix(l,:);
     [Pbar, ix] = sort(-log10(Pplot), 'descend'); 
 
@@ -22,7 +22,7 @@ for l=1:size(Pmatrix,1)
     for k=1:length(Pplot)
         if Pplot(k)>0.05
             cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.99);
-        elseif Pplot(k)<=0.05 && Pplot(k)>=0.05/(length(Pplot)-1)
+        elseif Pplot(k)<=0.05 && Pplot(k)>=0.05/(length(Pplot))
             cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.85);
         end
     end
