@@ -8,11 +8,13 @@ if nargin < 1
 end
 if nargin < 2
     whatDrugTargets = '2020'; 
-    whatTargets = 'all'; 
+    params = SetDefaultParams();
+    whatTargets = params.whatTargets; 
     % 2020 - uses automated AA version
 end
 if nargin < 3
-    whatTargets = 'all'; 
+    params = SetDefaultParams();
+    whatTargets = params.whatTargets; 
 end
 
 

@@ -33,7 +33,7 @@ params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 params.whatThreshold = 'BF';
 params.whatDrugTargets = '2020';
 
-params.whatTargets = 'all';
+params.whatTargets = 'active';
 
 params.numNull = 5000; 
 
