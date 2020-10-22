@@ -107,14 +107,9 @@ for d=1:length(whatDiseases)
 end
 
 % how correlated absolute and regular scores are across disorders? 
-for d1=1:length(whatDiseases)
-    for d2=d1+1:length(whatDiseases)
-        
-        r_abs(d1, d2) = corr(AllenMeanCoexp_abs(d1,:)', AllenMeanCoexp_abs(d2,:)', 'rows', 'complete');
-        r(d1, d2) = corr(AllenMeanCoexp(d1,:)', AllenMeanCoexp(d2,:)', 'rows', 'complete'); 
-        
-    end
-end
+r_abs = corr(AllenMeanCoexp_abs', 'rows', 'complete');
+r = corr(AllenMeanCoexp', 'rows', 'complete');
+
 [COL]=cbrewer('div', 'RdBu', 100);
 colors = flipud(COL);
 
