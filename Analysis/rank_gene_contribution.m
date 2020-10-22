@@ -35,16 +35,18 @@ end
 geneWeightsGWAS = geneWeightsGWAS(ia);
 geneWeightsDRUG = drugScoresAll(ib,INDtreatment);
 
-% Combine two datasets on overlap:
+% Combine nulls and real data on overlap
 [~,~,ir] = intersect(geneNames_matched, geneNames, 'stable');
 geneWeightsNull = RANDOMdrugs_treatment{INDnull}(ir,:); 
 
 numGenes = length(geneWeightsGWAS); 
 numNulls = size(geneWeightsNull,2); 
+
 % for each gene, get the dot product in real data
 % get dot product for null
 % compare real vs null, get p-value
 % save p-value, rank based on p-values
+
 dotP = nan(numGenes,1); 
 dotP_null = nan(numGenes, numNulls); 
 p_val = nan(numGenes,1); 
