@@ -75,10 +75,6 @@ for g = 1:numGenes
 end
 
 
-
-
-
-
     
 %-------------------------------------------------------------------------------
 % Get genes for a given GWAS study for different mapping methods:
@@ -122,13 +118,15 @@ end
 [COL]=cbrewer('div', 'RdBu', 100);
 colors = flipud(COL);
 
-figure; imagesc(r_abs); colormap(colors); caxis([-1 1]); colorbar; 
-figure; imagesc(r); colormap(colors); caxis([-1 1]); colorbar; 
+figure('color', 'w'); 
+subplot(1,2,1); imagesc(r_abs); colormap(colors); caxis([-1 1]); colorbar; 
+title('Correlation between abs(coexp)'); axis('square');  
+xticks(1:length(whatDiseases)); yticks(1:length(whatDiseases)); 
+xticklabels(whatDiseases); yticklabels(whatDiseases)
 
 
+subplot(1,2,2); imagesc(r); colormap(colors); caxis([-1 1]); colorbar; 
+title('Correlation between coexp'); axis('square'); 
+xticks(1:length(whatDiseases)); yticks(1:length(whatDiseases)); 
+xticklabels(whatDiseases); yticklabels(whatDiseases)
 
-
-
-figure;
-subplot(1,2,1); histogram(V_diabetes);
-subplot(1,2,2); histogram(V_scz);
