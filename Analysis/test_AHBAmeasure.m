@@ -88,7 +88,7 @@ for d=1:length(whatDiseases)
     pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
     allGWASgenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
     isGWAS = ismember(AllenGeneInfo.GeneSymbol,allGWASgenes);
-    
+    GWASgene(d,:) = isGWAS; 
     
     for i = 1:numTargetGenes
         
@@ -105,6 +105,25 @@ for d=1:length(whatDiseases)
         end
     end
 end
+
+% how many genes are the same across disorders? 
+isSame = nan(length(whatDiseases)); 
+for p1=1:length(whatDiseases)
+    for p2=1:length(whatDiseases)
+        %if p1~=p2
+        common_genes = sum(GWASgene(p1,:) & GWASgene(p2,:)); 
+        all_genes = sum(GWASgene(p1,:) | GWASgene(p2,:)); 
+        isSame(p1,p2) = common_genes/all_genes; 
+        %end
+    end
+end
+[COL]=cbrewer('seq', 'Reds', 100);
+
+figure('color', 'w'); imagesc(isSame); colormap(COL); title('Proportion of overlapping GWAS genes')
+xticks(1:length(whatDiseases)); yticks(1:length(whatDiseases)); 
+xticklabels(whatDiseases); yticklabels(whatDiseases)
+
+
 
 % how correlated absolute and regular scores are across disorders? 
 r_abs = corr(AllenMeanCoexp_abs', 'rows', 'complete');
