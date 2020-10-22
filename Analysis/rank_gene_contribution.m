@@ -57,7 +57,7 @@ for g=1:numGenes
     
     dotP(g) = geneWeightsGWAS(g).*geneWeightsDRUG(g);
     % if the mathch in real data is 0, it's not contributing
-    if dotP(g)~=0
+    if dotP(g)~=0 && ~isnan(dotP(g))
         % get pvalue for others
         dotP_null(g,:) = geneWeightsGWAS(g).*geneWeightsNull(g,:);
         p_val(g) = mean(dotP_null(g,:)>dotP(g));
@@ -69,7 +69,7 @@ Tp = table;
 Tp.Gene = geneNames(iP); 
 Tp.Pval = p_val(iP); 
 
-[~, iD] = sort(dotP, 'descend'); 
+[~, iD] = sort(dotP, 'descend', 'MissingPlacement','last'); 
 Tdot = table; 
 Tdot.Gene = geneNames(iD); 
 Tdot.DotP = dotP(iD); 
