@@ -1,4 +1,4 @@
-function [AllenCoexpDiff_z, AllenCoexpDiff_log10p, AllenCoexpDiff_invp] = evaluate_allenCoexp(allTargetGenes,GWASgenes)
+function geneStat = evaluate_allenCoexp(allTargetGenes,GWASgenes)
 
 % Human gene coexpression (AHBA)
 %-------------------------------------------------------------------------------
@@ -20,9 +20,10 @@ fprintf(1,'%u/%u genes to be characterized successfully matched to Allen data\n'
 
 %-------------------------------------------------------------------------------
 % Loop over list of genes to characterize:
-AllenCoexpDiff_z = nan(numGenesChar,1);
-AllenCoexpDiff_log10p = nan(numGenesChar,1);
-AllenCoexpDiff_invp = nan(numGenesChar,1);
+zval = nan(numGenesChar,1);
+log10p = nan(numGenesChar,1);
+invp = nan(numGenesChar,1);
+mean_r = nan(numGenesChar,1);
 
 for i = 1:numGenesChar
     gene_i = allTargetGenes{i};
@@ -40,14 +41,23 @@ for i = 1:numGenesChar
         % that GWAS genes will have more positive values than non-GWAS genes
         [p,~,stats] = ranksum(all_GWAS, all_nonGWAS, 'tail', 'right'); 
         
-        AllenCoexpDiff_z(i) = stats.zval; 
-        AllenCoexpDiff_log10p(i) = -log10(p); 
-        AllenCoexpDiff_invp(i) = 1/p; 
+        zval(i) = stats.zval; 
+        log10p(i) = -log10(p); 
+        invp(i) = 1/p; 
+
+        mean_r(i) = nanmean(all_GWAS);
+
     else
         % This gene could not be matched to AHBA data
         % warning('%s could not be matched to the Allen expression data',gene_i)
         % AllenMeanCoexp(i) = NaN;
     end
 end
+
+% save to struct
+geneStat.zval = zval; 
+geneStat.log10p = log10p; 
+geneStat.invp = invp; 
+geneStat.mean_r = mean_r; 
 
 end
