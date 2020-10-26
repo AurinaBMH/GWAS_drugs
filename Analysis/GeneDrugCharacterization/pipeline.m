@@ -135,13 +135,10 @@ geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqu
 %-------------------------------------------------------------------------------
 % For mapped genes: 
 % evaluate the difference between coexpression to GWAS vs non-GWAS genes
-[geneScores.AllenMappedCoexpDiff_z, geneScores.AllenMappedCoexpDiff_log10p, geneScores.AllenMappedCoexpDiff_invp] = evaluate_allenCoexp(allUniqueGenes,allMappedDiseaseGenes);
-% evaluate mean coexpression of GWAS genes
-geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
+geneScores.AllenMapped = evaluate_allenCoexp(allUniqueGenes,allMappedDiseaseGenes);
 
 % Including barin eQTL genes:
-[geneScores.AlleneQTLbrainCoexpDiff_z, geneScores.AlleneQTLbrainCoexpDiff_log10p, geneScores.AlleneQTLbrainCoexpDiff_invp] = evaluate_allenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
-geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
+geneScores.AlleneQTLbrain = evaluate_allenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
  
 %===============================================================================
 % Assimilate results
