@@ -1,11 +1,13 @@
 % matching for psychiatric disorders
 clear all; close all; 
 params = SetDefaultParams();
-similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
+%similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMappedCoexpDiff_invp'};
+similarityTypes = {'AllenMappedCoexpDiff_invp', 'AllenMappedCoexpDiff_z', 'AllenMappedCoexpDiff_log10p', ...
+    'AlleneQTLbrainCoexpDiff_invp', 'AlleneQTLbrainCoexpDiff_z', 'AlleneQTLbrainCoexpDiff_log10p'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; % {'DIABETES'  'IBD'  'HF'  'RA'}; %
 whatMeasures = 'allPsych'; % 'allBody'; %'
-whatNull = sprintf('randomDrugP_%s_drugbank_psych', params.whatTargets); 
+whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
 
 numGWAS = length(whatDiseases_GWAS); 
 V = nan(length(similarityTypes), numGWAS); 

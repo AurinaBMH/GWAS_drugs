@@ -22,9 +22,9 @@ if mean(r) < minGoodProp
     return
 end
 
-if any(v1 < 0) || any(v2 < 0)
-    warning('Weight vectors contain negative values')
-end
+% if any(v1 < 0) || any(v2 < 0)
+%     warning('Weight vectors contain negative values')
+% end
 
 % Shuffle:
 if doShuffle

@@ -44,10 +44,22 @@ case 'GWAS'
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
-
-
-    if strcmp(similarityType, 'AllenMeanCoexpMapped') || strcmp(similarityType, 'AllenMeanCoexpeQTLbrain')
+    
+    % try and keep only thresholded set of genes, give 0 to all others
+    load('GWAS_disordersMAGMA.mat')
+    listGENESmapped = DISORDERlist.MAGMAdefault.(whatDisease);
+    pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
+    allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
+    
+    isGWAS = ismember(geneNames,allMappedDiseaseGenes);
+    
+    if contains(similarityType, 'Allen')
         geneWeights = geneScores.(similarityType);
+    elseif strcmp(similarityType, 'MAGMAdefault')
+        %geneWeights = 1./(10.^-(geneScores.(similarityType).(whatProperty)));
+        %geneWeights(geneWeights==1) = 0; 
+        %geneWeights = double(isGWAS); 
+        geneWeights = geneScores.(similarityType).(whatProperty);
     else
         geneWeights = geneScores.(similarityType).(whatProperty);
     end

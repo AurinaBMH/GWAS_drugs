@@ -1,4 +1,4 @@
-function AllenCoexpDiff_p = evaluate_allenCoexp(allTargetGenes,GWASgenes)
+function [AllenCoexpDiff_z, AllenCoexpDiff_log10p, AllenCoexpDiff_invp] = evaluate_allenCoexp(allTargetGenes,GWASgenes)
 
 % Human gene coexpression (AHBA)
 %-------------------------------------------------------------------------------
@@ -20,8 +20,9 @@ fprintf(1,'%u/%u genes to be characterized successfully matched to Allen data\n'
 
 %-------------------------------------------------------------------------------
 % Loop over list of genes to characterize:
-AllenCoexpDiff = nan(numGenesChar,1);
-AllenCoexpDiff_p = nan(numGenesChar,1);
+AllenCoexpDiff_z = nan(numGenesChar,1);
+AllenCoexpDiff_log10p = nan(numGenesChar,1);
+AllenCoexpDiff_invp = nan(numGenesChar,1);
 
 for i = 1:numGenesChar
     gene_i = allTargetGenes{i};
@@ -36,12 +37,12 @@ for i = 1:numGenesChar
         all_nonGWAS = abs(geneCoexp(allenIndex,~isGWAS));
         
         % evaluate the difference between two distributions - expectation
-        % that GWAS genes will have more positive values than non-GWAS
-        % genes
-        [p,h,stats] = ranksum(all_GWAS,all_nonGWAS, 'tail', 'right'); 
+        % that GWAS genes will have more positive values than non-GWAS genes
+        [p,~,stats] = ranksum(all_GWAS, all_nonGWAS, 'tail', 'right'); 
         
-        AllenCoexpDiff(i) = stats.zval; 
-        AllenCoexpDiff_p(i) = 1/p; 
+        AllenCoexpDiff_z(i) = stats.zval; 
+        AllenCoexpDiff_log10p(i) = -log10(p); 
+        AllenCoexpDiff_invp(i) = 1/p; 
     else
         % This gene could not be matched to AHBA data
         % warning('%s could not be matched to the Allen expression data',gene_i)

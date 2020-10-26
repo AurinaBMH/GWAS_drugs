@@ -77,7 +77,7 @@ for m=1:length(mappingMethods)
     
     for s=1:length(geneWeights)
         % give an empty vector
-        scoreVector = zeros(length(allUniqueGenes),1);
+        scoreVector = nan(length(allUniqueGenes),1);
         
         mapping = mappingMethods{m};
         mapTABLE = DISORDERlist.(mapping).(whatDisease);
@@ -134,10 +134,15 @@ geneScores.PPI_eQTLbrain_th900 = TellMePPIInfo(alleQTLbrainDiseaseGenes,allUniqu
 % AHBA gene coexpression:
 %-------------------------------------------------------------------------------
 % For mapped genes: 
+% evaluate the difference between coexpression to GWAS vs non-GWAS genes
+[geneScores.AllenMappedCoexpDiff_z, geneScores.AllenMappedCoexpDiff_log10p, geneScores.AllenMappedCoexpDiff_invp] = evaluate_allenCoexp(allUniqueGenes,allMappedDiseaseGenes);
+% evaluate mean coexpression of GWAS genes
 geneScores.AllenMeanCoexpMapped = TellMeAllenCoexp(allUniqueGenes,allMappedDiseaseGenes);
-% Including barin eQTL genes:
-geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
 
+% Including barin eQTL genes:
+[geneScores.AlleneQTLbrainCoexpDiff_z, geneScores.AlleneQTLbrainCoexpDiff_log10p, geneScores.AlleneQTLbrainCoexpDiff_invp] = evaluate_allenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
+geneScores.AllenMeanCoexpeQTLbrain = TellMeAllenCoexp(allUniqueGenes,alleQTLbrainDiseaseGenes);
+ 
 %===============================================================================
 % Assimilate results
 %===============================================================================
