@@ -28,7 +28,7 @@ for s=1:length(similarityTypes)
         if ~contains(similarityTypes{s},'Allen')
             whatProperty = 'P';
         elseif contains(similarityTypes{s},'Allen')
-            whatProperty = 'r';
+            whatProperty = 'zval';
         end
     end
     
