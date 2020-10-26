@@ -57,16 +57,23 @@ for g = 1:numGenes
         allGWASgenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
         isGWAS = ismember(AllenGeneInfo.GeneSymbol,allGWASgenes);
         
+        % random set of genes
+        INDrand = randsample(size(geneCoexp,1), length(find(isGWAS))); 
+        
         if any(allenIndex)
             subplot(2,length(whatDiseases),d);
+            %histogram(geneCoexp(allenIndex,INDrand), 10)
             histogram(geneCoexp(allenIndex,isGWAS), 10)
             title(sprintf('GWAS: %s, gene %s', whatDiseases{d}, allTargetGenes{g}))
+            %xlabel(sprintf('coexpression, mean = %.4f', nanmean(geneCoexp(allenIndex,INDrand))))
             xlabel(sprintf('coexpression, mean = %.4f', nanmean(geneCoexp(allenIndex,isGWAS))))
             xlim([-1 1])
             
             subplot(2,length(whatDiseases),d+length(whatDiseases));
+            %histogram(abs(geneCoexp(allenIndex,INDrand)), 10)
             histogram(abs(geneCoexp(allenIndex,isGWAS)), 10)
             title(sprintf('GWAS: %s, gene %s', whatDiseases{d}, allTargetGenes{g}))
+            %xlabel(sprintf('abs(coexpression), mean = %.4f', nanmean(abs(geneCoexp(allenIndex,INDrand)))))
             xlabel(sprintf('abs(coexpression), mean = %.4f', nanmean(abs(geneCoexp(allenIndex,isGWAS)))))
             xlim([0 1])
         end
