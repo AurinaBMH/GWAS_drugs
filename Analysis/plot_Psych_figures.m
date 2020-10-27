@@ -2,8 +2,7 @@
 clear all; close all; 
 params = SetDefaultParams();
 %similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMappedCoexpDiff_invp'};
-similarityTypes = {'AllenMappedCoexpDiff_invp', 'AllenMappedCoexpDiff_z', 'AllenMappedCoexpDiff_log10p', ...
-    'AlleneQTLbrainCoexpDiff_invp', 'AlleneQTLbrainCoexpDiff_z', 'AlleneQTLbrainCoexpDiff_log10p'};
+similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMapped'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; % {'DIABETES'  'IBD'  'HF'  'RA'}; %
 whatMeasures = 'allPsych'; % 'allBody'; %'
