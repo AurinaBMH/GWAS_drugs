@@ -21,8 +21,9 @@ fprintf(1,'%u/%u genes to be characterized successfully matched to Allen data\n'
 %-------------------------------------------------------------------------------
 % Loop over list of genes to characterize:
 zval = nan(numGenesChar,1);
-log10p = nan(numGenesChar,1);
-invp = nan(numGenesChar,1);
+zval_abs = nan(numGenesChar,1);
+log10p_both = nan(numGenesChar,1);
+log10p_right = nan(numGenesChar,1);
 mean_r = nan(numGenesChar,1);
 
 for i = 1:numGenesChar
@@ -39,11 +40,13 @@ for i = 1:numGenesChar
         
         % evaluate the difference between two distributions - expectation
         % that GWAS genes will have more positive values than non-GWAS genes
-        [p,~,stats] = ranksum(all_GWAS, all_nonGWAS, 'tail', 'right'); 
+        [p,~,stats] = ranksum(all_GWAS, all_nonGWAS);  % 'tail', 'right'); 
+        p_right = ranksum(all_GWAS, all_nonGWAS, 'tail', 'right'); 
         
         zval(i) = stats.zval; 
-        log10p(i) = -log10(p); 
-        invp(i) = 1/p; 
+        zval_abs(i) = abs(stats.zval); 
+        log10p_both(i) = -log10(p); 
+        log10p_right(i) = -log10(p_right); 
 
         mean_r(i) = nanmean(all_GWAS);
 
@@ -56,7 +59,7 @@ end
 
 % save to struct
 geneStat.zval = zval; 
-geneStat.log10p = log10p; 
+geneStat.log10p = log10p_both; 
 geneStat.invp = invp; 
 geneStat.mean_r = mean_r; 
 
