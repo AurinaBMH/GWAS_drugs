@@ -1,5 +1,5 @@
 function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector(whatDisease,whatMeasurement,similarityType,whatProperty, whatThreshold)
-%-------------------------------------------------------------------------------
+%---------------------------------------r----------------------------------------
 % Inputs:
 %-------------------------------------------------------------------------------
 if nargin < 1
