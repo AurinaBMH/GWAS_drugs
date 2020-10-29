@@ -52,9 +52,6 @@ case 'GWAS'
 %     allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
 %     
 %     isGWAS = ismember(geneNames,allMappedDiseaseGenes);
-    
-   
-    
 
     if strcmp(similarityType, 'MAGMAdefault') || strcmp(similarityType, 'eQTLbrain')
         % BF correction over 2000 genes leaves almost no genes, use p<0.01
