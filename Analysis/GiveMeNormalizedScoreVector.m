@@ -53,18 +53,35 @@ case 'GWAS'
 %     
 %     isGWAS = ismember(geneNames,allMappedDiseaseGenes);
     
-    geneWeights = geneScores.(similarityType).(whatProperty);
+   
     
-%     if contains(similarityType, 'Allen')
-%         geneWeights = geneScores.(similarityType);
-%     elseif strcmp(similarityType, 'MAGMAdefault')
-%         %geneWeights = 1./(10.^-(geneScores.(similarityType).(whatProperty)));
-%         %geneWeights(geneWeights==1) = 0; 
-%         %geneWeights = double(isGWAS); 
-%         geneWeights = geneScores.(similarityType).(whatProperty);
-%     else
-%         geneWeights = geneScores.(similarityType).(whatProperty);
-%     end
+
+    if strcmp(similarityType, 'MAGMAdefault') || strcmp(similarityType, 'eQTLbrain')
+        % BF correction over 2000 genes leaves almost no genes, use p<0.01
+        % threshold, this is -log10(p)>2; 
+        if strcmp(whatProperty, 'P')
+            geneWeights = geneScores.(similarityType).(whatProperty);
+            %isGWAS = geneScores.(similarityType).(whatProperty)>-log10(0.05);
+            % null all scores with p>0.05 and keep weights for others; 
+            notGWAS = geneScores.(similarityType).(whatProperty)<-log10(0.05);
+            %isGWAS = (10.^-(geneScores.(similarityType).(whatProperty)))<0.05/length(geneNames); 
+            geneWeights(notGWAS) = 0;
+            %geneWeights = double(isGWAS); 
+        else
+            geneWeights = geneScores.(similarityType).(whatProperty);
+        end
+    elseif contains(similarityType, 'Allen')
+        if strcmp(whatProperty, 'zval')
+            % take absolute of z-value
+            % geneWeights = -geneScores.(similarityType).(whatProperty);
+            geneWeights = abs(geneScores.(similarityType).(whatProperty));
+        else
+            geneWeights = geneScores.(similarityType).(whatProperty);
+        end
+    else
+        
+        geneWeights = geneScores.(similarityType).(whatProperty);
+    end
 
 end
 
