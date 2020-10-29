@@ -2,9 +2,11 @@
 clear all; close all; 
 params = SetDefaultParams();
 %similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMappedCoexpDiff_invp'};
-similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMapped'};
+similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; % {'DIABETES'  'IBD'  'HF'  'RA'}; %
+whatDiseases_GWAS = {'ADHD', 'MDD2','SCZ','BIP2','DIABETES'};
+numDrugs = length(params.whatDiseases_Treatment); 
+%  % {'DIABETES'  'IBD'  'HF'  'RA'}; %
 whatMeasures = 'allPsych'; % 'allBody'; %'
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
 
@@ -31,7 +33,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(whatDiseases_GWAS), whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % find corresponsing match
     [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal

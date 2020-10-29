@@ -1,14 +1,15 @@
 clear all; close all; 
 
 whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; 
-whatMeasure = 'AlleneQTLbrainCoexpDiff_log10p'; 
+similarity = 'AllenMapped'; 
+whatMeasure = 'log10p'; 
 r = zeros(length(whatDiseases_GWAS)); 
 figure('color', 'w');
 
 for i=1:length(whatDiseases_GWAS) 
     load(sprintf('resultsTable_%s_BF_2020_all_drugbank.mat', whatDiseases_GWAS{i}))
     %A1 = 1./10.^-(geneScores.MAGMAdefault.P); 
-    A1 = geneScores.(whatMeasure); 
+    A1 = geneScores.(similarity).(whatMeasure); 
     % plot the histogram
     subplot(2,round(length(whatDiseases_GWAS)/2), i); 
     histogram(A1, 20); 
@@ -17,7 +18,7 @@ for i=1:length(whatDiseases_GWAS)
     
     for j=1:length(whatDiseases_GWAS)
     load(sprintf('resultsTable_%s_BF_2020_all_drugbank.mat', whatDiseases_GWAS{j}))   
-        A2 = geneScores.(whatMeasure); 
+        A2 = geneScores.(similarity).(whatMeasure); 
         
         r(i,j) = corr(A1, A2, 'rows', 'complete'); 
         
