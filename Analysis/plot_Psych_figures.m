@@ -1,5 +1,6 @@
 % matching for psychiatric disorders
 clear all; close all; 
+
 params = SetDefaultParams();
 %similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMappedCoexpDiff_invp'};
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
