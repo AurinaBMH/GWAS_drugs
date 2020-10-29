@@ -50,7 +50,6 @@ case 'GWAS'
 %     listGENESmapped = DISORDERlist.MAGMAdefault.(whatDisease);
 %     pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
 %     allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
-%     
 %     isGWAS = ismember(geneNames,allMappedDiseaseGenes);
 
     if strcmp(similarityType, 'MAGMAdefault') || strcmp(similarityType, 'eQTLbrain')
