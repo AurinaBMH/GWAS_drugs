@@ -6,7 +6,7 @@ similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbr
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD', 'MDD2','SCZ','BIP2','DIABETES'};
 numDrugs = length(params.whatDiseases_Treatment); 
-%  % {'DIABETES'  'IBD'  'HF'  'RA'}; %
+% {'DIABETES'  'IBD'  'HF'  'RA'}; %
 whatMeasures = 'allPsych'; % 'allBody'; %'
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
 
