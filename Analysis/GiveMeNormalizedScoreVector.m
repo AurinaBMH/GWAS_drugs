@@ -45,33 +45,25 @@ case 'GWAS'
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;
     
-    % try and keep only thresholded set of genes, give 0 to all others
-%     load('GWAS_disordersMAGMA.mat')
-%     listGENESmapped = DISORDERlist.MAGMAdefault.(whatDisease);
-%     pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
-%     allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
-%     isGWAS = ismember(geneNames,allMappedDiseaseGenes);
-
     if strcmp(similarityType, 'MAGMAdefault') || strcmp(similarityType, 'eQTLbrain')
-        % BF correction over 2000 genes leaves almost no genes, use p<0.01
-        % threshold, this is -log10(p)>2; 
-        if strcmp(whatProperty, 'P')
+        if strcmp(whatProperty, 'P') && params.DOthreshold
+            % if there is a selection to threshold, remove scores for genes
+            % that had p>0.05, keep for others;
             geneWeights = geneScores.(similarityType).(whatProperty);
-            %isGWAS = geneScores.(similarityType).(whatProperty)>-log10(0.05);
-            % null all scores with p>0.05 and keep weights for others; 
             notGWAS = geneScores.(similarityType).(whatProperty)<-log10(0.05);
-            %isGWAS = (10.^-(geneScores.(similarityType).(whatProperty)))<0.05/length(geneNames); 
             geneWeights(notGWAS) = 0;
-            %geneWeights = double(isGWAS); 
         else
             geneWeights = geneScores.(similarityType).(whatProperty);
         end
     elseif contains(similarityType, 'Allen')
-        if strcmp(whatProperty, 'zval')
-            % take absolute of z-value
-            % geneWeights = -geneScores.(similarityType).(whatProperty);
+        if strcmp(whatProperty, 'zval') && strcmp(params.AHBAmeasure, '-z')
+            % take negative of z
+            geneWeights = -geneScores.(similarityType).(whatProperty);
+        elseif strcmp(whatProperty, 'zval') && strcmp(params.AHBAmeasure, 'abs(z)')
+            % take abs of z
             geneWeights = abs(geneScores.(similarityType).(whatProperty));
         else
+            % take z
             geneWeights = geneScores.(similarityType).(whatProperty);
         end
     else
