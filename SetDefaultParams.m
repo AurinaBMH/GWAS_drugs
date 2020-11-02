@@ -5,22 +5,21 @@ function params = SetDefaultParams()
 %-------------------------------------------------------------------------------
 % Whether to use evidence scores as a proxy weight for network:
 params.doWeighted = true;
-
 params.whatNorm = 2; 
 
 % Evidence threshold for including PPI interactions in binary analyses:
 params.PPINevidenceThreshold = 0;
 
 %-------------------------------------------------------------------------------
-% SNP-gene mapping
+% AHBA measure
 %-------------------------------------------------------------------------------
-% Threshold for linking SNPs through LD relationships:
-% params.LDthreshold = 0.5;
+params.AHBAmeasure = 'z'; % could be -z, abs(z)
 
 %-------------------------------------------------------------------------------
 % Score for genes - could be ZSTAT, could be P
 %-------------------------------------------------------------------------------
 params.geneScore = 'P';
+params.DOthreshold = false; 
 
 %-------------------------------------------------------------------------------
 % Scoring similarity between two sets of SNPs/genes
@@ -32,9 +31,7 @@ params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 %-------------------------------------------------------------------------------
 params.whatThreshold = 'BF';
 params.whatDrugTargets = '2020';
-
 params.whatTargets = 'all';
-
 params.numNull = 5000; 
 
 % keep only psychiatric drugs+ diabetes
