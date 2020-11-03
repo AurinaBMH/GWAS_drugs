@@ -3,8 +3,7 @@ clear all; close all;
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 
-whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; %'BIPandSCZ'
-
+whatDiseases_GWAS = {'ADHD','MDD2','SCZ','BIP2','DIABETES'}; 
 numGWAS = length(whatDiseases_GWAS); 
 
 
@@ -40,10 +39,7 @@ end
 
 
 % does combinig scores improve matches?
-plotHow = 'horizontal'; 
-f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, false, plotHow); 
-figureName = sprintf('figures/compareMeasures_%s_%s', whatMeasures, plotHow);
-print(f,figureName,'-dpng','-r300');
+
 
 
 

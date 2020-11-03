@@ -1,12 +1,15 @@
-function f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc)
+function f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatNull)
 
 if nargin < 3
     recalc = false; 
 end
+if nargin < 4
+    whatNull = 'randomDrugR_all_drugbank'; 
+end
 
 
 if recalc
-    [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, false);
+    [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, false, whatNull);
     fileName = sprintf('DataOutput/Ptable_%s.mat', whatMeasures); 
     save(fileName, 'Ptable', 'measureNames'); 
 else

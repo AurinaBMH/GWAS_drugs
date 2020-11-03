@@ -69,7 +69,7 @@ end
 
 
 % does combinig scores improve matches?
-DOrecalc = false; 
+DOrecalc = true; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 

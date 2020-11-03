@@ -1,4 +1,4 @@
-function [Ptable, measureTable] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, doPlot)
+function [Ptable, measureTable] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, doPlot, whatNull)
 %X - predictor data: all gene scores from GWAS
 %y - response: drug score
 if nargin < 1
@@ -13,7 +13,10 @@ if nargin < 3
     doPlot = true;
 end
 
-whatNull = 'randomDrugP';
+if nargin < 4
+    whatNull = 'randomDrugR_all_drugbank';
+end
+
 params = SetDefaultParams();
 whatNorm = params.whatNorm;
 
@@ -35,7 +38,9 @@ for i = 1:numGWAS
     [~, diseaseResultsP, ~,~, measureNames] = compareGWASvsDRUGmatches({whatGWAS}, whatNull, Dname, similarityTypes, PPImeasures_names, whatMeasures);
     close all;
     
+    diseaseResultsP(diseaseResultsP==0) = 1/params.numNull;
     Pvals_mapp = -log10(diseaseResultsP(~isnan(diseaseResultsP(:))))';
+    Pvals_mapp
     %[Pvals_mapp,sIND]  = unique(Pvals_mapp);
     %measureNames = measureNames(sIND);
     

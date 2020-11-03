@@ -1,6 +1,6 @@
 function [diseaseResultsR, diseaseResultsP, similarityTypes, ALLmeasures, measureNames] = compareGWASvsDRUGmatches(whatDiseases_GWAS, whatNull, Dname, similarityTypes, PPImeasures_names, whatMeasures)
 if nargin <2
-    whatNull = 'randomDrugP';
+    whatNull = 'randomDrugR_all_drugbank';
 end
 
 if nargin <3
@@ -11,7 +11,7 @@ end
 Dname = Dname(isstrprop(Dname,'alpha'));
 
 % measures for non PPI mappings
-OTHERmeasures_names = {'P', 'r'};
+OTHERmeasures_names = {'P', 'zval'};
 whatThreshold = 'BF';
 
 PPInum = length(PPImeasures_names);
@@ -52,7 +52,7 @@ for s=1:length(similarityTypes)
         if ~contains(similarityTypes{s},'Allen')
             whatProperty = 'P';
         elseif contains(similarityTypes{s},'Allen')
-            whatProperty = 'r';
+            whatProperty = 'zval';
         end
         
         [rhos ,pVals, whatDiseases_Treatment_SEL] = DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, false, length(similarityTypes), whatMeasures);

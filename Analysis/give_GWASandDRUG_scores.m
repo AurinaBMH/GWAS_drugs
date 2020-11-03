@@ -49,7 +49,7 @@ for s=1:length(similarityTypes)
         if ~contains(similarityTypes{s},'Allen')
             whatProperty = 'P';
         elseif contains(similarityTypes{s},'Allen')
-            whatProperty = 'r';
+            whatProperty = 'zval';
         end
         [geneNamesGWAS,geneWeightsGWAS{k}] = GiveMeNormalizedScoreVector(whatGWAS,'GWAS',similarityTypes{s},whatProperty, whatThreshold);
         measureNames{k} = [similarityTypes{s}, whatProperty]; 

@@ -6,12 +6,8 @@ end
 
 params = SetDefaultParams();
 whatGWAS = whatGWAS(isstrprop(whatGWAS,'alpha'));
+load(sprintf('nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
 
-if strcmp(whatNull, 'randomDrugR')
-    load(sprintf('nulls_5000_%stargets_randomDrugR.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-elseif strcmp(whatNull, 'randomDrugP')
-    load(sprintf('nulls_5000_%stargets_randomDrugP.mat', params.whatDrugTargets), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
-end
 
 % choose null for the corresponding disorder
 [~, l] = intersect(whatDiseases_Treatment,whatGWAS); 
