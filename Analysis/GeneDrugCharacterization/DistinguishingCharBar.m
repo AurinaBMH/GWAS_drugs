@@ -54,9 +54,7 @@ if strcmp(whatNull, 'randomGene')
     
     load('GWAS_disordersMAGMA.mat', 'DISORDERlist')
     
-elseif strcmp(whatNull, 'randomDrugR') || strcmp(whatNull, 'randomDrugP') || ...
-        strcmp(whatNull, 'randomDrugP_all_drugbank_psych') || strcmp(whatNull, 'randomDrugR_all_drugbank') || ...
-        strcmp(whatNull, 'randomDrugP_active_drugbank_psych') || strcmp(whatNull, 'randomDrugR_active_drugbank')
+elseif contains(whatNull, 'randomDrug')
     
     load(sprintf('nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
@@ -84,7 +82,6 @@ numDrugScores = length(drugScoresAll);
 %===============================================================================
 if doPlot
     f = figure('color','w', 'Position', [300, 300, 1500, 400]);
-    %sgtitle(sprintf('%s, %s',similarityType, whatProperty))
     ax = cell(numDiseases_GWAS,1);
     if length(whatDiseases_GWAS)>3
         f.Position = [471,945,1830,318];
@@ -113,12 +110,7 @@ for i = 1:numDiseases_GWAS
         % select drug list
         kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k});
         geneWeights_treatment = drugScores(:,kIND);
-%        figure;
-%        KK = find(geneWeights_treatment); 
-%        histogram(geneWeights_treatment(KK)); hold on; 
-% %         imagesc(geneWeights_treatment); 
-%         title(sprintf('%s', whatDiseases_Treatment{k}))
-%         caxis([0 0.2])        
+     
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
         if isnan(rhos(k))
             warning('Issue with %s-%s',whatDiseases_Treatment{k},whatDisease)
@@ -171,8 +163,7 @@ for i = 1:numDiseases_GWAS
         end
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
-            % if rho is not-NaN, calculate the p-value, but if NaN - assign
-            % NaN; 
+            % if rho is not-NaN, calculate the p-value, but if NaN - assign NaN; 
             if ~isnan(rhos(k))
                 isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/numMeasures));
                 isSig(k) = logical((mean(rhos(k) < nullScores) < 0.05));
@@ -192,42 +183,41 @@ for i = 1:numDiseases_GWAS
             nullScores = zeros(numNulls,1);
             for k = 1:numNulls
                 % separate set of nulls for each drug target list
-                switch whatNull
-                    
-                    case 'randomGene' % is the actual match higher than a match with completely random genes
-                        if ~contains(similarityType, 'PPI') && ~contains(similarityType, 'Allen')
-                            % for this null, load all available scores for genes
-                            % select a random set of genes from GWAS scores - keep
-                            % drugs the same, randomise GWAS scores; This is
-                            % suitable only for MAGMA-based  methods;
-                            
-                            switch whatProperty
-                                case 'P'
-                                    geneWeightsGWAS_all = -log10(DISORDERlist.(similarityType).(whatDisease).(whatProperty));
-                                otherwise
-                                    geneWeightsGWAS_all = DISORDERlist.(similarityType).(whatDisease).(whatProperty);
-                            end
-                            
-                            geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
-                            % normalizde the weights, by default this used
-                            % norm-1, but mabe should be chnaged to norm2?
-                            geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand);
-                            nullScores(k) = ComputeDotProduct(drugScores(:,lIND),geneWeightsGWAS_randNorm);
-                        else
-                            
-                            warning('% null is not compatible with %s\n', whatNull, whatNull)
-                            return
-                            
+                
+                if strcmp(whatNull, 'randomGene')
+                    % is the actual match higher than a match with completely random genes
+                    if ~contains(similarityType, 'PPI') && ~contains(similarityType, 'Allen')
+                        % for this null, load all available scores for genes
+                        % select a random set of genes from GWAS scores - keep
+                        % drugs the same, randomise GWAS scores; This is
+                        % suitable only for MAGMA-based  methods;
+                        
+                        switch whatProperty
+                            case 'P'
+                                geneWeightsGWAS_all = -log10(DISORDERlist.(similarityType).(whatDisease).(whatProperty));
+                            otherwise
+                                geneWeightsGWAS_all = DISORDERlist.(similarityType).(whatDisease).(whatProperty);
                         end
                         
-                    case 'randomTarget' % is the actual match higher than a match with random gene score assignment
-                        % Shuffle weights taken from each drug list individually
-                        drugScores_DIS = drugScores(:,lIND);
-                        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
-                        % randomise v1 within ComputeDotProduct
-                    case {'randomDrugP','randomDrugR',...
-                            'randomDrugP_all_drugbank_psych', 'randomDrugR_all_drugbank', ...
-                            'randomDrugP_active_drugbank_psych', 'randomDrugR_active_drugbank'}  % for each disease get a random set of drugs that is the same size as
+                        geneWeightsGWAS_rand = datasample(geneWeightsGWAS_all,numDrugScores,'Replace',false);
+                        % normalize the weights, by default norm2
+                        geneWeightsGWAS_randNorm = normalizeScoreVector(geneWeightsGWAS_rand);
+                        nullScores(k) = ComputeDotProduct(drugScores(:,lIND),geneWeightsGWAS_randNorm);
+                    else
+                        
+                        warning('% null is not compatible with %s\n', whatNull, whatNull)
+                        return
+                        
+                    end
+                    
+                elseif strcmp(whatNull, 'randomTarget') % is the actual match higher than a match with random gene score assignment
+                    % Shuffle weights taken from each drug list individually
+                    drugScores_DIS = drugScores(:,lIND);
+                    nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
+                    % randomise v1 within ComputeDotProduct
+                else
+                    if contains(whatNull, 'randomDrugP')
+                        % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % load pre-computed nulls
                         % the order of genes is the same in GWAS and nulls
@@ -239,13 +229,20 @@ for i = 1:numDiseases_GWAS
                         drugScores_DIS = RANDOMdrugs_treatment{l}(:,k);
                         %nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS(ix));
                         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
-                        
+                    end
                 end
             end
             % Compute p-values: based on separate nulls
-            isSig_BF(l) = logical((mean(rhos(l) < nullScores) < 0.05/numMeasures));
-            isSig(l) = logical((mean(rhos(l) < nullScores) < 0.05));
-            pVals(l) = mean(rhos(l) < nullScores);
+            if ~isnan(rhos(l))
+                isSig_BF(l) = logical((mean(rhos(l) < nullScores) < 0.05/numMeasures));
+                isSig(l) = logical((mean(rhos(l) < nullScores) < 0.05));
+                pVals(l) = mean(rhos(l) < nullScores);
+            else
+                isSig_BF(l) = NaN;
+                isSig(l) = NaN;
+                pVals(l) = NaN;
+            end
+                
             % save separate nulls
             all_nullScores{l} = nullScores;
             
@@ -317,9 +314,7 @@ for i = 1:numDiseases_GWAS
         
         ax{i}.XTickLabelRotation = 45;
         xlabel('Disease treatment')
-        %ylabel(sprintf('%s similarity',whatScore))
         ylabel({'GWAS-treatment', 'similarity'})
-        %title(sprintf('%s-%s',whatDiseases_GWAS{i},whatProperty),'interpreter','none')
         title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
         cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false);
         cMapGeneric_n = cMapGeneric;

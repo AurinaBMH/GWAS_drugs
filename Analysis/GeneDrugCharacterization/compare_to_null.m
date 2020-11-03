@@ -1,7 +1,7 @@
 function pVals = compare_to_null(whatGWAS, geneWeightsGWAS, drugScores_DIS, whatNull)
 
 if nargin < 4
-    whatNull = 'randomDrugP';
+    whatNull = 'randomDrugR_all_drugbank';
 end
 
 params = SetDefaultParams();
@@ -16,23 +16,27 @@ numNulls = params.numNull;
 rhos = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS);
 nullScores = zeros(numNulls,1);
 
-    for k = 1:numNulls
-        % separate set of nulls for each drug target list
-        switch whatNull
-            
-            case 'randomTarget' % is the actual match higher than a match with random gene score assignment
-                % Shuffle weights taken from each drug list individually
-                nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
-                % randomise v1 within ComputeDotProduct
-            case {'randomDrugP','randomDrugR'}  % for each disease get a random set of drugs that is the same size as
-                drugScores_DISrand = RANDOMdrugs_treatment{l}(:,k);
-                nullScores(k) = ComputeDotProduct(drugScores_DISrand,geneWeightsGWAS);
-                
-        end
+for k = 1:numNulls
+    % separate set of nulls for each drug target list
+    if contains(whatNull, 'randomTarget')
+        % is the actual match higher than a match with random gene score assignment
+        % Shuffle weights taken from each drug list individually
+        nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
+        % randomise v1 within ComputeDotProduct
+    elseif contains(whatNull, 'randomDrug')
+        % for each disease get a random set of drugs that is the same size as
+        drugScores_DISrand = RANDOMdrugs_treatment{l}(:,k);
+        nullScores(k) = ComputeDotProduct(drugScores_DISrand,geneWeightsGWAS);
+        
     end
+end
+if ~isnan(rhos)
     % Compute p-values: based on separate nulls
-    isSig = (mean(rhos < nullScores) < 0.05);
     pVals = mean(rhos < nullScores);
+else
+    pVals = NaN;
+end
+    
 
 end
 
