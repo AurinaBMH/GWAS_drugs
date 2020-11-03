@@ -44,10 +44,8 @@ for i = 1:numGenesChar
         p_right = ranksum(all_GWAS, all_nonGWAS, 'tail', 'right'); 
         
         zval(i) = stats.zval; 
-        zval_abs(i) = abs(stats.zval); 
         log10p_both(i) = -log10(p); 
         log10p_right(i) = -log10(p_right); 
-
         mean_r(i) = nanmean(all_GWAS);
 
     else
@@ -59,8 +57,8 @@ end
 
 % save to struct
 geneStat.zval = zval; 
-geneStat.log10p = log10p_both; 
-geneStat.invp = invp; 
+geneStat.log10p_both = log10p_both; 
+geneStat.log10p_right = log10p_right; 
 geneStat.mean_r = mean_r; 
 
 end
