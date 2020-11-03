@@ -3,13 +3,16 @@ function [f, Mnames, Mnumbers] = correlate_geneMeasures(disorder, whatMeasures, 
 % select_measures - allPsych - relevant to psychiatric
 % select_measures - allBody - relevant to non-psychiatric
 % select_measures - all - all available
+if nargin < 2
+    whatMeasures = 'allPsych'; 
+end
 
 if nargin<3
     plotSeparate = true; 
 end
 
 % load data
-fileName = sprintf('resultsTable_%s_BF_2020.mat', disorder);
+fileName = sprintf('resultsTable_%s_BF_2020_all_drugbank.mat', disorder);
 load(fileName, 'geneScores');
 
 % get all measures
@@ -25,14 +28,14 @@ switch whatMeasures
         measures = setdiff(M, {'gene', 'params'}); 
 end
 
-measureNames = {'numPPIneighbors1', 'percPPIneighbors1'}; %'numPPIneighbors2', 'percPPIneighbors2'};
+measureNames = {'numPPIneighbors1', 'percPPIneighbors1'};
 
 % make a vector of all measures
 p=1;
 for k=1:length(measures)
     
-    if contains(measures{k}, 'Allen') && contains(measures{k}, 'Mapped')
-        MN{p} = {measures{k}};
+    if contains(measures{k}, 'Allen')
+        MN{p} = {measures{k}, 'zval'};
         p=p+1;
     elseif contains(measures{k}, 'PPI')
         for l=1:length(measureNames)
@@ -51,18 +54,8 @@ p = zeros(length(MN));
 for i=1:length(MN)
     for j=i+1:length(MN)
         
-        
-        if contains(MN{1,i}{1,1}, 'Allen')
-            m1 = geneScores.(MN{1,i}{1,1});
-        else
-            m1 = geneScores.(MN{1,i}{1,1}).(MN{1,i}{1,2});
-        end
-        
-        if contains(MN{1,j}{1,1}, 'Allen')
-            m2 = geneScores.(MN{1,j}{1,1});
-        else
-            m2 = geneScores.(MN{1,j}{1,1}).(MN{1,j}{1,2});
-        end
+        m1 = geneScores.(MN{1,i}{1,1}).(MN{1,i}{1,2});
+        m2 = geneScores.(MN{1,j}{1,1}).(MN{1,j}{1,2});
         
         [r(i,j),p(i,j)] = corr(m1, m2, 'type', 'Spearman', 'rows', 'complete');
         

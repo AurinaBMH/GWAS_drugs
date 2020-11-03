@@ -7,11 +7,11 @@ colLine = [252,78,42]/255;
 
 % for several borderline matches plot null distributions and real data
 % based on all radnom drug nulls or only using psychiatric drug nulls; 
-typesNull = {'randomDrugR_drugbank','randomDrugP_drugbank_psych'}; 
+typesNull = {'randomDrugR_all_drugbank','randomDrugP_all_drugbank_psych'}; 
 for t=1:length(typesNull)
-% for SCZ
-whatDiseases_GWAS = {'SCZ'}; 
-[SCZ_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, SCZ_null{t}] = ...
+% for BIP
+whatDiseases_GWAS = {'BIP2'}; 
+[BIP_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, BIP_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 
 % for DIABETES
@@ -22,16 +22,16 @@ end
 
 f = figure('color','w', 'Position', [300, 300, 1200, 500]);
 
-% find BIP in SCZ list
-[~, IND_scz] = intersect(whatDiseases_Treatment,'BIP', 'stable');
-rho_SCZ_BIP = SCZ_rhosALL{1}(IND_scz); 
-N_scz_all = SCZ_null{1}{1}{IND_scz}; 
-N_scz_psy = SCZ_null{2}{1}{IND_scz};
+% find BIP in BIP2 list
+[~, IND_bip] = intersect(whatDiseases_Treatment,'BIP', 'stable');
+rho_BIP_BIP = BIP_rhosALL{1}(IND_bip); 
+N_bip_all = BIP_null{1}{1}{IND_bip}; 
+N_bip_psy = BIP_null{2}{1}{IND_bip};
 
 ax{1} = subplot(1,2,1); 
-histogram(N_scz_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
-histogram(N_scz_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
-plot([rho_SCZ_BIP rho_SCZ_BIP],[0 300], 'LineWidth', 3, 'Color', colLine)
+histogram(N_bip_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
+histogram(N_bip_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
+plot([rho_BIP_BIP rho_BIP_BIP],[0 300], 'LineWidth', 3, 'Color', colLine)
 box off
 legend('All treatment null','Psychiatric treatment null')
 legend boxoff  
@@ -39,7 +39,7 @@ legend boxoff
 xlabel('GWAS-treatment similarity')
 ylabel({'Count'})
 set(gca,'FontSize', 20)
-title('Psychiatric disorder')
+title('Bipolar disorder')
         
         
 

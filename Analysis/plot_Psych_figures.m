@@ -2,13 +2,11 @@
 clear all; close all; 
 
 params = SetDefaultParams();
-%similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMappedCoexpDiff_invp'};
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
 whatDiseases_GWAS = {'ADHD', 'MDD2','SCZ','BIP2','DIABETES'};
 numDrugs = length(params.whatDiseases_Treatment); 
-% {'DIABETES'  'IBD'  'HF'  'RA'}; %
-whatMeasures = 'allPsych'; % 'allBody'; %'
+whatMeasures = 'allPsych';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
 
 
@@ -51,8 +49,8 @@ f = plot_measureOverview(Pmatrix, T, similarityTypes_label);
 figureName = sprintf('figures/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
-% plot null distributions when chooseing from all and from psychiatric
-% drugs: in this example: use PPI-significant results: SCZ GWAS vs BIP
+% plot null distributions when choosing from all and from psychiatric
+% drugs: in this example: use PPI-significant results: BIP GWAS vs BIP
 % drugs and DIABETES vs DIABETES drugs
 f = plot_nullDistributions(); 
 figureName = 'figures/Null_distribution_comparison';
