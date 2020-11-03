@@ -57,7 +57,6 @@ if strcmp(whatNull, 'randomGene')
 elseif strcmp(whatNull, 'randomDrugR') || strcmp(whatNull, 'randomDrugP') || ...
         strcmp(whatNull, 'randomDrugP_all_drugbank_psych') || strcmp(whatNull, 'randomDrugR_all_drugbank') || ...
         strcmp(whatNull, 'randomDrugP_active_drugbank_psych') || strcmp(whatNull, 'randomDrugR_active_drugbank')
-        
     
     load(sprintf('nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;

@@ -77,7 +77,7 @@ for m=1:length(mappingMethods)
     
     for s=1:length(geneWeights)
         % give an empty vector
-        scoreVector = nan(length(allUniqueGenes),1);
+        scoreVector = zeros(length(allUniqueGenes),1);
         
         mapping = mappingMethods{m};
         mapTABLE = DISORDERlist.(mapping).(whatDisease);
