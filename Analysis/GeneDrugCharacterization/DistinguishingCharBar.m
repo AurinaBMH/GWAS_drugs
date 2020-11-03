@@ -118,8 +118,7 @@ for i = 1:numDiseases_GWAS
 %        histogram(geneWeights_treatment(KK)); hold on; 
 % %         imagesc(geneWeights_treatment); 
 %         title(sprintf('%s', whatDiseases_Treatment{k}))
-%         caxis([0 0.2])
-        
+%         caxis([0 0.2])        
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
         if isnan(rhos(k))
             warning('Issue with %s-%s',whatDiseases_Treatment{k},whatDisease)
@@ -172,9 +171,17 @@ for i = 1:numDiseases_GWAS
         end
         % Compute p-values based on pooled nulls
         for k = 1:numDiseases_Treatment
-            isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/numMeasures));
-            isSig(k) = logical((mean(rhos(k) < nullScores) < 0.05));
-            pVals(k) = mean(rhos(k) < nullScores);
+            % if rho is not-NaN, calculate the p-value, but if NaN - assign
+            % NaN; 
+            if ~isnan(rhos(k))
+                isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/numMeasures));
+                isSig(k) = logical((mean(rhos(k) < nullScores) < 0.05));
+                pVals(k) = mean(rhos(k) < nullScores);
+            else
+                isSig_BF(k) = NaN;
+                isSig(k) = NaN;
+                pVals(k) = NaN;
+            end   
         end
         
     else
@@ -249,7 +256,6 @@ for i = 1:numDiseases_GWAS
     
     
     % Sort:
-    %[~, ix] = sort(pVals, 'ascend');
     [~,ix] = sort(rhos,'descend');
     nullScoresALL{i} = all_nullScores; 
     all_nullScores = all_nullScores(ix);
