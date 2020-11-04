@@ -49,13 +49,15 @@ f = plot_measureOverview(Pmatrix, T, similarityTypes_label);
 figureName = sprintf('figures/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
+% score genes by contribution: 
+[Prank_diabetes, Drank_diabetes] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
+[Prank_bip, Drank_bip] = rank_gene_contribution('BIP2', 'BIP', 'PPI_mapped_th600');
+
 % plot null distributions when choosing from all and from psychiatric
-% drugs: in this example: use PPI-significant results: BIP GWAS vs BIP
-% drugs and DIABETES vs DIABETES drugs
+% drugs: in this example: use PPI-significant results: BIP GWAS vs BIP drugs and DIABETES vs DIABETES drugs
 f = plot_nullDistributions(); 
 figureName = 'figures/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
-
 
 
 % plot correlation between different measures for one representative disorder
@@ -67,14 +69,12 @@ for i=1:numGWAS
     
 end
 
-
 % does combinig scores improve matches?
 DOrecalc = false; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 
-% score genes by contribution: 
-[Prank, Drank] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
+
 
 
 
