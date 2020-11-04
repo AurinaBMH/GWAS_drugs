@@ -73,8 +73,8 @@ DOrecalc = false;
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 
-
-
+% score genes by contribution: 
+[Prank, Drank] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
 
 
 
