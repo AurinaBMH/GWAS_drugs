@@ -216,7 +216,7 @@ for i = 1:numDiseases_GWAS
                     nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightsGWAS, true);
                     % randomise v1 within ComputeDotProduct
                 else
-                    if contains(whatNull, 'randomDrugP')
+                    if contains(whatNull, 'randomDrug')
                         % for each disease get a random set of drugs that is the same size as
                         % real list of drugs, e.g. for ADHD select 18 drugs
                         % load pre-computed nulls

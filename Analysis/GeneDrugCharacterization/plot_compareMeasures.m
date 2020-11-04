@@ -9,7 +9,7 @@ end
 
 
 if recalc
-    [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, false, whatNull);
+    [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, whatNull);
     fileName = sprintf('DataOutput/Ptable_%s.mat', whatMeasures); 
     save(fileName, 'Ptable', 'measureNames'); 
 else
