@@ -100,23 +100,44 @@ Mlabels = Mlabels(ord);
 % plot
 colors = cbrewer('div', 'RdBu', 64);
 colors = flipud(colors);
+% if plotSeparate
+%     f = figure('color','w', 'Position', [100 100 1200 1200]);
+% end
+% imagesc(RR); axis('equal');
+% colormap(colors);
+% 
+% yticks(1:length(MN));
+% yticklabels(Mlabels)
+% 
+% xticks(1:length(MN));
+% xticklabels(Mlabels)
+% xtickangle(45);
+% 
+% caxis([-1 1])
+% colorbar
+% title(sprintf('%s', disorder))
+% set(gca,'FontSize', 22)
+
+
+[measureColors, ~, cluster] = give_measureColors(Mnames);
+[~,V] = unique(cluster); 
+measureColors = measureColors(V,:); 
+% CLUSTER 1: SNPposition - green; 
+% CLUSTER 2: Chromatin - pink
+% CLUSTER 3: eQTL - green
+% CLUSTER 4: AHBA - grey
+% CLUSTER 5: PPIperc - light blue
+% CLUSTER 6: PPInum - dark blue
+   
+% assign clusters
 if plotSeparate
-    f = figure('color','w', 'Position', [100 100 1200 1200]);
+    f = figure('color','w', 'Position', [100 100 1000 800]);
 end
-imagesc(RR); axis('square')
-colormap(colors);
 
-yticks(1:length(MN));
-yticklabels(Mlabels)
-
-xticks(1:length(MN));
-xticklabels(Mlabels)
-xtickangle(45);
-
-caxis([-1 1])
-colorbar
+plotClusteredData(RR,cluster,Mlabels',colors,measureColors);
 title(sprintf('%s', disorder))
-set(gca,'FontSize', 22)
+set(gca,'FontSize', 18)
 
+             
 
 end

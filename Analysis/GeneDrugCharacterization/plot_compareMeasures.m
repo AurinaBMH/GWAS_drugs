@@ -76,7 +76,6 @@ for i=1:numDiseases_GWAS
         xlabel('Measures')
     %end
     ylim([0 4]); 
-    
     figureName = sprintf('figures/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
 end
