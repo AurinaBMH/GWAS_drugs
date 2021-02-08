@@ -123,7 +123,7 @@ allGenes = strjoin(allDrugs.Target,', ');
 allGenes = unique(split(allGenes, ', '));
 allGenes = allGenes(~cellfun('isempty',allGenes));  
 numGenes = length(allGenes);
-fprintf(1,'There are %u pharmacologically active genes in the DrugBank\n', numGenes);
+fprintf(1,'There are %u drug target genes in the DrugBank\n', numGenes);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table

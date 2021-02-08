@@ -1,4 +1,4 @@
-function geneStats = TellMePPIInfo(contextGenes,genesChar,doWeighted,evidenceThreshold,numSteps)
+function geneStats = TellMePPIInfo(mappedGenes,targetGenes,doWeighted,evidenceThreshold,numSteps)
 % Characterize each gene in the list genesChar in terms of its nearness to the
 % set of context genes in contextGenes
 %-------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ if nargin < 5
 end
 
 whatPPIData = 'HGNCmatch';
-numContextGenes = length(contextGenes);
+numContextGenes = length(mappedGenes);
 
 %-------------------------------------------------------------------------------
 % Filenames:
@@ -54,7 +54,7 @@ end
 switch whatPPIData
 case 'HGNCmatch'
     % No need to map out to other nomenclatures because data is already in the format
-    allUniqueProteins = genesChar;
+    allUniqueProteins = targetGenes;
 otherwise
     warning('Unknown dataset, how should I match gene names -> protein names for optimal matching?')
 end
@@ -63,26 +63,26 @@ end
 %-------------------------------------------------------------------------------
 % Get indices of mapped disease genes on PPI network:
 %-------------------------------------------------------------------------------
-PPI_isInContext = ismember(contextGenes,PPIN.geneNames);
-PPI_isInChar = ismember(genesChar,PPIN.geneNames);
+PPI_isInContext = ismember(mappedGenes,PPIN.geneNames);
+PPI_isInChar = ismember(targetGenes,PPIN.geneNames);
 missingContext = find(~PPI_isInContext);
 missingChar = find(~PPI_isInChar);
 fprintf(1,'%u/%u context genes are in the PPI network\n',sum(PPI_isInContext),numContextGenes);
 fprintf(1,'%u/%u genes to be characterized could be matched to PPI network data\n',...
-                    sum(PPI_isInChar),length(genesChar));
+                    sum(PPI_isInChar),length(targetGenes));
 
 for i = 1:length(missingContext)
     fprintf(1,'[%u/%u context]: %s missing in PPIN\n',i,length(missingContext),...
-                                contextGenes{missingContext(i)});
+                                mappedGenes{missingContext(i)});
 end
 for i = 1:length(missingChar)
     fprintf(1,'[%u/%u characterize]: %s missing in PPIN\n',i,length(missingChar),...
-                                genesChar{missingChar(i)});
+                                targetGenes{missingChar(i)});
 end
 
 %-------------------------------------------------------------------------------
 % Initialize variables:
-numGenesChar = length(genesChar);
+numtargetGenes = length(targetGenes);
 numPPIneighbors = cell(numSteps,1);
 gwasPPIneighbors = cell(numSteps,1);
 percPPIneighbors = cell(numSteps,1);
@@ -93,20 +93,20 @@ expWeiPPIneighbors = cell(numSteps,1);
 weigwasPPIneighbors = cell(numSteps,1);
 expWeigwasPPIneighbors = cell(numSteps,1);
 hasPath = cell(numSteps,1);
-meanPPIDistance = nan(numGenesChar,1);
-medianPPIDistance = nan(numGenesChar,1);
+meanPPIDistance = nan(numtargetGenes,1);
+medianPPIDistance = nan(numtargetGenes,1);
 
 % Initialize longer (binary) paths
 for k = 1:numSteps
-    numPPIneighbors{k} = nan(numGenesChar,1);
-    percPPIneighbors{k} = nan(numGenesChar,1);
-    weiPPIneighbors{k} = zeros(numGenesChar,1);
-    expWeiPPIneighbors{k} = zeros(numGenesChar,1);
-    numCOMMONneighbors{k} = nan(numGenesChar,1);
-    percCOMMONneighbors{k} = nan(numGenesChar,1);
-    weigwasPPIneighbors{k} = zeros(numGenesChar,1);
-    expWeigwasPPIneighbors{k} = zeros(numGenesChar,1);
-    gwasPPIneighbors{k} = nan(numGenesChar,1);
+    numPPIneighbors{k} = nan(numtargetGenes,1);
+    percPPIneighbors{k} = nan(numtargetGenes,1);
+    weiPPIneighbors{k} = zeros(numtargetGenes,1);
+    expWeiPPIneighbors{k} = zeros(numtargetGenes,1);
+    numCOMMONneighbors{k} = nan(numtargetGenes,1);
+    percCOMMONneighbors{k} = nan(numtargetGenes,1);
+    weigwasPPIneighbors{k} = zeros(numtargetGenes,1);
+    expWeigwasPPIneighbors{k} = zeros(numtargetGenes,1);
+    gwasPPIneighbors{k} = nan(numtargetGenes,1);
 end
 
 %-------------------------------------------------------------------------------
@@ -115,12 +115,12 @@ end
 % Count disease genes that are 1-step neighbors on the PPI network:
 % Match using "protein" nomenclature, mapped during processing steps above
 fprintf(1,'Characterizing the properties of %u difference genes in the context of %u genes\n',...
-                        numGenesChar,numContextGenes);
+                        numtargetGenes,numContextGenes);
 % for a selected GWAS list, find a list of k-step neighbors
-PPI_neighborsK = find_PPIneighbors(PPIN, contextGenes, numSteps); 
+PPI_neighborsK = find_PPIneighbors(PPIN, mappedGenes, numSteps); 
 
-for i = 1:numGenesChar
-    gene_i = genesChar{i};
+for i = 1:numtargetGenes
+    gene_i = targetGenes{i};
     protein_i = allUniqueProteins{i};
 
     % First try matching the gene:
@@ -148,7 +148,7 @@ for i = 1:numGenesChar
             percPPIneighbors{k}(i) = NaN;
         else
             PPI_neighbors_gene = PPIN.geneNames(iskStepNeighbor);
-            isInContext = ismember(PPI_neighbors_gene,contextGenes);
+            isInContext = ismember(PPI_neighbors_gene,mappedGenes);
             % find common neighbors instead of GWAS hits, use a list of the
             % neighbors of GWAS hits at a selected k threshold PPI_neighborsK{k}
             isInContextNeighbors = ismember(PPI_neighbors_gene,PPI_neighborsK{k});
@@ -180,8 +180,8 @@ for i = 1:numGenesChar
         % (ii) Weight contribution of neighbors by their pathlength:
         for kk = 1:k
             iskkStepNeighbor = (PPIN.distMatrix(PPI_index,:) == k);
-            prop_kk_neighbors = 100*mean(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes));
-            propgwas_kk_neighbors = sum(ismember(PPIN.geneNames(iskkStepNeighbor),contextGenes))/numContextGenes; 
+            prop_kk_neighbors = 100*mean(ismember(PPIN.geneNames(iskkStepNeighbor),mappedGenes));
+            propgwas_kk_neighbors = sum(ismember(PPIN.geneNames(iskkStepNeighbor),mappedGenes))/numContextGenes; 
             if ~isnan(prop_kk_neighbors)
                 weiPPIneighbors{k}(i) = weiPPIneighbors{k}(i) + prop_kk_neighbors/kk;
                 expWeiPPIneighbors{k}(i) = expWeiPPIneighbors{k}(i) + prop_kk_neighbors/factorial(kk);
@@ -199,7 +199,7 @@ for i = 1:numGenesChar
     %-------------------------------------------------------------------------------
     % PPIN Distance:
     % What is the mean path length to genes on the disease list (mapped/LD)?:
-    isInContext = ismember(PPIN.geneNames,contextGenes);
+    isInContext = ismember(PPIN.geneNames,mappedGenes);
     allDistances = PPIN.distMatrix(PPI_index,isInContext);
     meanPPIDistance(i) = nanmean(allDistances);
     medianPPIDistance(i) = nanmedian(allDistances);

@@ -5,7 +5,7 @@ function geneStat = evaluate_allenCoexp(allTargetGenes,GWASgenes)
 % Look at the distribution of cortical coexpression each gene with the set of
 % matches from the list of context genes (e.g., GWAS hits)
 %-------------------------------------------------------------------------------
-numGenesChar = length(allTargetGenes);
+numTargetGenes = length(allTargetGenes);
 %-------------------------------------------------------------------------------
 % Load gene coexpression information from the Allen Human Brain Atlas (processed):
 %-------------------------------------------------------------------------------
@@ -20,13 +20,13 @@ fprintf(1,'%u/%u genes to be characterized successfully matched to Allen data\n'
 
 %-------------------------------------------------------------------------------
 % Loop over list of genes to characterize:
-zval = nan(numGenesChar,1);
-zval_abs = nan(numGenesChar,1);
-log10p_both = nan(numGenesChar,1);
-log10p_right = nan(numGenesChar,1);
-mean_r = nan(numGenesChar,1);
+zval = nan(numTargetGenes,1);
+zval_abs = nan(numTargetGenes,1);
+log10p_both = nan(numTargetGenes,1);
+log10p_right = nan(numTargetGenes,1);
+mean_r = nan(numTargetGenes,1);
 
-for i = 1:numGenesChar
+for i = 1:numTargetGenes
     gene_i = allTargetGenes{i};
 
     allenIndex = strcmp(AllenGeneInfo.GeneSymbol,gene_i);

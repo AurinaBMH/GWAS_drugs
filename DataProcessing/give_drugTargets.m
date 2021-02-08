@@ -1,6 +1,6 @@
 function dataTable = give_drugTargets(whatTargets, whatDatabase)
 if nargin < 1
-    whatTargets = 'active'; 
+    whatTargets = 'all'; 
 end
 if nargin < 2
     whatDatabase = 'drugbank'; 
