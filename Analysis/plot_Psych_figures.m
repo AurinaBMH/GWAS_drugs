@@ -55,7 +55,7 @@ print(gcf,figureName,'-dpng','-r300');
 
 % plot null distributions when choosing from all and from psychiatric
 % drugs: in this example: use PPI-significant results: BIP GWAS vs BIP drugs and DIABETES vs DIABETES drugs
-f = plot_nullDistributions(); 
+[f, Ptable_null] = plot_nullDistributions(); 
 figureName = 'figures/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
 
