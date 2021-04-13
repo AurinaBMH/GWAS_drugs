@@ -59,6 +59,7 @@ for i=1:numDiseases_GWAS
     xticks(1:numMeasures); 
     xticklabels(Mlabels(ix)); 
     xtickangle(90); 
+
     %ax{i}.XTick = 1:numMeasures;
     %ax{i}.XTickLabel = Mlabels(ix);
     %ax{i}.XTickLabelRotation = 45;

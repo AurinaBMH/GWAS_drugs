@@ -21,6 +21,12 @@ for tt=1:length(Mnames)
             Mlabels{tt} = 'eQTL Blood  ';
         elseif contains(Mnames{tt}, 'brain')
             Mlabels{tt} = 'eQTL Brain  ';
+        elseif contains(Mnames{tt}, 'Terminal')
+            Mlabels{tt} = 'eQTL SITI  ';
+        elseif contains(Mnames{tt}, 'Omentum')
+            Mlabels{tt} = 'eQTL AVO  ';
+        elseif contains(Mnames{tt}, 'Subcutaneous')
+            Mlabels{tt} = 'eQTL AS  ';
         else
             V = strsplit(Mnames{tt}, '.');
             Vnew = strrep(V{1,1}, 'eQTL', 'eQTL ');
