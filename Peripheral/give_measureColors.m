@@ -7,12 +7,12 @@ measureLabel = measureNames;
 colors = zeros(numMeasures, 3);
 for tt=1:numMeasures
     if contains(measureNames{tt}, 'PPI') && contains(measureNames{tt}, 'num')
-        colors(tt,:) = [31,120,180]; % dark blue
+        colors(tt,:) = [49,54,149]; % dark blue
         A = split(measureNames{tt}, '.'); 
         measureLabel{tt} = A{1};
         cluster(tt) = 6; 
     elseif contains(measureNames{tt}, 'PPI') && contains(measureNames{tt}, 'perc')
-        colors(tt,:) = [171,217,233]; % light blue
+        colors(tt,:) = [67,147,195]; % light blue
         A = split(measureNames{tt}, '.'); 
         measureLabel{tt} = A{1};
         cluster(tt) = 5; 
@@ -25,17 +25,17 @@ for tt=1:numMeasures
         end
         cluster(tt) = 4; 
     elseif contains(measureNames{tt}, 'eQTL')
-        colors(tt,:) = [178,223,138]; % light green
+        colors(tt,:) = [102,189,99]; % light green
         A = split(measureNames{tt}, '.'); 
         measureLabel{tt} = A{1};
         cluster(tt) = 3; 
     elseif contains(measureNames{tt}, 'default')
-        colors(tt,:) = [51,160,44]; % dark green
+        colors(tt,:) = [27,120,55]; % dark green
         A = split(measureNames{tt}, '.'); 
         measureLabel{tt} = A{1};
         cluster(tt) = 1; 
     elseif contains(measureNames{tt}, 'Combined')
-        colors(tt,:) = [178,24,43];
+        colors(tt,:) = [227,26,28];
         measureLabel{tt} = measureNames{tt}; 
         
     else % chromatin

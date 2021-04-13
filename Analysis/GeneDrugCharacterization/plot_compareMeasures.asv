@@ -36,7 +36,7 @@ measureNR = 1:length(measureLabels);
 for i=1:numDiseases_GWAS
     
     % plot separate figures; 
-    f = figure('color','w', 'Position', [300, 300, 1200, 650]);
+    f = figure('color','w', 'Position', [300, 300, 1200, 600]);
     
     % reorder bars by size
     [pPlot, ix] = sort(Ptable.(whatDiseases_GWAS{i}).Pvals, 'descend');
@@ -47,28 +47,25 @@ for i=1:numDiseases_GWAS
 %             %ax{i} = subplot(numDiseases_GWAS, 1, i);
 %     end
     %hold on;
-    pPlot_all(i,:) = pPlot; 
+
     %b = bar(pPlot);
-    hold on; 
-    stem(pPlot, 'Marker','none', 'LineStyle',':', 'Color',[.25 .25 .25], 'LineWidth',2)
-    
-    b = scatter(1:length(ix), pPlot, 500, colors(ix,:),...
-              'MarkerFaceColor',[1 1 1],...
-              'LineWidth',6); 
-    set(gcf, 'renderer', 'painters') 
+    b = scatter(1:length(ix), pPlot, 300,'M[.9 .9 .9],...
+              'MarkerFaceColor',colors(ix,:),...
+              'LineWidth',5); 
+    set(gcf, 'renderer', 'painters')
     xticks(1:numMeasures); 
     xticklabels(Mlabels(ix)); 
-    xtickangle(90); 
+    xtickangle(45); 
     %ax{i}.XTick = 1:numMeasures;
     %ax{i}.XTickLabel = Mlabels(ix);
     %ax{i}.XTickLabelRotation = 45;
     
- %   b.CData = colors(ix,:);
+    b.CData = colors(ix,:);
 %    b.FaceColor = 'flat';
 %    b.EdgeColor = [1 1 1]; 
     box off; 
     
-    set(gca,'FontSize', 25)
+    set(gca,'FontSize', 20)
     
     ylabel('-log10(P)')
     title(sprintf('%s', whatDiseases_GWAS{i}))
@@ -86,7 +83,6 @@ for i=1:numDiseases_GWAS
     print(f,figureName,'-dpng','-r300');
 end
 
-%figure; imagesc(pPlot_all); 
 %linkaxes([ax{:}],'y');
 
 end

@@ -23,27 +23,25 @@ for tt=1:length(Mnames)
             Mlabels{tt} = 'eQTL Brain  ';
         else
             V = strsplit(Mnames{tt}, '.');
-            Vnew = strrep(V{1,1}, 'eQTL', 'eQTL ');
-            Mlabels{tt} = strcat(Vnew, "  ");
+            Mlabels{tt} = strrep(V{1,1}, ' eQTL', 'eQTL  ');
         end
         
     elseif contains(Mnames{tt}, 'PPI') && contains(Mnames{tt}, 'mapped')
         
         V = strsplit(Mnames{tt}, '.');
         Vnew = strrep(V{1,1},'mapped','position');
-        Mlabels{tt} = strcat(Vnew, "  ");
+        Mlabels{tt} = strcat{Vnew;
         
     elseif contains(Mnames{tt}, 'PPI') && contains(Mnames{tt}, 'eQTL')
         
         V = strsplit(Mnames{tt}, '.');
-        Mlabels{tt} = strcat(V{1,1}, "  ");
-    elseif contains(Mnames{tt}, 'Combined')
-        Mlabels{tt} = strcat(Mnames{tt}, "  ");
+        Mlabels{tt} = V{1,1};
+    elseif contains(Mnames{tt}, 'Combined  ')
+        Mlabels{tt} = Mnames{tt}; 
         
     else
         V = strsplit(Mnames{tt}, '.');
-        Vnew = insertBefore(V{1,1}, V{1,1},"Chrom ");
-        Mlabels{tt} = strcat(Vnew, "  ");
+        Mlabels{tt} = insertBefore(V{1,1}, V{1,1},"Chrom");
         
     end
 end
