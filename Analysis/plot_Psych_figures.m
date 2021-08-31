@@ -39,8 +39,8 @@ for s=1:length(similarityTypes)
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
-    figureName = sprintf('figures/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
-    print(gcf,figureName,'-dpng','-r300');
+    %figureName = sprintf('figures/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    %print(gcf,figureName,'-dpng','-r300');
     
     
 end

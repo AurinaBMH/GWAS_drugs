@@ -21,16 +21,20 @@ for l=1:size(Pmatrix,1)
     [Pbar, ix] = sort(-log10(Pplot), 'descend'); 
 
     ax{l} = subplot(1,size(Pmatrix,1),l); hold on
-   
+    % line for BF corrected value, p=0.01
+    yline(-log10(0.01), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
+    % line for 0.05
+    yline(-log10(0.05), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
+    %cMapGeneric_n = brighten(cMapGeneric,0.1);
     %b = bar(Pbar);
-
-    for k=1:length(Pplot)
-        if Pplot(k)>0.05
-            cMapGeneric_n(k,:) = [235,235,235]/255; %brighten(cMapGeneric(k,:),0.95);
-        elseif Pplot(k)<=0.05 && Pplot(k)>=0.05/(length(Pplot))
-            cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.45);
-        end
-    end
+% don't change the color based on significance
+%     for k=1:length(Pplot)
+%         if Pplot(k)>0.05
+%             cMapGeneric_n(k,:) = [235,235,235]/255; %brighten(cMapGeneric(k,:),0.95);
+%         elseif Pplot(k)<=0.05 && Pplot(k)>=0.05/(length(Pplot))
+%             cMapGeneric_n(k,:) = brighten(cMapGeneric(k,:),0.45);
+%         end
+%     end
     
 %      ax{l}.XTick = 1:length(whatDiseases_Treatment_label);
 %      ax{l}.XTickLabel = whatDiseases_Treatment_label(ix);
@@ -42,9 +46,9 @@ for l=1:size(Pmatrix,1)
     hold on;
     stem(Pbar, 'Marker','none', 'LineStyle',':', 'Color',[.25 .25 .25], 'LineWidth',2)
     
-    b = scatter(1:length(ix), Pbar, 800, cMapGeneric_n(ix,:),...
+    b = scatter(1:length(ix), Pbar, 500, cMapGeneric_n(ix,:),...
         'MarkerFaceColor',[1 1 1],...
-        'LineWidth',8);
+        'LineWidth',6);
     set(gcf, 'renderer', 'painters')
     xticks(1:length(ix));
     xticklabels(whatDiseases_Treatment_label(ix));
