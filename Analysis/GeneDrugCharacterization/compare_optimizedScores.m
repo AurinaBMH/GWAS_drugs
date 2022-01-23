@@ -6,7 +6,7 @@ if nargin < 1
     whatDiseases_GWAS = params.whatGWAS;
 end
 if nargin < 2
-    whatMeasures = 'reduced'; % 'reduced' or 'all';
+    whatMeasures = 'all'; % 'reduced' or 'all';
 end
 
 if nargin < 3
@@ -42,7 +42,7 @@ for i = 1:numGWAS
     ypred = predict(mdl,geneWeightsGWAS_ALL);
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
-    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, whatNull);
+    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, geneWeightsGWAS_ALL, whatNull);
     if Pval_comb==0
         Pval_comb = 1/params.numNull;
     end

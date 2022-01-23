@@ -67,7 +67,7 @@ mdl = fitlm(geneWeightsGWAS_ALL_train,drugScores_train);
 yTest = predict(mdl,geneWeightsGWAS_ALL_test);
 yTestNorm = normalizeScoreVector(yTest, whatNorm);
 
-Pval_comb = compare_to_null(disorderTest, yTestNorm, drugScores_test, whatNull);
+Pval_comb = compare_to_null(disorderTest, yTestNorm, drugScores_test, geneWeightsGWAS_ALL_test, whatNull);
 if Pval_comb==0
     Pval_comb = 1/params.numNull;
 end
