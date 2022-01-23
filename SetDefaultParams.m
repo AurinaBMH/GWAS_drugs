@@ -62,4 +62,6 @@ params.whatANNOT_all = unique([params.whatANNOT_psych, params.whatANNOT_body]);
 
 params.whatANNOT_reduced = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'}; 
 
+params.whatANNOT_reduced5 = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain', 'Adult_brain'}; 
+
 end

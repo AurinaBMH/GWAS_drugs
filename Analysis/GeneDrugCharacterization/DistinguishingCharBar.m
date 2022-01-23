@@ -34,7 +34,7 @@ whatScore = params.whatScore;
 %-------------------------------------------------------------------------------
 
 switch whatMeasures
-    case {'allPsych', 'reduced'}
+    case {'allPsych', 'reduced', 'reduced5'}
 
         whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
         whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
@@ -47,7 +47,7 @@ switch whatMeasures
 
         whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_label_ALL; 
         whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_ALL; 
-        
+
 end
 
 if strcmp(whatNull, 'randomGene')
