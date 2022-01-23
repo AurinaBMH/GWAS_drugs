@@ -1,8 +1,8 @@
-WHEREISCODE='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/code/DataProcessing/HMAGMA'
-WHEREISGWAS='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/GWAS'
-WHEREISOUT='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/GWASgenes'
-WHEREIS1000G='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/g1000_eur'
-WHEREISANNOT='/Users/aurinaa/Google_drive/PostDoc/projects/GWASdrugs/data/GWASlists/HMAGMA'
+WHEREISCODE='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/code/DataProcessing/HMAGMA'
+WHEREISGWAS='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/GWAS'
+WHEREISOUT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/GWASgenes'
+WHEREIS1000G='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/g1000_eur'
+WHEREISANNOT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/HMAGMA'
 
 # MDD2 dataset: on Chr21 there are 61 SNPs that have only 12 instead of 19 fields. This is because only one cohort
 # contributed these SNPs. Remove 61 lines from 21 chromosome,if not removed, will break MAGMA
