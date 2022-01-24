@@ -29,10 +29,6 @@ for s=1:length(similarityTypes)
     
 end
 
-
-
-
-% does combinig scores improve matches?
 % does combinig scores improve matches?
 DOrecalc = false; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 

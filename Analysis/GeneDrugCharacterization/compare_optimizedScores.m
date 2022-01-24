@@ -6,7 +6,7 @@ if nargin < 1
     whatDiseases_GWAS = params.whatGWAS;
 end
 if nargin < 2
-    whatMeasures = 'all'; % 'reduced' or 'all';
+    whatMeasures = 'allPsych'; % 'reduced' or 'all';
 end
 
 if nargin < 3
@@ -18,7 +18,6 @@ whatNorm = params.whatNorm;
 
 numGWAS = length(whatDiseases_GWAS);
 
-% run lasso for each GWAS
 for i = 1:numGWAS
     
     whatGWAS = whatDiseases_GWAS{i};
@@ -42,7 +41,8 @@ for i = 1:numGWAS
     ypred = predict(mdl,geneWeightsGWAS_ALL);
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
-    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, geneWeightsGWAS_ALL, whatNull);
+    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, geneWeightsGWAS_ALL, whatNull, whatNorm);
+    
     if Pval_comb==0
         Pval_comb = 1/params.numNull;
     end

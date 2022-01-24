@@ -24,10 +24,6 @@ for k = 1:numNulls
         % Shuffle weights taken from each drug list individually
         nullScores(k) = ComputeDotProduct(drugScores_DIS,geneWeightGWAS, true);
         % randomise v1 within ComputeDotProduct
-%     elseif contains(whatNull, 'randomDrug')
-%         % for each disease get a random set of drugs that is the same size as
-%         drugScores_DISrand = RANDOMdrugs_treatment{l}(:,k);
-%         nullScores(k) = ComputeDotProduct(drugScores_DISrand,geneWeightGWAS);
     elseif contains(whatNull, 'randomDrug')
         % select null drug vector
         drugScores_DISrand = RANDOMdrugs_treatment{l}(:,k);
@@ -37,7 +33,7 @@ for k = 1:numNulls
         ypred = predict(mdl,geneWeightsGWAS_all);
         ypredNorm = normalizeScoreVector(ypred, whatNorm);
         
-        % get the score
+        % get the similarity score
         nullScores(k) = ComputeDotProduct(drugScores_DISrand,ypredNorm);
 
     end
