@@ -80,9 +80,20 @@ for i=1:numDiseases_GWAS
     %        xlabel('Measures')
     %    end
     %else
-        xlabel('Measures')
+    xlabel('Measures')
     %end
-    ylim([0 4]); 
+    ylim([0 4]);
+    % line for BF corrected value, p=0.01
+    if strcmp(whatMeasures, 'allPsych')
+        yline(-log10(0.05/27), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
+        % 27 measures for psych
+    elseif strcmp(whatMeasures, 'allBody')
+        yline(-log10(0.05/28), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
+        % 28 measures for body
+    end
+    % line for 0.05
+    yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
+    
     figureName = sprintf('figures/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
 end
