@@ -1,6 +1,6 @@
 % this function ranks each gene by its contribution to the matching between
 % GWAS and drug target
-function [Tp, Tdot] = rank_gene_contribution(whatGWAS, whatDrugs, similarityType, whatNull)
+function [Tp, Tdot, Tgwas] = rank_gene_contribution(whatGWAS, whatDrugs, similarityType, whatNull)
 
 if nargin < 4
     whatNull = 'randomDrugR_all_drugbank'; 
@@ -73,5 +73,10 @@ Tp.Pval = p_val(iP);
 Tdot = table; 
 Tdot.Gene = geneNames(iD); 
 Tdot.DotP = dotP(iD); 
+
+[~, iG] = sort(geneWeightsGWAS, 'descend', 'MissingPlacement','last'); 
+Tgwas = table; 
+Tgwas.Gene = geneNames(iD); 
+Tgwas.GWASscore = geneWeightsGWAS(iG);
 
 end
