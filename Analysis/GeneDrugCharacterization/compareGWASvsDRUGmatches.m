@@ -72,38 +72,37 @@ for s=1:length(similarityTypes)
 end
 
 ALLmeasures = horzcat(OTHERmeasures_names, PPImeasures_names);
-similarityTypes_label = strrep(similarityTypes(:),'_',' '); % remove _ for plotting
-
 measureNames = aggregate_names(diseaseResultsP, similarityTypes, ALLmeasures); 
 
-colors = cbrewer('seq', 'Reds', 64);
-
-figure; set(gcf,'color','w');
-set(gcf, 'Position', [500 500 750 750])
-
-imagesc(diseaseResultsR); axis('square')
-
-%colors = flipud(colors); % puts red on top, blue at the bottom
-colormap(colors);
-hold on;
-% plot p-values on top
-plot_matrixValues(diseaseResultsP)
-hold on;
-plot_matrixValues(diseaseResultsISbest)
-hold off
-
-
-yticks(1:length(similarityTypes));
-yticklabels(similarityTypes_label)
-
-xticks(1:PPInum+OTHERnum);
-xticklabels(ALLmeasures)
-
-xtickangle(45);
-box off
-
-title(sprintf('%s GWAS vs %s Drugs \n null=%s', whatDiseases_GWAS{1}, Dname, whatNull))
-colorbar
-caxis([0 0.4])
+% similarityTypes_label = strrep(similarityTypes(:),'_',' '); % remove _ for plotting
+% colors = cbrewer('seq', 'Reds', 64);
+% 
+% figure; set(gcf,'color','w');
+% set(gcf, 'Position', [500 500 750 750])
+% 
+% imagesc(diseaseResultsR); axis('square')
+% 
+% %colors = flipud(colors); % puts red on top, blue at the bottom
+% colormap(colors);
+% hold on;
+% % plot p-values on top
+% plot_matrixValues(diseaseResultsP)
+% hold on;
+% plot_matrixValues(diseaseResultsISbest)
+% hold off
+% 
+% 
+% yticks(1:length(similarityTypes));
+% yticklabels(similarityTypes_label)
+% 
+% xticks(1:PPInum+OTHERnum);
+% xticklabels(ALLmeasures)
+% 
+% xtickangle(45);
+% box off
+% 
+% title(sprintf('%s GWAS vs %s Drugs \n null=%s', whatDiseases_GWAS{1}, Dname, whatNull))
+% colorbar
+% caxis([0 0.4])
 
 end
