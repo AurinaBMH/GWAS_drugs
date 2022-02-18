@@ -76,7 +76,7 @@ Tdot.DotP = dotP(iD);
 
 [~, iG] = sort(geneWeightsGWAS, 'descend', 'MissingPlacement','last'); 
 Tgwas = table; 
-Tgwas.Gene = geneNames(iD); 
+Tgwas.Gene = geneNames(iG); 
 Tgwas.GWASscore = geneWeightsGWAS(iG);
 
 end

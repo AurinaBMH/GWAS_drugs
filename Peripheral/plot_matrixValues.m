@@ -17,7 +17,7 @@ else
     hStrings = text(x(:), y(:), textStrings(:), ...  % Plot the strings
         'HorizontalAlignment', 'center');
 end
-textColors = repmat(0.25,length(values(:)), 3);
+textColors = repmat(0.00,length(values(:)), 3);
 if isa(values,'double')
     diffCol = find(values(:) < 0.05);
     vals = ones(length(diffCol),3);

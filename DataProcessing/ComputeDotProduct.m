@@ -1,4 +1,4 @@
-function rho = ComputeDotProduct(v1,v2,doShuffle,minGoodProp,whatNorm)
+function [rho, v1, v2] = ComputeDotProduct(v1,v2,doShuffle,minGoodProp,whatNorm)
 % Compute the weighted sum of two vectors, v1 & v2
 if nargin < 3
     doShuffle = false;

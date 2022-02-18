@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, geneWeights_treatment, geneWeightsGWAS, nullScoresALL] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -98,6 +98,12 @@ for i = 1:numDiseases_GWAS
     [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug);
     geneWeightsGWAS = geneWeightsGWAS(ia);
     drugScores = drugScoresAll(ib,:);
+    
+    % save for enrichment
+    enrichment_score_GWAS.(whatDisease) = table(geneNames, geneWeightsGWAS); 
+    drugScores_save = array2table(drugScores); 
+    enrichment_score_drug = [geneNames, drugScores_save];
+    enrichment_score_drug.Properties.VariableNames = [{'geneName'}, whatDiseases_Treatment_ALL(:)']; 
     
     fprintf(1,'%u matching (/%u %s GWAS); (/%u with treatment weights)\n',...
         length(ia),length(geneWeightsGWAS),whatDisease,length(drugScores));

@@ -33,25 +33,37 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+    [rhosALL ,pValsALL, whatDiseases_Treatment, ~, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+    % save scores for enrichment
+    save(sprintf('enrichment/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
+    save(sprintf('enrichment/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
+    
+    
     % find corresponsing match
-    [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
+    [T_diabetes, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
     %figureName = sprintf('figures/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     %print(gcf,figureName,'-dpng','-r300');
+    % save scores for enrichment
     
     
 end
 
-f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
+f = plot_measureOverview(Pmatrix, T_diabetes, similarityTypes_label); 
 figureName = sprintf('figures/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
 % score genes by contribution: 
 [Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
 [Prank_bip, Drank_bip, Grank_bip] = rank_gene_contribution('BIP2', 'BIP', 'PPI_mapped_th600');
+
+T_diabetes = join(Drank_diabetes,Grank_diabetes);
+T_diabetes = sortrows(T_diabetes, 3, 'descend');
+
+T_bip = join(Drank_bip,Grank_bip);
+T_bip = sortrows(T_bip, 3, 'descend');
 
 % plot null distributions when choosing from all and from psychiatric
 % drugs: in this example: use PPI-significant results: BIP GWAS vs BIP drugs and DIABETES vs DIABETES drugs
@@ -72,10 +84,6 @@ end
 % does combinig scores improve matches?
 DOrecalc = false; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
-
-
-
-
 
 
 
