@@ -56,7 +56,7 @@ p_val = nan(numGenes,1);
 for g=1:numGenes
     
     dotP(g) = geneWeightsGWAS(g).*geneWeightsDRUG(g);
-    % if the mathch in real data is 0, it's not contributing
+    % if the match in real data is 0, it's not contributing
     if dotP(g)~=0 && ~isnan(dotP(g))
         % get pvalue for others
         dotP_null(g,:) = geneWeightsGWAS(g).*geneWeightsNull(g,:);
