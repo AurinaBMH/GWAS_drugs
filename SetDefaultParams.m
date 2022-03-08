@@ -35,7 +35,10 @@ params.whatTargets = 'all';
 params.numNull = 5000; 
 
 % keep only psychiatric drugs+ diabetes
-params.whatGWAS = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
+% for 2021 data
+params.whatGWAS_2021 = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
+% for 2022 data
+params.whatGWAS_2022 = {'ADHD2','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
 
 params.whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES'};
 params.whatDiseases_Treatment_label = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes'};
@@ -58,7 +61,11 @@ params.whatANNOT_body = {'MAGMAdefault', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHe
     'PPI_eQTLbrain_th0', 'PPI_eQTLbrain_th400', 'PPI_eQTLbrain_th600', 'PPI_eQTLbrain_th900', ...
     'PPI_mapped_th0', 'PPI_mapped_th400', 'PPI_mapped_th600', 'PPI_mapped_th900'};
 
-params.whatANNOT_all = unique([params.whatANNOT_psych, params.whatANNOT_body]); 
+params.whatANNOT_all = unique([params.whatANNOT_psych, params.whatANNOT_body]);
+
+params.whatANNOT_MAGMA = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
+    'eQTLbrain', 'eQTLWhole_Blood', 'eQTLLiver', 'eQTLHeart_Left_Ventricle', 'eQTLPancreas', ...
+    'eQTLSmall_Intestine_Terminal_Ileum', 'eQTLColon_Transverse' 'eQTLColon_Sigmoid', 'eQTLAdipose_Subcutaneous' 'eQTLAdipose_Visceral_Omentum'};
 
 params.whatANNOT_reduced = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'}; 
 
