@@ -4,9 +4,8 @@ WHEREISOUT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/G
 WHEREIS1000G='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/g1000_eur'
 WHEREISANNOT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists/HMAGMA'
 
-# DIABETES GWAS contains a line with a very low p-value, that is read as non-number;
-# it needed to be removed for MAGMA to run
-# line: 10 114758349 rs7903146 T C 0.291584512494863 0.3059 0.0077 1.33e-347 597475
+# SCZ3 GWAS contains a line with missing values, it needed to be removed for MAGMA to run
+# line: 21 rs148878475 9648204 C T 0.9878 0.9845 0.1375 7.5732 1.0014 0.0432 0
 
 # for DISORDER in 'ADHD' 'MDD2' 'SCZ' 'DIABETES' 'BIP2' 'HF' 'AD' 'AUT' 'IBD_Liu' 'BIP2011' 'RA' 'IBD_Lange' 'BIPandSCZ'
 for DISORDER in 'MDD3' 'ADHD2' 'SCZ3' 'BIP3' 'DIABETES' 'HF' 'RA' 'IBD'

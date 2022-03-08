@@ -4,8 +4,8 @@ function save_MAGMAHresults()
 %---------------------------------------------------------------------------
 
 params = SetDefaultParams();
-Disorders = params.whatGWAS; 
-whatANNOT = params.whatANNOT; 
+Disorders = params.whatGWAS_2022; 
+whatANNOT = params.whatANNOT_MAGMA; 
 
 % MAGMA: 'MAGMAdefault'
 % MAGMA-H: 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro',
@@ -31,7 +31,7 @@ DISORDERlist=struct;
 for D=1:length(Disorders)
     for A=1:length(whatANNOT)
 
-        fileName = sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes.txt', Disorders{D}, whatANNOT{A});
+        fileName = sprintf('data/GWASlists/GWASgenes_2022/pgc%s_%s_genes.txt', Disorders{D}, whatANNOT{A});
 
         %GTEx - based files have genes labeled with entrezIDs, other with stable IDs
         isGTEx = strcmp(whatANNOT{A}, 'eQTLWhole_Blood') || strcmp(whatANNOT{A}, 'eQTLLiver') || strcmp(whatANNOT{A}, 'eQTLHeart_Left_Ventricle') || ...
@@ -74,11 +74,11 @@ for D=1:length(Disorders)
         % there are also some cases where the same ENTREZis and same gene
         % name corresponds to several GENEIDs, if that's the case, keep one
 
-        writetable(mapLIST, sprintf('data/GWASlists/GWASgenes/pgc%s_%s_genes_entrezID.txt', ...
+        writetable(mapLIST, sprintf('data/GWASlists/GWASgenes_2022/pgc%s_%s_genes_entrezID.txt', ...
             Disorders{D}, whatANNOT{A}), 'Delimiter','\t');
     end
 end
 
-% save sigle file for future analyses
-save('DataOutput/GWAS_disordersMAGMA.mat', 'DISORDERlist')
+% save single file for future analyses
+save('DataOutput_2022/GWAS_disordersMAGMA.mat', 'DISORDERlist')
 end
