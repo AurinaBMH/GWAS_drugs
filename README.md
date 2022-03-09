@@ -2,8 +2,24 @@
 ## Workflow
 ### Data processing
 
-#### Set default parameters
-All default parameters to be used repeatedly are to be set in `SetDefaultParams`.
+#### Aggregate PPI-based information
+Information on the PPI data (file: 9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
+1. Replace protein IDs with gene names `make_PPI_linkfile()`; 
+2. Generate and save PPI files for each evidence threshold: 0,400,600,900 using the follwing commands:  
+```matlab
+% BINARY networks:
+PPIthrs = [0,400,600,900];
+for t=1:length(PPIthrs)   
+    % save PPI Adj and distance matrix
+    [AdjPPI,geneNames] = PPINImport(false,PPIthrs(t),'HGNCmatch');
+    distMatrix = ComputePPIDist(PPIthrs(t),false);  
+end
+% WEIGHTED network:
+[AdjPPI,geneNames] = PPINImport(true);
+```
+
+
+
 
 #### PPI network data processing using `PPINImport`
 Process PPI network data, save to processed sparse matrix.

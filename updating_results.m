@@ -1,7 +1,7 @@
 % --------------------------------------------
 % Aggregate PPI-based information
 % --------------------------------------------
-% 1. Information on the PPI data (9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
+% 1. Information on the PPI data (file: 9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
 % 2. Replace protein IDs with gene names - make_PPI_linkfile(); 
 % 3. Generate and save PPI files for each evidence threshold: 0,400,600,900 using the follwing commands;  
 % BINARY 
