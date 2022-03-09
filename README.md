@@ -89,3 +89,7 @@ GOtable = save_enrichment_results();
 ```
 
 ## Data Information
+GWAS summary statistics: 
+PPI network: 
+Treatments lists
+
