@@ -66,31 +66,31 @@ generate_randomDrug_nulls('drugbank')
 
 ### Analysis
 
-#### Reproduce results presented in the manuscript: 
+#### :scroll: Reproduce results presented in the manuscript: 
 
-1. For psychiatric disorders and diabetes (Figure 2, Figure 3, Figure S1, Figure S2, Figure S4) generate figures using: 
+For psychiatric disorders and diabetes (Figure 2, Figure 3, Figure S1, Figure S2, Figure S4) generate figures using: 
 ```matlab
 plot_Psych_figures
 ```
 
-2. For non-psychiatric disorders (Figure S3): 
+For non-psychiatric disorders (Figure S3): 
 ```matlab
 plot_Body_figures
 ```
 
-3. Save gene scores for enrichment analysis: 
+Save gene scores for enrichment analysis: 
 ```matlab
 save_enrichment_scores()
 ```
 
-4. Run the enrichment analysis using ermineJ software and aggregate results using: 
+Run the enrichment analysis using ermineJ software and aggregate results using: 
 ```matlab
 GOtable = save_enrichment_results(); 
 ```
 
 ## Data Information
 
-#### GWAS summary statistics: 
+#### :dna: GWAS summary statistics: 
 1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2019)'](https://doi.org/10.1038/s41588-018-0269-7)
 2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
 3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
@@ -101,12 +101,12 @@ GOtable = save_enrichment_results();
 8. Rheumatoid arthritis GWAS summary statistics based on [:green_book: 'Okada et al (2013)'](https://doi.org/10.1038/nature12873)
 
 
-#### PPI network data
+#### :books: PPI network data
 
-`9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'] (https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
+`9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
 
-#### Treatments lists
-Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'] (www.drugbank.ca), accessed on September 3, 2020. 
+#### :pill: Treatments lists
+Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020. 
 Specifically, drugs for each indication were searched in the DrugBank database using the following search terms: 
 1. "attention deficit" (for ADHD);
 2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
