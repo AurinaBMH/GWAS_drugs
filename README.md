@@ -37,7 +37,7 @@ save_MAGMAHresults()
 ```matlab
 GenerateResultsTables()
 ```
-This will create `geneScores` structure for each disorder. This step takes several hours to run. 
+This will create `geneScores` structure for each disorder (takes several hours to run). 
 
 #### Aggregate drug target information
 
