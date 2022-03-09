@@ -12,8 +12,8 @@ Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found 
 PPIthrs = [0,400,600,900];
 for t=1:length(PPIthrs)   
     % save PPI Adj and distance matrix
-    [AdjPPI,geneNames] = PPINImport(false,PPIthrs(t),'HGNCmatch');
-    distMatrix = ComputePPIDist(PPIthrs(t),false);  
+    [AdjPPI,geneNames] = PPINImport(false, PPIthrs(t), 'HGNCmatch');
+    distMatrix = ComputePPIDist(PPIthrs(t), false);  
 end
 % WEIGHTED network:
 [AdjPPI,geneNames] = PPINImport(true);
