@@ -12,7 +12,7 @@ Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory. 
 
-#### Aggregate PPI-based information
+#### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
 1. Replace protein IDs with gene names using `make_PPI_linkfile()`; 
 2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900: 
@@ -29,7 +29,7 @@ end
 ```
 These commands will save `PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_geneLabels_th0.mat` files.   
 
-#### Aggregate GWAS-based information
+#### :label: Aggregate GWAS-based information
 
 1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2022.sh`. 
 First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2022.sh` to indicate the location of code, .annot files and reference genome. 
@@ -48,7 +48,7 @@ GenerateResultsTables()
 ```
 This will create `geneScores` structure for each disorder (takes several hours to run). 
 
-#### Aggregate drug target information
+#### :label: Aggregate drug target information
 
 1. Combine drug target information from `.txt` files into matlab format
 ```matlab
