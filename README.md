@@ -102,8 +102,8 @@ For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Fi
 plot_Psych_figures()
 ```
 
-![](figs/compareMeasures_BIP3_allPsych.png)
-![](figs/compareMeasures_ADHD2_allPsych.png)
+![](plots/compareMeasures_BIP3_allPsych.png)
+![](plots/compareMeasures_ADHD2_allPsych.png)
 
 For non-psychiatric disorders (`Figure S3`): 
 ```matlab
