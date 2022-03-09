@@ -1,9 +1,14 @@
 % extract enrichment results
-disorders = {'ADHD', 'BIP', 'MDD', 'SCZ'}; 
-measureType = 'PPI'; 
+function GOtable = save_enrichment_results(measureType)
+if nargin <1
+    measureType = 'PPI';
+end
+
+disorders = {'ADHD', 'BIP', 'MDD', 'SCZ'};
 
 for d=1:length(disorders)
     
-GOtableCON = makeEnrichmentResultTable(disorders{d}, measureType); 
-
+    GOtable.(disorders{d}) = makeEnrichmentResultTable(disorders{d}, measureType);
+    
+end
 end

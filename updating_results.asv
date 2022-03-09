@@ -1,7 +1,7 @@
 % --------------------------------------------
 % Aggregate PPI-based information
 % --------------------------------------------
-% 1. Information on the PPI data (file: 9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
+% 1. Information on the PPI data (9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
 % 2. Replace protein IDs with gene names - make_PPI_linkfile(); 
 % 3. Generate and save PPI files for each evidence threshold: 0,400,600,900 using the follwing commands;  
 % BINARY 
@@ -13,8 +13,7 @@
 % end
 % WEIGHTED
 % [AdjPPI,geneNames] = PPINImport(true);
-% this will save
-% PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_geneLabels_th0.mat files; 
+% this will save PPI_HGNC_Adj_th0.mat/
  
 % --------------------------------------------
 % Aggregating GWAS-based information
@@ -51,7 +50,3 @@
 % --------------------------------------------
 % Generate figures using: plot_Psych_figures.m
 % For non-psychiatric disorders: plot_Body_figures.m
-% save gene scores for enrichment analysis: save_enrichment_scores(); 
-
-% run enrichment analysis and aggregae results: 
-% GOtable = save_enrichment_results(); 

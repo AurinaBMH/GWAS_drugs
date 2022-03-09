@@ -84,8 +84,8 @@ f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc);
 % Figure S2: Correlation between GWAS-based scores for different data processing methods
 %-------------------------------------------------------
 Mnames = cell(numGWAS,1); 
-Mnumbers = cell(numGWAS,1); 
-
+Mnumbers
+% plot correlation between different measures for one representative disorder
 for i=1:numGWAS
 
     [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
@@ -97,11 +97,14 @@ end
 %-------------------------------------------------------
 % Figure S4: different null distributions for bipolar disorder and diabetes
 %-------------------------------------------------------
-% Plot null distributions when choosing from all and from psychiatric drugs: 
-% in this example PPI-based significant results are used: bipolar disorder and diabetes; 
+% plot null distributions when choosing from all and from psychiatric drugs: 
+% in this example PPI-based significant results are used: bipolar disorder
+% and diabetes; 
 [f, Ptable_null] = plot_nullDistributions(); 
 figureName = 'figures_2022/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
+
+
 
 
 %% don't plot these - will say in words, it's a null result

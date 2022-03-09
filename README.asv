@@ -42,41 +42,42 @@ This will create `geneScores` structure for each disorder. This step takes sever
 #### Aggregate drug target information
 
 1. Combine drug target information from `.txt` files into matlab format
-```matlab
-dataTable = give_drugTargets('all', 'drugbank'); 
-```
-This will save `drugTargets_2020_all_drugbank.mat` file; 
+% dataTable = give_drugTargets('all', 'drugbank')
 
-2. Generate 5000 drug-based null vectors for each disorder. 
-For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2155 genes;   
-For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected. 
-```matlab
-generate_randomDrug_nulls('drugbank')
-```
-
+% 2. Generate nulls for each disorder - 5000 drug-based vectors selecting X number of random drugs (X is the number of drugs used for that disorder. 
+% E.g. there are 14 drugs for ADHD, 22 for BIP and 45 for diabetes 
+% generate_randomDrug_nulls('drugbank')
 
 ### Analysis
 
-#### Reproduce results presented in the manuscript: 
+#### Compute SNP annotation details
 
-1. For psychiatric disorders and diabetes (Figure 2, Figure 3, Figure S1, Figure S2, Figure S4) generate figures using: 
+Reads in information about SNPs from GWAS hits, computes LD neighbor information
+from a mySQL database, saves output to `SNPAnnotationTable_X` for a given LD threshold X:
 ```matlab
-plot_Psych_figures
+SNPAnnotationProcessing;
 ```
 
-2. For non-psychiatric disorders (Figure S3): 
+#### Characterize drugs used for each disorder with respect to GWAS hits
+Run:
 ```matlab
-plot_Body_figures
+GenerateResultsTables
 ```
+Saves `resultsTable_X.mat` for each disorder, X.
+These `.mat` files contain a structure with diverse information about how each
+drug-target gene relates to the set of GWAS hits for a given disorder X.
 
-3. Save gene scores for enrichment analysis: 
+### Visualization
+#### `DistinguishingCharBar`
+Allows visualization of how a set of drug-target genes relates to GWAS hits for a given disorder.
+For example, this looks at how percentage of direct PPI neighbors matches onto GWAS hits for a given disorder:
 ```matlab
-save_enrichment_scores()
-```
-
-4. Run the enrichment analysis using ermineJ software and aggregate results using: 
-```matlab
-GOtable = save_enrichment_results(); 
+DistinguishingCharBar('PPI_mapped_th0_percNeigh1')
 ```
 
 ## Data Information
+`eQTL_protein_names.csv` contains protein nodes for the entire PPI network.
+
+`eQTL_edges.csv` contains all interactions formed by the nodes. For a given interaction, i code whether the nodes are from first degree partner of disease genes (binary with 1 denoting first degree partner, 0 for disease gene), and which disease is the disease gene from.
+
+`eQTL_identifier.csv` contains which disease is the protein from, the association type (LD or GWAS relationship) with the disease, whether it is a first degree interaction partner or not.
