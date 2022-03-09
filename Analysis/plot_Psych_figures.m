@@ -40,7 +40,7 @@ for s=1:length(similarityTypes)
     
     
     % find corresponsing match
-    [T_diabetes, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
+    [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
@@ -51,19 +51,21 @@ for s=1:length(similarityTypes)
     
 end
 
-f = plot_measureOverview(Pmatrix, T_diabetes, similarityTypes_label); 
+f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
 figureName = sprintf('figures_2022/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
 % score genes by contribution: 
 [Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
-[Prank_bip, Drank_bip, Grank_bip] = rank_gene_contribution('BIP2', 'BIP', 'PPI_mapped_th600');
+[Prank_bip, Drank_bip, Grank_bip] = rank_gene_contribution('BIP3', 'BIP', 'PPI_mapped_th600');
 
-T_diabetes = join(Drank_diabetes,Grank_diabetes);
-T_diabetes = sortrows(T_diabetes, 3, 'descend');
+% these are genes that more significantly contribute to the match between
+% GWAS and drugs compared to random; Prank_diabetes, Prank_bip; 
+T_diabetes = join(Prank_diabetes, Drank_diabetes);
+T_diabetes = sortrows(T_diabetes, 2, 'ascend');
 
-T_bip = join(Drank_bip,Grank_bip);
-T_bip = sortrows(T_bip, 3, 'descend');
+T_bip = join(Prank_bip, Drank_bip);
+T_bip = sortrows(T_bip, 2, 'ascend');
 
 % plot null distributions when choosing from all and from psychiatric
 % drugs: in this example: use PPI-significant results: BIP GWAS vs BIP drugs and DIABETES vs DIABETES drugs
@@ -82,7 +84,7 @@ for i=1:numGWAS
 end
 
 % does combinig scores improve matches?
-DOrecalc = true; 
+DOrecalc = false; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 
