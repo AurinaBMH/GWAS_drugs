@@ -36,7 +36,7 @@ switch whatDrugTargets
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
 
-        fileName = sprintf('DataOutput/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
 
         load(fileName, 'dataTable');
 end

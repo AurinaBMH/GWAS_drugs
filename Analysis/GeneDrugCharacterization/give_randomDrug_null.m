@@ -19,8 +19,7 @@ numDrugs = size(disorderDrugs.(diseaseName),1);
 switch whatSelection
     case {'random', 'drugbank'}
         % random selection was used initially; drugbank uses all drugs from
-        % drugbank, but does not does not specify drug - to - disease
-        % pairs; 
+        % drugbank, but does not specify drug - to - disease pairs; 
         % now select the same number of drugs at random from the list without replacement
         INDrand = datasample(1:size(allDrugs,1), numDrugs,'Replace',false);
     case 'proportional'

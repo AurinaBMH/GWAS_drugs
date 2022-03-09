@@ -104,7 +104,7 @@ end
 % active is default - will not have a not in the name, all will have a flag
 % in the file name
 
-fileName = sprintf('DataOutput/drugTargets_2020_%s_%s.mat', whatTargets, whatDatabase);
+fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_%s.mat', whatTargets, whatDatabase);
 
         
 save(fileName, 'dataTable'); 

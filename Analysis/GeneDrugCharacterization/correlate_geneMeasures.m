@@ -12,7 +12,7 @@ if nargin<3
 end
 
 % load data
-fileName = sprintf('resultsTable_%s_BF_2020_all_drugbank.mat', disorder);
+fileName = sprintf('DataOutput_2022/resultsTable_%s_BF_2020_all_drugbank.mat', disorder);
 load(fileName, 'geneScores');
 
 % get all measures

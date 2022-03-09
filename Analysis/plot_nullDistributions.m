@@ -10,13 +10,13 @@ colLine = [252,78,42]/255;
 typesNull = {'randomDrugR_all_drugbank','randomDrugP_all_drugbank_psych'}; 
 for t=1:length(typesNull)
 % for BIP
-whatDiseases_GWAS = {'BIP2'}; 
-[BIP_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, BIP_null{t}] = ...
+whatDiseases_GWAS = {'BIP3'}; 
+[BIP_rhosALL{t} ,~, whatDiseases_Treatment, BIP_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 
 % for DIABETES
 whatDiseases_GWAS = {'DIABETES'}; 
-[DIABETES_rhosALL{t} ,~, whatDiseases_Treatment, ~, ~, DIABETES_null{t}] = ...
+[DIABETES_rhosALL{t} ,~, whatDiseases_Treatment, DIABETES_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 end
 

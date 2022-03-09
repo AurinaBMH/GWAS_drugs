@@ -4,7 +4,7 @@ clear all; close all;
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'ADHD', 'MDD2','SCZ','BIP2','DIABETES'};
+whatDiseases_GWAS = {'ADHD2', 'MDD3','SCZ3','BIP3','DIABETES'};
 numDrugs = length(params.whatDiseases_Treatment); 
 whatMeasures = 'allPsych';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
@@ -35,8 +35,8 @@ for s=1:length(similarityTypes)
     
     [rhosALL ,pValsALL, whatDiseases_Treatment, ~, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % save scores for enrichment
-    save(sprintf('enrichment/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
-    save(sprintf('enrichment/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
+    save(sprintf('enrichment_2022/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
+    save(sprintf('enrichment_2022/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
     
     
     % find corresponsing match
@@ -44,15 +44,15 @@ for s=1:length(similarityTypes)
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
-    %figureName = sprintf('figures/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
-    %print(gcf,figureName,'-dpng','-r300');
+    figureName = sprintf('figures_2022/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    print(gcf,figureName,'-dpng','-r300');
     % save scores for enrichment
     
     
 end
 
 f = plot_measureOverview(Pmatrix, T_diabetes, similarityTypes_label); 
-figureName = sprintf('figures/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
+figureName = sprintf('figures_2022/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
 % score genes by contribution: 
@@ -68,7 +68,7 @@ T_bip = sortrows(T_bip, 3, 'descend');
 % plot null distributions when choosing from all and from psychiatric
 % drugs: in this example: use PPI-significant results: BIP GWAS vs BIP drugs and DIABETES vs DIABETES drugs
 [f, Ptable_null] = plot_nullDistributions(); 
-figureName = 'figures/Null_distribution_comparison';
+figureName = 'figures_2022/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
 
 
@@ -76,13 +76,13 @@ print(f,figureName,'-dpng','-r300');
 for i=1:numGWAS
 
     [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
-    figureName = sprintf('figures/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
+    figureName = sprintf('figures_2022/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
     
 end
 
 % does combinig scores improve matches?
-DOrecalc = false; 
+DOrecalc = true; 
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 

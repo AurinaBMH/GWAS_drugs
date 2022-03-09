@@ -10,7 +10,7 @@ end
 
 if recalc
     [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, whatNull);
-    fileName = sprintf('DataOutput/Ptable_%s.mat', whatMeasures); 
+    fileName = sprintf('DataOutput_2022/Ptable_%s.mat', whatMeasures); 
     save(fileName, 'Ptable', 'measureNames'); 
 else
     load(sprintf('Ptable_%s.mat', whatMeasures))
@@ -94,7 +94,7 @@ for i=1:numDiseases_GWAS
     % line for 0.05
     yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
     
-    figureName = sprintf('figures/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
+    figureName = sprintf('figures_2022/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
 end
 

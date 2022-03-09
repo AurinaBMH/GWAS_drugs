@@ -40,7 +40,7 @@ case 'Drug'
     geneWeights = indicatorTable.(whatDisease);
 case 'GWAS'
     % Load data:
-    fileName = sprintf('resultsTable_%s_%s_%s_%s_drugbank.mat',whatDisease, whatThreshold, params.whatDrugTargets, params.whatTargets);
+    fileName = sprintf('DataOutput_2022/resultsTable_%s_%s_%s_%s_drugbank.mat',whatDisease, whatThreshold, params.whatDrugTargets, params.whatTargets);
     load(fileName,'geneScores');
     fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
     geneNames = geneScores.gene;

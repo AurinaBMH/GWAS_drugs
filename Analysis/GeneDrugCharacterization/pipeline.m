@@ -11,7 +11,7 @@ mappingMethods = fieldnames(DISORDERlist);
 %-------------------------------------------------------------------------------
 if nargin < 1
     % GWAS hits from which disease?: 'all','SZP','ASD','ADHD','BIP','MDD'
-    whatDisease = 'MDD2';
+    whatDisease = 'MDD3';
 end
 
 %-------------------------------------------------------------------------------
