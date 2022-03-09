@@ -1,4 +1,22 @@
 % --------------------------------------------
+% Aggregate PPI-based information
+% --------------------------------------------
+% 1. Information on the PPI data (9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
+% 2. Replace protein IDs with gene names - make_PPI_linkfile(); 
+% 3. Generate and save PPI files for each evidence threshold: 0,400,600,900 using the follwing commands;  
+% BINARY 
+% PPIthrs = [0,400,600,900];
+% for t=1:length(PPIthrs)   
+    % save PPI Adj and distance matrix
+    %[AdjPPI,geneNames] = PPINImport(false,PPIthrs(t),'HGNCmatch');
+    %distMatrix = ComputePPIDist(PPIthrs(t),false);  
+% end
+% WEIGHTED
+% [AdjPPI,geneNames] = PPINImport(true);
+% this will save
+% PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_geneLabels_th0.mat files; 
+ 
+% --------------------------------------------
 % Aggregating GWAS-based information
 % --------------------------------------------
 % updating data using new GWAS for MDD, BIP and SCZ
@@ -9,7 +27,9 @@
 % 2.0 update default disorder abbreviations and paths for MAGMA outputs in
 % SetDefaultParams(); 
 
-% 2.1 update gene IDs for MAGMA outputs and collate all results into a
+% 2.1 get gene name to entrezID mapping (saved in BIOMART_geneIDs.txt) using code/DataProcessing/HMAGMA/get_BIOMARTdata.R; 
+
+% 2.2 update gene IDs for MAGMA outputs and collate all results into a
 % single .mat file using save_MAGMAHresults() function; 
 
 % 3.1 creating results tables for each disorder using
@@ -22,7 +42,8 @@
 % 1. Combine drug target information from .txt files into matlab format
 % dataTable = give_drugTargets('all', 'drugbank')
 
-% 2. Generate nulls for each disorder - 5000 drug-based vectors selecting X number of random drugs: 
+% 2. Generate nulls for each disorder - 5000 drug-based vectors selecting X number of random drugs (X is the number of drugs used for that disorder. 
+% E.g. there are 14 drugs for ADHD, 22 for BIP and 45 for diabetes 
 % generate_randomDrug_nulls('drugbank')
 
 % --------------------------------------------
@@ -30,3 +51,4 @@
 % --------------------------------------------
 % Generate figures using: plot_Psych_figures.m
 % For non-psychiatric disorders: plot_Body_figures.m
+% save gene scores for enrichment analysis: save_enrichment_scores(); 

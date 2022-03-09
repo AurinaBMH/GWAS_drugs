@@ -23,8 +23,6 @@ fileNameSave = PPIFileNames(doWeighted,evidenceThreshold,whatInput);
 % Read in PPI data:
 switch whatInput
     case 'HGNCmatch'
-        % Latest matching to HGNC genes by Janette (July 2018):
-        % fileName = 'PPI_conversionToGenes.csv';
         % File generated based on 9606.protein.links.v11.0.txt (June 2020), gene names extracted from biomart using 
         % make_PPI_linkfile.m
         fileName = 'PPIlinks_v11.0.txt'; 
