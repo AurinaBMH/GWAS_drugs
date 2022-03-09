@@ -68,14 +68,14 @@ generate_randomDrug_nulls('drugbank')
 
 #### :scroll: Reproduce results presented in the manuscript: 
 
-For psychiatric disorders and diabetes (Figure 2, Figure 3, Figure S1, Figure S2, Figure S4) generate figures using: 
+For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Figure S2`, `Figure S4`) generate figures using: 
 ```matlab
-plot_Psych_figures
+plot_Psych_figures()
 ```
 
-For non-psychiatric disorders (Figure S3): 
+For non-psychiatric disorders (`Figure S3`): 
 ```matlab
-plot_Body_figures
+plot_Body_figures()
 ```
 
 Save gene scores for enrichment analysis: 
@@ -85,7 +85,7 @@ save_enrichment_scores()
 
 Run the enrichment analysis using ermineJ software and aggregate results using: 
 ```matlab
-GOtable = save_enrichment_results(); 
+save_enrichment_results(); 
 ```
 
 ## Data Information

@@ -1,5 +1,5 @@
 % Generating results for psychiatric disorders:
-clear all; close all; 
+function plot_Psych_figures()
 %-------------------------------------------------------
 % Set the options
 %-------------------------------------------------------
@@ -49,7 +49,7 @@ for s=1:length(similarityTypes)
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
-    figureName = sprintf('figures_2022/BarChart_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    figureName = sprintf('figures_2022/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
 
     
@@ -103,7 +103,7 @@ end
 figureName = 'figures_2022/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
 
-
+end
 %% don't plot these - will say in words, it's a null result
 % f = figure('color','w', 'Position', [300, 300, 1500, 400]); 
 % % choose more diverging colours
