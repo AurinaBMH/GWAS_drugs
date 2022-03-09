@@ -1,4 +1,13 @@
 
+This repository provides Matlab, R and MAGMA code for reproducing results presented in the manuscript entitled: 
+
+- Arnatkeviciute et al. (2022) [:green_book: 'Linking GWAS to pharmacological treatments for psychiatric disorders'](DOI).
+
+The code was written using MATLAB_R2020b. 
+
+Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
+
+
 ## Workflow
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory. 
