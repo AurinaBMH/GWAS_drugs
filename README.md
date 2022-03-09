@@ -8,6 +8,35 @@ The code was written using MATLAB_R2020b.
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 
+## Data Information
+
+#### :dna: GWAS summary statistics: 
+1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2019)'](https://doi.org/10.1038/s41588-018-0269-7)
+2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
+3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
+4. Schizophrenia GWAS summary statistics based on [:green_book: 'The Schizophrenia Working Group of the Psychiatric Genomics Consortium et al (2020)'](https://doi.org/10.1101/2020.09.12.20192922)
+5. Diabetes GWAS summary statistics based on [:green_book: 'Xue et al (2018)'](https://doi.org/10.1038/s41467-018-04951-w)
+6. Heart failure GWAS summary statistics based on [:green_book: 'Shah et al (2021)'](https://doi.org/10.1038/s41467-019-13690-5)
+7. Inflammatory bowel disease GWAS summary statistics based on [:green_book: 'Lange et al (2017)'](https://doi.org/10.1038/ng.3760)
+8. Rheumatoid arthritis GWAS summary statistics based on [:green_book: 'Okada et al (2013)'](https://doi.org/10.1038/nature12873)
+
+
+#### :books: PPI network data
+
+`9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
+
+#### :pill: Treatments lists
+Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020. 
+Specifically, drugs for each indication were searched in the DrugBank database using the following search terms: 
+1. "attention deficit" (for ADHD);
+2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
+3. "schizophrenia" (for schizophrenia); 
+4. "major depression" (for major depression); - confirm this term!!! 
+5. "diabetes" (for type 2 diabetes) excluding "type I diabetes" and "diabetes insipidus"; 
+6. "heart failure" (for heart failure); 
+7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and 
+8. "rheumatoid arthritis" (for rheumatoid arthritis).
+
 ## Workflow
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory. 
@@ -73,6 +102,9 @@ For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Fi
 plot_Psych_figures()
 ```
 
+![](figs/compareMeasures_BIP3_allPsych.png)
+![](figs/compareMeasures_ADHD2_allPsych.png)
+
 For non-psychiatric disorders (`Figure S3`): 
 ```matlab
 plot_Body_figures()
@@ -87,32 +119,3 @@ Run the enrichment analysis using ermineJ software and aggregate results using:
 ```matlab
 save_enrichment_results(); 
 ```
-
-## Data Information
-
-#### :dna: GWAS summary statistics: 
-1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2019)'](https://doi.org/10.1038/s41588-018-0269-7)
-2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
-3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
-4. Schizophrenia GWAS summary statistics based on [:green_book: 'The Schizophrenia Working Group of the Psychiatric Genomics Consortium et al (2020)'](https://doi.org/10.1101/2020.09.12.20192922)
-5. Diabetes GWAS summary statistics based on [:green_book: 'Xue et al (2018)'](https://doi.org/10.1038/s41467-018-04951-w)
-6. Heart failure GWAS summary statistics based on [:green_book: 'Shah et al (2021)'](https://doi.org/10.1038/s41467-019-13690-5)
-7. Inflammatory bowel disease GWAS summary statistics based on [:green_book: 'Lange et al (2017)'](https://doi.org/10.1038/ng.3760)
-8. Rheumatoid arthritis GWAS summary statistics based on [:green_book: 'Okada et al (2013)'](https://doi.org/10.1038/nature12873)
-
-
-#### :books: PPI network data
-
-`9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
-
-#### :pill: Treatments lists
-Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020. 
-Specifically, drugs for each indication were searched in the DrugBank database using the following search terms: 
-1. "attention deficit" (for ADHD);
-2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
-3. "schizophrenia" (for schizophrenia); 
-4. "major depression" (for major depression); - confirm this term!!! 
-5. "diabetes" (for type 2 diabetes) excluding "type I diabetes" and "diabetes insipidus"; 
-6. "heart failure" (for heart failure); 
-7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and 
-8. "rheumatoid arthritis" (for rheumatoid arthritis).
