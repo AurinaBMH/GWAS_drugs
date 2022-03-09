@@ -3,8 +3,8 @@
 ### Data processing
 
 #### Aggregate PPI-based information
-Information on the PPI data (file: 9606.protein.links.v11.0.txt) can be found in rawData/README_PPI.txt
-1. Replace protein IDs with gene names `make_PPI_linkfile()`; 
+Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
+1. Replace protein IDs with gene names using `make_PPI_linkfile()`; 
 2. Generate and save PPI files for each evidence threshold: 0,400,600,900 using the follwing commands:  
 ```matlab
 % BINARY networks:
