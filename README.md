@@ -5,7 +5,7 @@ This repository provides Matlab, R and MAGMA code for reproducing results presen
 
 The code was written using MATLAB_R2020b. 
 
-Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
+:envelope: Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 
 ## Data Information
