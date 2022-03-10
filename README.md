@@ -5,7 +5,7 @@ This repository provides Matlab, R and MAGMA code for reproducing results presen
 
 The code was written using MATLAB_R2020b. 
 
-Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
+:envelope: Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 
 ## Data Information
@@ -101,14 +101,43 @@ For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Fi
 ```matlab
 plot_Psych_figures()
 ```
+`Figure 2` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder. 
+![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank.png)
 
-![](plots/compareMeasures_BIP3_allPsych.png)
+`Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods. 
 ![](plots/compareMeasures_ADHD2_allPsych.png)
+![](plots/compareMeasures_MDD3_allPsych.png)
+![](plots/compareMeasures_SCZ3_allPsych.png)
+![](plots/compareMeasures_BIP3_allPsych.png)
+![](plots/compareMeasures_DIABETES_allPsych.png)
+
+`Figure S1` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
+![](plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank.png)
+![](plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank.png)
+![](plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank.png)
+![](plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank.png)
+
+`Figure S2` - Correlation between mapping methods.
+![](plots/ADHD2_geneMeasures_allPsych.png)
+![](plots/MDD3_geneMeasures_allPsych.png)
+![](plots/SCZ3_geneMeasures_allPsych.png)
+![](plots/BIP3_geneMeasures_allPsych.png)
+![](plots/DIABETES_geneMeasures_allPsych.png)
+
+`Figure S4` - The comparison of different null models for significance testing. 
+![](plots/Null_distribution_comparison.png)
+
 
 For non-psychiatric disorders (`Figure S3`): 
 ```matlab
 plot_Body_figures()
 ```
+`Figure S3` - The correspondence between treatment targets and genes implicated in a GWAS for non-psychiatric disorders across different mapping methods.
+![](plots/compareMeasures_HF_allBody.png)
+![](plots/compareMeasures_RA_allBody.png)
+![](plots/compareMeasures_IBD_allBody.png)
+![](plots/compareMeasures_DIABETES_allBody.png)
+
 
 Save gene scores for enrichment analysis: 
 ```matlab
