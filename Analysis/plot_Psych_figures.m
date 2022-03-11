@@ -6,7 +6,7 @@ function plot_Psych_figures()
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'ADHD2', 'MDD3','SCZ3','BIP3','DIABETES'};
+whatDiseases_GWAS = {'ADHD3', 'MDD3','SCZ3','BIP3','DIABETES'};
 numDrugs = length(params.whatDiseases_Treatment); 
 whatMeasures = 'allPsych';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
@@ -77,7 +77,7 @@ T_bip = sortrows(T_bip, 2, 'ascend');
 %-------------------------------------------------------
 % Figure 3: Correspondence across different data processing methods
 %-------------------------------------------------------
-DOrecalc = false; 
+DOrecalc = false; % select true if any data was updated since the last run
 f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 %-------------------------------------------------------

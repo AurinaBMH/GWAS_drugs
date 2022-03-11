@@ -8,10 +8,13 @@ WHEREISANNOT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists
 # line: 21 rs148878475 9648204 C T 0.9878 0.9845 0.1375 7.5732 1.0014 0.0432 0
 
 # for DISORDER in 'ADHD' 'MDD2' 'SCZ' 'DIABETES' 'BIP2' 'HF' 'AD' 'AUT' 'IBD_Liu' 'BIP2011' 'RA' 'IBD_Lange' 'BIPandSCZ'
-for DISORDER in 'MDD3' 'ADHD2' 'SCZ3' 'BIP3' 'DIABETES' 'HF' 'RA' 'IBD'
+# 'MDD3' 'ADHD2' 'SCZ3' 'BIP3' 'DIABETES' 'HF' 'RA' 'IBD'
+
+for DISORDER in 'ADHD3'
 do
 # with p-values
 # 1. use different HMAGMA annotations
+# 'MAGMAdefault' 'Adult_brain' 'Fetal_brain' 'Neuro' 'Astro'
 for whatANNOT in 'MAGMAdefault' 'Adult_brain' 'Fetal_brain' 'Neuro' 'Astro'
 do
 ${WHEREISCODE}/magma --bfile ${WHEREIS1000G}/g1000_eur --gene-annot ${WHEREISANNOT}/${whatANNOT}.genes.annot --pval ${WHEREISGWAS}/pgc${DISORDER}.txt N=10000 --out ${WHEREISOUT}/pgc${DISORDER}_${whatANNOT}

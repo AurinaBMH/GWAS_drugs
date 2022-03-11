@@ -13,7 +13,7 @@ load('DataOutput_2022/GWAS_disordersMAGMA.mat')
 
 %-------------------------------------------------------------------------------
 numDiseases = length(whatDiseases);
-for k = 1:numDiseases
+for k = 1%:numDiseases
     %for k = 1:numDiseases
     whatDisease = whatDiseases{k};
     geneScores = pipeline(DISORDERlist, whatDisease, whatThreshold);

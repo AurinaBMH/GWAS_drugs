@@ -38,7 +38,7 @@ params.numNull = 5000;
 % for 2021 data
 params.whatGWAS_2021 = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
 % for 2022 data
-params.whatGWAS_2022 = {'ADHD2','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
+params.whatGWAS_2022 = {'ADHD3','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
 
 params.whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES'};
 params.whatDiseases_Treatment_label = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes'};
