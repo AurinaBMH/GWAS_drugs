@@ -105,7 +105,7 @@ plot_Psych_figures()
 ![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank.png)
 
 `Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods. 
-![](plots/compareMeasures_ADHD2_allPsych.png)
+![](plots/compareMeasures_ADHD3_allPsych.png)
 ![](plots/compareMeasures_MDD3_allPsych.png)
 ![](plots/compareMeasures_SCZ3_allPsych.png)
 ![](plots/compareMeasures_BIP3_allPsych.png)
@@ -118,7 +118,7 @@ plot_Psych_figures()
 ![](plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank.png)
 
 `Figure S2` - Correlation between mapping methods.
-![](plots/ADHD2_geneMeasures_allPsych.png)
+![](plots/ADHD3_geneMeasures_allPsych.png)
 ![](plots/MDD3_geneMeasures_allPsych.png)
 ![](plots/SCZ3_geneMeasures_allPsych.png)
 ![](plots/BIP3_geneMeasures_allPsych.png)
