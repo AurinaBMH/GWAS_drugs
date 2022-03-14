@@ -1,15 +1,15 @@
 % convert gene IDs for enrichment and save to file
 function save_enrichment_scores()
 
-entrezIDs = readtable('enrichment/SynGO_id_convert_2022-01-18_1653/idmap.xlsx');
-similarityTypes = {'MAGMAdefault'}; %{'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
+entrezIDs = readtable('enrichment_2022/SynGO_id_convert_2022-01-18_1653/idmap.xlsx');
+similarityTypes = {'PPI_mapped_th600'}; %{'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 disorders = {'ADHD', 'BIP', 'MDD', 'SCZ', 'DIABETES'};
 
 for i=1:length(similarityTypes)
     for d=1:length(disorders)
         
-        load(sprintf('enrichment/enrichment_drug_%s', similarityTypes{i}));
-        load(sprintf('enrichment/enrichment_GWAS_%s', similarityTypes{i}));
+        load(sprintf('enrichment_2022/enrichment_drug_%s', similarityTypes{i}));
+        load(sprintf('enrichment_2022/enrichment_GWAS_%s', similarityTypes{i}));
         
         [~, Ie, Idrug] = intersect(entrezIDs.query, enrichment_score_drug.geneName);
         
@@ -23,7 +23,7 @@ for i=1:length(similarityTypes)
         TF = TF1|TF2;
         
         enrichment_score_drug_dis = enrichment_score_drug(:,TF);
-        writetable(enrichment_score_drug_dis, sprintf('enrichment/enrichment_%s_drug_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
+        writetable(enrichment_score_drug_dis, sprintf('enrichment_2022/enrichment_%s_drug_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
         
         % for GWAS
         gwas_names = fieldnames(enrichment_score_GWAS);
@@ -33,7 +33,7 @@ for i=1:length(similarityTypes)
         [~, Ie, Igwas] = intersect(entrezIDs.query, enrichment_score_gwas_dis.geneNames);
         
         enrichment_score_gwas_dis.geneNames(Igwas) = entrezIDs.entrezgene(Ie);
-        writetable(enrichment_score_gwas_dis, sprintf('enrichment/enrichment_%s_gwas_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
+        writetable(enrichment_score_gwas_dis, sprintf('enrichment_2022/enrichment_%s_gwas_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
         
     end
 end
