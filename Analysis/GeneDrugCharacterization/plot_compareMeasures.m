@@ -1,4 +1,4 @@
-function f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatNull)
+function pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatNull)
 
 if nargin < 3
     recalc = false; 

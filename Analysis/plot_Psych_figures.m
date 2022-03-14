@@ -78,7 +78,7 @@ T_bip = sortrows(T_bip, 2, 'ascend');
 % Figure 3: Correspondence across different data processing methods
 %-------------------------------------------------------
 DOrecalc = false; % select true if any data was updated since the last run
-f = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
+pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 %-------------------------------------------------------
 % Figure S2: Correlation between GWAS-based scores for different data processing methods
