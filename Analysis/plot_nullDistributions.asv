@@ -1,8 +1,4 @@
-function [f, Ptable] = plot_nullDistributions(whatYear)
-
-if nargin < 1
-    whatYear = 2022; 
-end
+function [f, Ptable] = plot_nullDistributions(whatYe)
 
 whatMeasures = 'allPsych';
 colPsy = [253,141,6]/255; 
@@ -14,11 +10,7 @@ colLine = [252,78,42]/255;
 typesNull = {'randomDrugR_all_drugbank','randomDrugP_all_drugbank_psych'}; 
 for t=1:length(typesNull)
 % for BIP
-if strcmp(whatYear, '2022')
-    whatDiseases_GWAS = {'BIP3'};
-elseif strcmp(whatYear, '2021')
-    whatDiseases_GWAS = {'BIP2'};
-end
+whatDiseases_GWAS = {'BIP3'}; 
 [BIP_rhosALL{t} ,~, whatDiseases_Treatment, BIP_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 

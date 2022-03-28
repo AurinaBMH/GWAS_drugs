@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whichYear)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -24,6 +24,10 @@ end
 
 if nargin < 7
     numMeasures = length(whatDiseases_GWAS); 
+end
+
+if nargin < 8
+    whichYear = 2022; 
 end
 
 %-------------------------------------------------------------------------------
@@ -56,7 +60,7 @@ if strcmp(whatNull, 'randomGene')
     
 elseif contains(whatNull, 'randomDrug')
     
-    load(sprintf('DataOutput_2022/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    load(sprintf('DataOutput_%d/nulls_5000_%stargets_%s.mat', whichYear, params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');

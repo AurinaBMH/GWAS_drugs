@@ -81,4 +81,4 @@ for D=1:length(Disorders)
 end
 
 % save sigle file for future analyses
-save('DataOutput/GWAS_disordersMAGMA.mat', 'DISORDERlist')
+save('DataOutput_2022/GWAS_disordersMAGMA.mat', 'DISORDERlist')
