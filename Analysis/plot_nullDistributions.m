@@ -1,7 +1,7 @@
 function [f, Ptable] = plot_nullDistributions(whatYear)
 
 if nargin < 1
-    whatYear = 2022; 
+    whatYear = '2022'; 
 end
 
 whatMeasures = 'allPsych';

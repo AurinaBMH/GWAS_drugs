@@ -26,9 +26,6 @@ if nargin < 7
     numMeasures = length(whatDiseases_GWAS); 
 end
 
-if nargin < 8
-    whichYear = 2022; 
-end
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
@@ -60,7 +57,7 @@ if strcmp(whatNull, 'randomGene')
     
 elseif contains(whatNull, 'randomDrug')
     
-    load(sprintf('DataOutput_%d/nulls_5000_%stargets_%s.mat', whichYear, params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    load(sprintf('DataOutput_2022/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');

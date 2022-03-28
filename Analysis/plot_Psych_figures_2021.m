@@ -78,30 +78,30 @@ T_bip = sortrows(T_bip, 2, 'ascend');
 % Figure 3: Correspondence across different data processing methods
 %-------------------------------------------------------
 DOrecalc = false; % select true if any data was updated since the last run
-pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
+pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc, '2021'); 
 
 %-------------------------------------------------------
 % Figure S2: Correlation between GWAS-based scores for different data processing methods
 %-------------------------------------------------------
-Mnames = cell(numGWAS,1); 
-Mnumbers = cell(numGWAS,1); 
-
-for i=1:numGWAS
-
-    [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
-    figureName = sprintf('figures_2021/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
-    print(f,figureName,'-dpng','-r300');
-    
-end
+% Mnames = cell(numGWAS,1); 
+% Mnumbers = cell(numGWAS,1); 
+% 
+% for i=1:numGWAS
+% 
+%     [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
+%     figureName = sprintf('figures_2021/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
+%     print(f,figureName,'-dpng','-r300');
+%     
+% end
 
 %-------------------------------------------------------
 % Figure S4: different null distributions for bipolar disorder and diabetes
 %-------------------------------------------------------
 % Plot null distributions when choosing from all and from psychiatric drugs: 
 % in this example PPI-based significant results are used: bipolar disorder and diabetes; 
-[f, Ptable_null] = plot_nullDistributions(); 
-figureName = 'figures_2022/Null_distribution_comparison';
-print(f,figureName,'-dpng','-r300');
+% [f, Ptable_null] = plot_nullDistributions(); 
+% figureName = 'figures_2022/Null_distribution_comparison';
+% print(f,figureName,'-dpng','-r300');
 
 end
 %% don't plot these - will say in words, it's a null result

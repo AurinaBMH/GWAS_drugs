@@ -1,22 +1,25 @@
-function pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatNull, whatYear)
+function pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, recalc, whatYear, whatNull)
 
 if nargin < 3
     recalc = false; 
 end
+
 if nargin < 4
+    whatYear = '2022'; 
+end
+
+if nargin < 5
     whatNull = 'randomDrugR_all_drugbank'; 
 end
-if nargin < 5
-    whatYear = 2022; 
-end
+
 
 
 if recalc
     [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, whatNull);
-    fileName = sprintf('DataOutput_2022/Ptable_%s_%d.mat', whatMeasures, whatYear); 
+    fileName = sprintf('DataOutput_2022/Ptable_%s_%s.mat', whatMeasures, whatYear); 
     save(fileName, 'Ptable', 'measureNames'); 
 else
-    load(sprintf('Ptable_%s_%d.mat', whatMeasures, whatYear))
+    load(sprintf('Ptable_%s_%s.mat', whatMeasures, whatYear))
 end
 
 numDiseases_GWAS = length(whatDiseases_GWAS);
@@ -97,7 +100,7 @@ for i=1:numDiseases_GWAS
     % line for 0.05
     yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
     
-    figureName = sprintf('figures_2022/compareMeasures_%s_%s', whatDiseases_GWAS{i}, whatMeasures);
+    figureName = sprintf('figures_%s/compareMeasures_%s_%s', whichYear, whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
 end
 
