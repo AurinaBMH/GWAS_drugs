@@ -31,7 +31,7 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 1. "attention deficit" (for ADHD);
 2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
 3. "schizophrenia" (for schizophrenia); 
-4. "major depression" (for major depression); - confirm this term!!! 
+4. "major depression" (for major depression);
 5. "diabetes" (for type 2 diabetes) excluding "type I diabetes" and "diabetes insipidus"; 
 6. "heart failure" (for heart failure); 
 7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and 
