@@ -42,7 +42,7 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 ### Data files
 
 Data files required for this project are hosted on [this CloudStor repository](https://doi.org/10.6084/m9.figshare.6852911).
-Please download and place `data` folder in the root directory.
+Please download and place `data` folder in the root directory (20.68GB when unzipped).
 
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory. 
@@ -76,10 +76,18 @@ The output is saved to `BIOMART_geneIDs.txt`;
 ```matlab
 save_MAGMAHresults()
 ```
+To generate data using an older set of GWAS summary statistics: 
+```matlab
+save_MAGMAHresults('2021')
+```
 
-4. Create GWAS-based gene scores and save them for each disorder: 
+4. Create GWAS-based gene scores and save them for each disorder and each set of GWAS summary statistics: 
 ```matlab
 GenerateResultsTables()
+```
+To generate data using an older set of GWAS summary statistics: 
+```matlab
+GenerateResultsTables('2021')
 ```
 This will create `geneScores` structure for each disorder (takes several hours to run). 
 
