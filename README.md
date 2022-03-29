@@ -38,6 +38,12 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 8. "rheumatoid arthritis" (for rheumatoid arthritis).
 
 ## Workflow
+
+### Data files
+
+Data files required for this project are hosted on [this CloudStor repository](https://doi.org/10.6084/m9.figshare.6852911).
+Please download and place `data` folder in the root directory.
+
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory. 
 
