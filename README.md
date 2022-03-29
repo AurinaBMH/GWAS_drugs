@@ -127,7 +127,6 @@ plot_Psych_figures()
 `Figure S4` - The comparison of different null models for significance testing. 
 ![](plots/Null_distribution_comparison.png)
 
-
 For non-psychiatric disorders (`Figure S3`): 
 ```matlab
 plot_Body_figures()
@@ -138,7 +137,6 @@ plot_Body_figures()
 ![](plots/compareMeasures_IBD_allBody.png)
 ![](plots/compareMeasures_DIABETES_allBody.png)
 
-
 Save gene scores for enrichment analysis: 
 ```matlab
 save_enrichment_scores()
@@ -148,3 +146,24 @@ Run the enrichment analysis using ermineJ software and aggregate results using:
 ```matlab
 save_enrichment_results(); 
 ```
+
+For replicating results using an alternative set of GWAS summary statistics (`Figure S5`, `Figure S6`, `Figure S7`) generate figures using: 
+```matlab
+plot_Psych_figures_2021()
+```
+
+`Figure S5` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder. 
+![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank_2021.png)
+
+`Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods. 
+![](plots/compareMeasures_ADHD_allPsych.png)
+![](plots/compareMeasures_MDD2_allPsych.png)
+![](plots/compareMeasures_SCZ_allPsych.png)
+![](plots/compareMeasures_BIP2_allPsych.png)
+![](plots/compareMeasures_DIABETES_allPsych.png)
+
+`Figure S7` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
+![](plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank_2021.png)
+![](plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank_2021.png)
+![](plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
+![](plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)

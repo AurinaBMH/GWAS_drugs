@@ -104,31 +104,7 @@ figureName = 'figures_2022/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
 
 end
-%% don't plot these - will say in words, it's a null result
-% f = figure('color','w', 'Position', [300, 300, 1500, 400]); 
-% % choose more diverging colours
-% barColor = BF_getcmap('set5',5);  
-% 
-% for i=1:numGWAS
-%     
-%     ax{i} = subplot(1,numGWAS,i); hold on
-%     title(sprintf('%s', whatDiseases_GWAS{i}))
-%     b = bar(Ptable.(whatDiseases_GWAS{i}).Pvals);
-%     ylabel('-log10(P)')
-%     set(gca,'FontSize', 14)
-%     b.CData = barColor;
-%     b.FaceColor = 'flat';
-%     
-%     ax{i}.XTick = 1:length(similarityTypes)+1;
-%     ax{i}.XTickLabel = [similarityTypes_label, 'Combined'];
-%     ax{i}.XTickLabelRotation = 45;
-%     
-% end
-% 
-% % rescale axes
-% linkaxes([ax{:}],'y');
-% 
-% print(gcf,'figures/comparePvals','-dpng','-r300');
+
 
     
     

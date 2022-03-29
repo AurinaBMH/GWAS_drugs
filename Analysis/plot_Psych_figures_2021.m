@@ -80,55 +80,8 @@ T_bip = sortrows(T_bip, 2, 'ascend');
 DOrecalc = false; % select true if any data was updated since the last run
 pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc, '2021'); 
 
-%-------------------------------------------------------
-% Figure S2: Correlation between GWAS-based scores for different data processing methods
-%-------------------------------------------------------
-% Mnames = cell(numGWAS,1); 
-% Mnumbers = cell(numGWAS,1); 
-% 
-% for i=1:numGWAS
-% 
-%     [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
-%     figureName = sprintf('figures_2021/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
-%     print(f,figureName,'-dpng','-r300');
-%     
-% end
-
-%-------------------------------------------------------
-% Figure S4: different null distributions for bipolar disorder and diabetes
-%-------------------------------------------------------
-% Plot null distributions when choosing from all and from psychiatric drugs: 
-% in this example PPI-based significant results are used: bipolar disorder and diabetes; 
-% [f, Ptable_null] = plot_nullDistributions(); 
-% figureName = 'figures_2022/Null_distribution_comparison';
-% print(f,figureName,'-dpng','-r300');
-
 end
-%% don't plot these - will say in words, it's a null result
-% f = figure('color','w', 'Position', [300, 300, 1500, 400]); 
-% % choose more diverging colours
-% barColor = BF_getcmap('set5',5);  
-% 
-% for i=1:numGWAS
-%     
-%     ax{i} = subplot(1,numGWAS,i); hold on
-%     title(sprintf('%s', whatDiseases_GWAS{i}))
-%     b = bar(Ptable.(whatDiseases_GWAS{i}).Pvals);
-%     ylabel('-log10(P)')
-%     set(gca,'FontSize', 14)
-%     b.CData = barColor;
-%     b.FaceColor = 'flat';
-%     
-%     ax{i}.XTick = 1:length(similarityTypes)+1;
-%     ax{i}.XTickLabel = [similarityTypes_label, 'Combined'];
-%     ax{i}.XTickLabelRotation = 45;
-%     
-% end
-% 
-% % rescale axes
-% linkaxes([ax{:}],'y');
-% 
-% print(gcf,'figures/comparePvals','-dpng','-r300');
+
 
     
     
