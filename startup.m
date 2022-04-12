@@ -1,4 +1,6 @@
 % Make folders that will be used to save data
+cd ..
+
 mkdir DataOutput_2022
 mkdir enrichment_2021
 mkdir enrichment_2022
