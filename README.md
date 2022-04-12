@@ -41,7 +41,7 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 
 ### Data files
 
-Data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/5YSZaWKIuhsW1sn).
+Data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/kt6KtFGyQCkFduv).
 Please download and place `data` folder in the root directory (20.68GB when unzipped).
 
 ### Data processing
