@@ -48,7 +48,7 @@ Please download and place `data` folder in the root directory (20.68GB when unzi
 First, add all sub-folders to the path using startup() function from the root directory.
 All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the startup() function.
 As a result, the contents of the root directory should be as follows
-![](code/plots/root_directory_image.png)
+![](code/plots/root_directory_image.png width=50% height=50%)
 
 #### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
