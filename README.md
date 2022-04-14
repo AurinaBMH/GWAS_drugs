@@ -1,16 +1,16 @@
 
-This repository provides Matlab, R and MAGMA code for reproducing results presented in the manuscript entitled: 
+This repository provides Matlab, R and MAGMA code for reproducing results presented in the manuscript entitled:
 
 - Arnatkeviciute et al. (2022) [:green_book: 'Linking GWAS to pharmacological treatments for psychiatric disorders'](DOI).
 
-The code was written using MATLAB_R2020b. 
+The code was written using MATLAB_R2020b.
 
 :envelope: Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 
 ## Data Information
 
-#### :dna: GWAS summary statistics: 
+#### :dna: GWAS summary statistics:
 1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2022)'](https://doi.org/10.1101/2022.02.14.22270780)
 2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
 3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
@@ -26,15 +26,15 @@ The code was written using MATLAB_R2020b.
 `9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
 
 #### :pill: Treatments lists
-Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020. 
-Specifically, drugs for each indication were searched in the DrugBank database using the following search terms: 
+Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020.
+Specifically, drugs for each indication were searched in the DrugBank database using the following search terms:
 1. "attention deficit" (for ADHD);
 2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
-3. "schizophrenia" (for schizophrenia); 
+3. "schizophrenia" (for schizophrenia);
 4. "major depression" (for major depression);
-5. "diabetes" (for type 2 diabetes) excluding "type I diabetes" and "diabetes insipidus"; 
-6. "heart failure" (for heart failure); 
-7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and 
+5. "diabetes" (for type 2 diabetes) excluding "type I diabetes" and "diabetes insipidus";
+6. "heart failure" (for heart failure);
+7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and
 8. "rheumatoid arthritis" (for rheumatoid arthritis).
 
 ## Workflow
@@ -45,12 +45,15 @@ Data files required for this project are hosted on [this CloudStor repository](h
 Please download and place `data` folder in the root directory (20.68GB when unzipped).
 
 ### Data processing
-First, add all sub-folders to the path using startup() function from the root directory. 
+First, add all sub-folders to the path using startup() function from the root directory.
+All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the startup() function.
+As a result, the contents of the root directory should be as follows
+![](plots/root_directory_image.pdf)
 
 #### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
-1. Replace protein IDs with gene names using `make_PPI_linkfile()`; 
-2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900: 
+1. Replace protein IDs with gene names using `make_PPI_linkfile()`;
+2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900:
 ```matlab
 % BINARY networks:
 PPIthrs = [0,400,600,900];
@@ -66,42 +69,42 @@ These commands will save `PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_ge
 
 #### :label: Aggregate GWAS-based information
 
-1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2022.sh`. 
-First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2022.sh` to indicate the location of code, .annot files and reference genome. 
+1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2022.sh`.
+First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2022.sh` to indicate the location of code, .annot files and reference genome.
 
 2. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
-The output is saved to `BIOMART_geneIDs.txt`; 
+The output is saved to `BIOMART_geneIDs.txt`;
 
-3. Update gene IDs for MAGMA outputs and collate all results into a single .mat file: 
+3. Update gene IDs for MAGMA outputs and collate all results into a single .mat file:
 ```matlab
 save_MAGMAHresults()
 ```
-To generate data using an older set of GWAS summary statistics: 
+To generate data using an older set of GWAS summary statistics:
 ```matlab
 save_MAGMAHresults('2021')
 ```
 
-4. Create GWAS-based gene scores and save them for each disorder and each set of GWAS summary statistics: 
+4. Create GWAS-based gene scores and save them for each disorder and each set of GWAS summary statistics:
 ```matlab
 GenerateResultsTables()
 ```
-To generate data using an older set of GWAS summary statistics: 
+To generate data using an older set of GWAS summary statistics:
 ```matlab
 GenerateResultsTables('2021')
 ```
-This will create `geneScores` structure for each disorder (takes several hours to run). 
+This will create `geneScores` structure for each disorder (takes several hours to run).
 
 #### :label: Aggregate drug target information
 
 1. Combine drug target information from `.txt` files into matlab format
 ```matlab
-dataTable = give_drugTargets('all', 'drugbank'); 
+dataTable = give_drugTargets('all', 'drugbank');
 ```
-This will save `drugTargets_2020_all_drugbank.mat` file; 
+This will save `drugTargets_2020_all_drugbank.mat` file;
 
-2. Generate 5000 drug-based null vectors for each disorder. 
+2. Generate 5000 drug-based null vectors for each disorder.
 For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2155 genes;   
-For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected. 
+For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
 ```matlab
 generate_randomDrug_nulls('drugbank')
 ```
@@ -109,16 +112,16 @@ generate_randomDrug_nulls('drugbank')
 
 ### Analysis
 
-#### :scroll: Reproduce results presented in the manuscript: 
+#### :scroll: Reproduce results presented in the manuscript:
 
-For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Figure S2`, `Figure S4`) generate figures using: 
+For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Figure S2`, `Figure S4`) generate figures using:
 ```matlab
 plot_Psych_figures()
 ```
-`Figure 2` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder. 
+`Figure 2` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
 ![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank.png)
 
-`Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods. 
+`Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
 ![](plots/compareMeasures_ADHD3_allPsych.png)
 ![](plots/compareMeasures_MDD3_allPsych.png)
 ![](plots/compareMeasures_SCZ3_allPsych.png)
@@ -138,10 +141,10 @@ plot_Psych_figures()
 ![](plots/BIP3_geneMeasures_allPsych.png)
 ![](plots/DIABETES_geneMeasures_allPsych.png)
 
-`Figure S4` - The comparison of different null models for significance testing. 
+`Figure S4` - The comparison of different null models for significance testing.
 ![](plots/Null_distribution_comparison.png)
 
-For non-psychiatric disorders (`Figure S3`): 
+For non-psychiatric disorders (`Figure S3`):
 ```matlab
 plot_Body_figures()
 ```
@@ -151,25 +154,25 @@ plot_Body_figures()
 ![](plots/compareMeasures_IBD_allBody.png)
 ![](plots/compareMeasures_DIABETES_allBody.png)
 
-Save gene scores for enrichment analysis: 
+Save gene scores for enrichment analysis:
 ```matlab
 save_enrichment_scores()
 ```
 
-Run the enrichment analysis using ermineJ software and aggregate results using: 
+Run the enrichment analysis using ermineJ software and aggregate results using:
 ```matlab
-save_enrichment_results(); 
+save_enrichment_results();
 ```
 
-For replicating results using an alternative set of GWAS summary statistics (`Figure S5`, `Figure S6`, `Figure S7`) generate figures using: 
+For replicating results using an alternative set of GWAS summary statistics (`Figure S5`, `Figure S6`, `Figure S7`) generate figures using:
 ```matlab
 plot_Psych_figures_2021()
 ```
 
-`Figure S5` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder. 
+`Figure S5` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
 ![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank_2021.png)
 
-`Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods. 
+`Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
 ![](plots/compareMeasures_ADHD_allPsych.png)
 ![](plots/compareMeasures_MDD2_allPsych.png)
 ![](plots/compareMeasures_SCZ_allPsych.png)
