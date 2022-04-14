@@ -50,7 +50,7 @@ for p=1:length(prot)
     end
 end
 
-writetable(PPI,'data/GeneTaggingData/PPIlinks_v11.0.txt', 'WriteVariableNames', true)
+writetable(PPI,'data/PPIdata/PPIlinks_v11.0.txt', 'WriteVariableNames', true)
 end
 
 
