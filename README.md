@@ -51,7 +51,7 @@ As a result, the contents of the root directory should be as follows:
 ![](code/plots/root_directory_image.png)
 
 #### :label: Aggregate PPI-based information
-Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
+Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `data/PPIdata/README_PPI.txt`
 1. Replace protein IDs with gene names using `make_PPI_linkfile()`;
 2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900:
 ```matlab
