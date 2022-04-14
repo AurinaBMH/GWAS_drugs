@@ -43,10 +43,10 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 
 Data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/kt6KtFGyQCkFduv).
 To perform all analyses and process the data from raw files, please download and place `data` folder in the root directory (20.68 GB when unzipped).
-If you would like to process all data, please follow the instructions in the data "Data processing" section.
+If you would like to process all data, please follow the instructions in the data **"Data processing"** section.  
 If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2), unzip and place the `DataOutput_2022` folder in the root directory (780.8 MB when unzipped).
 This will allow to work with processed data and reproduce the figures immediately (data processing from raw files takes several days).
-To reproduce figures, move to the "Analysis" section. 
+To reproduce figures, move to the **"Analysis"** section.
 
 ### Data processing
 First, add all sub-folders to the path using startup() function from the root directory.
