@@ -1,6 +1,4 @@
 % Make folders that will be used to save data
-cd ..
-
 mkdir DataOutput_2022
 mkdir enrichment_2021
 mkdir enrichment_2022
@@ -16,9 +14,3 @@ for j = 1:length(paths)
     addpath(genpath(paths{j}))
 end
 
-
-%-------------------------------------------------------------------------------
-% load('processedData.mat');
-%-------------------------------------------------------------------------------
-% fprintf(1,'Adding path to MatlabmySQL toolbox\n');
-% addpath('/Users/benfulcher/DropboxSydneyUni/CodeToolboxes/MatlabmySQL/')
