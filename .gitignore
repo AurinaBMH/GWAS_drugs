@@ -1,3 +1,9 @@
 *.csv
 *.mat
 data/*
+DataOutput_2022/*
+enrichment_2021/*
+enrichment_2022/*
+figures_2021/*
+figures_2022/*
+
