@@ -48,7 +48,7 @@ Please download and place `data` folder in the root directory (20.68GB when unzi
 First, add all sub-folders to the path using startup() function from the root directory.
 All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the startup() function.
 As a result, the contents of the root directory should be as follows
-![](plots/root_directory_image.png)
+![](code/plots/root_directory_image.png)
 
 #### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `rawData/README_PPI.txt`
@@ -119,40 +119,40 @@ For psychiatric disorders and diabetes (`Figure 2`, `Figure 3`, `Figure S1`, `Fi
 plot_Psych_figures()
 ```
 `Figure 2` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
-![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank.png)
+![](code/plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank.png)
 
 `Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
-![](plots/compareMeasures_ADHD3_allPsych.png)
-![](plots/compareMeasures_MDD3_allPsych.png)
-![](plots/compareMeasures_SCZ3_allPsych.png)
-![](plots/compareMeasures_BIP3_allPsych.png)
-![](plots/compareMeasures_DIABETES_allPsych.png)
+![](code/plots/compareMeasures_ADHD3_allPsych.png)
+![](code/plots/compareMeasures_MDD3_allPsych.png)
+![](code/plots/compareMeasures_SCZ3_allPsych.png)
+![](code/plots/compareMeasures_BIP3_allPsych.png)
+![](code/plots/compareMeasures_DIABETES_allPsych.png)
 
 `Figure S1` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
-![](plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank.png)
-![](plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank.png)
-![](plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank.png)
-![](plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank.png)
+![](code/plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank.png)
+![](code/plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank.png)
+![](code/plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank.png)
+![](code/plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank.png)
 
 `Figure S2` - Correlation between mapping methods.
-![](plots/ADHD3_geneMeasures_allPsych.png)
-![](plots/MDD3_geneMeasures_allPsych.png)
-![](plots/SCZ3_geneMeasures_allPsych.png)
-![](plots/BIP3_geneMeasures_allPsych.png)
-![](plots/DIABETES_geneMeasures_allPsych.png)
+![](code/plots/ADHD3_geneMeasures_allPsych.png)
+![](code/plots/MDD3_geneMeasures_allPsych.png)
+![](code/plots/SCZ3_geneMeasures_allPsych.png)
+![](code/plots/BIP3_geneMeasures_allPsych.png)
+![](code/plots/DIABETES_geneMeasures_allPsych.png)
 
 `Figure S4` - The comparison of different null models for significance testing.
-![](plots/Null_distribution_comparison.png)
+![](code/plots/Null_distribution_comparison.png)
 
 For non-psychiatric disorders (`Figure S3`):
 ```matlab
 plot_Body_figures()
 ```
 `Figure S3` - The correspondence between treatment targets and genes implicated in a GWAS for non-psychiatric disorders across different mapping methods.
-![](plots/compareMeasures_HF_allBody.png)
-![](plots/compareMeasures_RA_allBody.png)
-![](plots/compareMeasures_IBD_allBody.png)
-![](plots/compareMeasures_DIABETES_allBody.png)
+![](code/plots/compareMeasures_HF_allBody.png)
+![](code/plots/compareMeasures_RA_allBody.png)
+![](code/plots/compareMeasures_IBD_allBody.png)
+![](code/plots/compareMeasures_DIABETES_allBody.png)
 
 Save gene scores for enrichment analysis:
 ```matlab
@@ -170,17 +170,17 @@ plot_Psych_figures_2021()
 ```
 
 `Figure S5` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
-![](plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank_2021.png)
+![](code/plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank_2021.png)
 
 `Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
-![](plots/compareMeasures_ADHD_allPsych.png)
-![](plots/compareMeasures_MDD2_allPsych.png)
-![](plots/compareMeasures_SCZ_allPsych.png)
-![](plots/compareMeasures_BIP2_allPsych.png)
-![](plots/compareMeasures_DIABETES_allPsych.png)
+![](code/plots/compareMeasures_ADHD_allPsych.png)
+![](code/plots/compareMeasures_MDD2_allPsych.png)
+![](code/plots/compareMeasures_SCZ_allPsych.png)
+![](code/plots/compareMeasures_BIP2_allPsych.png)
+![](code/plots/compareMeasures_DIABETES_allPsych.png)
 
 `Figure S7` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
-![](plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank_2021.png)
-![](plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank_2021.png)
-![](plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
-![](plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
+![](code/plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank_2021.png)
+![](code/plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank_2021.png)
+![](code/plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
+![](code/plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
