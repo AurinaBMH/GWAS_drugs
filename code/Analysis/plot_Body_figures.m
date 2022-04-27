@@ -1,6 +1,5 @@
 function plot_Body_figures()
 
-clear all; close all;
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 whatDiseases_GWAS = {'IBD','RA', 'HF', 'DIABETES'}; %'BIPandSCZ'

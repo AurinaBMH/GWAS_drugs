@@ -60,7 +60,7 @@ for i=1:numDiseases_GWAS
     xlabel('Measures')
     %end
     ylim([0 4]);
-    % line for BF corrected value, p=0.01
+    % line for BF corrected value
     if strcmp(whatMeasures, 'allPsych')
         yline(-log10(0.05/27), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
         % 27 measures for psych
@@ -68,8 +68,16 @@ for i=1:numDiseases_GWAS
         yline(-log10(0.05/28), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
         % 28 measures for body
     end
-    % line for 0.05
+    % line for 6 measure types
     yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
+    % line for all BF corrections: 27 or 28 mapping methods and 5 dissorders
+    if strcmp(whatMeasures, 'allPsych')
+        yline(-log10(0.05/(27*5)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
+        % 27 measures for psych x 5 disorders
+    elseif strcmp(whatMeasures, 'allBody')
+        yline(-log10(0.05/(28*5)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
+        % 28 measures for body x 5 disorders
+    end
     
     figureName = sprintf('figures_%s/compareMeasures_%s_%s', whatYear, whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
