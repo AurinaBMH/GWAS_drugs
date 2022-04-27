@@ -71,7 +71,7 @@ for i=1:numDiseases_GWAS
     % line for 0.05
     yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
     
-    figureName = sprintf('figures_%s/compareMeasures_%s_%s', whichYear, whatDiseases_GWAS{i}, whatMeasures);
+    figureName = sprintf('figures_%s/compareMeasures_%s_%s', whatYear, whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
 end
 
