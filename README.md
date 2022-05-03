@@ -41,10 +41,10 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 
 ### Data files
 
-Data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/kt6KtFGyQCkFduv).
-To perform all analyses and process the data from raw files, please download and place `data` folder in the root directory (20.68 GB when unzipped).
+Raw data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/MjzVh95NbO3Sux4). Enrichment analysis results and associated files are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF).
+To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2022` folders in the root directory (19.3 GB when unzipped). GWAS summary statistics data for ADHD is not included here yet and will be uploaded upon the publication of the original article by Demontis et al. (2022).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.  
-If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2), unzip and place the `DataOutput_2022` folder in the root directory (780.8 MB when unzipped).
+If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2) as well as the enrichment analysis results from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF), unzip and place the `DataOutput_2022` (780.8 MB when unzipped) and `enrichment_2022` folders in the root directory.
 This will allow to work with processed data and reproduce the figures immediately (data processing from raw files takes several days).
 To reproduce figures, move to the **"Analysis"** section.
 
@@ -113,7 +113,6 @@ For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for dia
 generate_randomDrug_nulls('drugbank')
 ```
 
-
 ### Analysis
 
 #### :scroll: Reproduce results presented in the manuscript:
@@ -163,7 +162,8 @@ Save gene scores for enrichment analysis:
 save_enrichment_scores()
 ```
 
-Run the enrichment analysis using ermineJ software and aggregate results using:
+Run the enrichment analysis using ermineJ software, save the results from each analysis in the `enrichment_2022/output` folder.
+Enrichment analysis results derived from ermineJ are already provided. Aggregate results using:
 ```matlab
 save_enrichment_results();
 ```

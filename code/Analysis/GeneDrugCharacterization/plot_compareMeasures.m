@@ -64,19 +64,17 @@ for i=1:numDiseases_GWAS
     if strcmp(whatMeasures, 'allPsych')
         yline(-log10(0.05/27), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
         % 27 measures for psych
+        yline(-log10(0.05/(27*5)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
+        % 27 measures for psych x 5 disorders
+        yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
+        % line for 6 measure types
     elseif strcmp(whatMeasures, 'allBody')
         yline(-log10(0.05/28), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
         % 28 measures for body
-    end
-    % line for 6 measure types
-    yline(-log10(0.05/6), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
-    % line for all BF corrections: 27 or 28 mapping methods and 5 dissorders
-    if strcmp(whatMeasures, 'allPsych')
-        yline(-log10(0.05/(27*5)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
-        % 27 measures for psych x 5 disorders
-    elseif strcmp(whatMeasures, 'allBody')
-        yline(-log10(0.05/(28*5)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
-        % 28 measures for body x 5 disorders
+        yline(-log10(0.05/(28*4)), ':', 'color', [.05 .05 .05], 'LineWidth', 3);
+        % 28 measures for body x 4 disorders
+        yline(-log10(0.05/5), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
+        % line for 5 measure types
     end
     
     figureName = sprintf('figures_%s/compareMeasures_%s_%s', whatYear, whatDiseases_GWAS{i}, whatMeasures);
