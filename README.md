@@ -52,7 +52,7 @@ To reproduce figures, move to the **"Analysis"** section.
 First, add all sub-folders to the path using startup() function from the root directory.
 All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the startup() function.
 As a result, the contents of the root directory should be as follows:
-![](code/plots/root_directory_image.png)
+![](code/plots/root_directory.png)
 
 #### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `data/PPIdata/README_PPI.txt`
