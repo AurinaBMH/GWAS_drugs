@@ -1,3 +1,4 @@
+# Linking GWAS to pharmacological treatments for psychiatric disorders
 [![DOI](https://zenodo.org/badge/94279070.svg)](https://zenodo.org/badge/latestdoi/94279070)
 
 This repository provides Matlab, R and MAGMA code for reproducing results presented in the manuscript entitled:
