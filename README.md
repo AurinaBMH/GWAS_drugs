@@ -3,7 +3,7 @@
 
 This repository provides Matlab, R and MAGMA code for reproducing results presented in the manuscript entitled:
 
-- Arnatkeviciute et al. (2022) [:green_book: 'Linking GWAS to pharmacological treatments for psychiatric disorders'](https://doi.org/10.1101/2022.05.11.22274981).
+- Arnatkeviciute et al. (2022) [:green_book: 'Linking GWAS to pharmacological treatments for psychiatric disorders' (https://t.co/AKmyF8wv9e).
 
 The code was written using MATLAB_R2020b.
 
