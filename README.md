@@ -16,7 +16,7 @@ The code was written using MATLAB_R2020b.
 1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2022)'](https://doi.org/10.1101/2022.02.14.22270780)
 2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
 3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
-4. Schizophrenia GWAS summary statistics based on [:green_book: 'The Schizophrenia Working Group of the Psychiatric Genomics Consortium et al (2020)'](https://doi.org/10.1101/2020.09.12.20192922)
+4. Schizophrenia GWAS summary statistics based on [:green_book: 'Vassily Trubetskoy et al (2022)'](https://doi.org/10.1038/s41586-022-04434-5)
 5. Diabetes GWAS summary statistics based on [:green_book: 'Xue et al (2018)'](https://doi.org/10.1038/s41467-018-04951-w)
 6. Heart failure GWAS summary statistics based on [:green_book: 'Shah et al (2021)'](https://doi.org/10.1038/s41467-019-13690-5)
 7. Inflammatory bowel disease GWAS summary statistics based on [:green_book: 'Lange et al (2017)'](https://doi.org/10.1038/ng.3760)
