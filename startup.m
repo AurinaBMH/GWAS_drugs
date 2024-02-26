@@ -1,5 +1,6 @@
 % Make folders that will be used to save data
 mkdir DataOutput_2022
+mkdir DataOutput_2024
 mkdir figures_2021
 mkdir figures_2022
 

@@ -23,9 +23,9 @@ fileNameSave = PPIFileNames(doWeighted,evidenceThreshold,whatInput);
 % Read in PPI data:
 switch whatInput
     case 'HGNCmatch'
-        % File generated based on 9606.protein.links.v11.0.txt (June 2020), gene names extracted from biomart using 
+        % File generated based on 9606.protein.links.v12.0.txt (26 February 2024), gene names extracted from biomart using 
         % make_PPI_linkfile.m
-        fileName = 'PPIlinks_v11.0.txt'; 
+        fileName = 'PPIlinks_v12.0.txt'; 
     case 'proteins'
         % Mapping to proteins:
         fileName = '9606.protein.links.v10.5.txt';

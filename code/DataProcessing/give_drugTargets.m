@@ -79,7 +79,7 @@ for d = 1:length(disorders)
         [~, ia] = unique(upper(targetCOMB_s));
         targetCOMB_s = targetCOMB_s(ia);
         
-        % combine all into one strin to be compatible with Ben's old script
+        % combine all into one string to be compatible with Ben's old script
         targetCOMB_s = strjoin(targetCOMB_s,',');
 
         

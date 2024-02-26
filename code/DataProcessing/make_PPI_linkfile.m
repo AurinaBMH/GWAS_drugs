@@ -5,13 +5,13 @@
 function make_PPI_linkfile()
 
 % load PPI network links
-PROTEINlinks = importPROTEINLINKSfile('9606.protein.links.v11.0.txt');
+PROTEINlinks = importPROTEINLINKSfile('9606.protein.links.v12.0.txt');
 P = PROTEINlinks(:,[1,2]);
 nPairsR = unique(P);
 if size(nPairsR,1)==size(PROTEINlinks,1)
     sprintf('all protein pairs are unique\n')
 else
-    sprintf('there are duplicate protin pairs')
+    sprintf('there are duplicate protein pairs')
 end
 %  - at the level of protein all pairs are unique
 % remove 9606 from protein IDs and replace protein IDs
@@ -50,7 +50,7 @@ for p=1:length(prot)
     end
 end
 
-writetable(PPI,'data/PPIdata/PPIlinks_v11.0.txt', 'WriteVariableNames', true)
+writetable(PPI,'data/PPIdata/PPIlinks_v12.0.txt', 'WriteVariableNames', true)
 end
 
 
