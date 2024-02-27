@@ -22,13 +22,13 @@ if strcmp(whatDatabase, 'both')
     drugREP = drugREP(IND_Launched,:);
 end
 % load drugBank database files
-vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
+vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_vocabulary.csv');
 %
 switch whatTargets
     case 'active'
-        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_approved_target_polypeptide_ids.csv/pharmacologically_active.csv');
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_approved_target_polypeptide_ids/pharmacologically_active.csv');
     case 'all'
-        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_approved_target_polypeptide_ids.csv/all.csv');
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_approved_target_polypeptide_ids/all.csv');
 end
 
 IND_human = contains(targetsBANK.Species, 'Humans'); 
@@ -104,7 +104,7 @@ end
 % active is default - will not have a not in the name, all will have a flag
 % in the file name
 
-fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_%s.mat', whatTargets, whatDatabase);
+fileName = sprintf('DataOutput_2024/drugTargets_%s_%s_%s.mat', params.whatDrugTargets, whatTargets, whatDatabase);
 
         
 save(fileName, 'dataTable'); 

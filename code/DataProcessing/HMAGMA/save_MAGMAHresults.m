@@ -1,14 +1,16 @@
 function save_MAGMAHresults(whichYear)
 
 if nargin < 1 
-    whichYear = '2022'; 
+    whichYear = '2024'; 
 end
 %---------------------------------------------------------------------------
 % This script imports HMAGMA output files and assigns each gene an entrezID
 %---------------------------------------------------------------------------
 
 params = SetDefaultParams();
-if strcmp(whichYear, '2022')
+if strcmp(whichYear, '2024')
+    Disorders = params.whatGWAS_2024;
+elseif strcmp(whichYear, '2022')
     Disorders = params.whatGWAS_2022;
 elseif strcmp(whichYear, '2021')
     Disorders = params.whatGWAS_2021;
@@ -88,5 +90,5 @@ for D=1:length(Disorders)
 end
 
 % save single file for future analyses
-save(sprintf('DataOutput_2022/GWAS_disordersMAGMA_%s.mat', whichYear), 'DISORDERlist')
+save(sprintf('DataOutput_%s/GWAS_disordersMAGMA_%s.mat', whichYear, whichYear), 'DISORDERlist')
 end

@@ -30,7 +30,7 @@ params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 % How to select genes for PPI mapping
 %-------------------------------------------------------------------------------
 params.whatThreshold = 'BF';
-params.whatDrugTargets = '2020';
+params.whatDrugTargets = '2024';
 params.whatTargets = 'all';
 params.numNull = 5000; 
 
@@ -39,6 +39,8 @@ params.numNull = 5000;
 params.whatGWAS_2021 = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
 % for 2022 data
 params.whatGWAS_2022 = {'ADHD3','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
+% for 2024 data
+params.whatGWAS_2024 = {'ADHD3','MDD4', 'SCZ3', 'BIP3', 'DIABETES2', 'HF', 'IBD', 'RA'};
 
 params.whatDiseases_Treatment = {'ADHD', 'BIP', 'SCZ', 'MDD', 'DIABETES'};
 params.whatDiseases_Treatment_label = {'ADHD', 'Bipolar disorder', 'Schizophrenia', 'Major depression', 'Diabetes'};

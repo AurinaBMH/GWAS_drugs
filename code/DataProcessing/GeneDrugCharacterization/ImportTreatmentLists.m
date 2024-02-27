@@ -7,7 +7,7 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 2
-    whatDrugTargets = '2020'; 
+    whatDrugTargets = '2024'; 
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
     % 2020 - uses automated AA version
@@ -41,8 +41,13 @@ switch whatDrugTargets
         % dataTable = give_drugTargets();
 
         fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
-
         load(fileName, 'dataTable');
+        
+    case '2024'
+        
+        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets); 
+        load(fileName, 'dataTable');
+        
 end
 
 % get all drugs with active gene targets from DrugBank

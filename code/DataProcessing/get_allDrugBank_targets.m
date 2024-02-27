@@ -8,11 +8,11 @@ end
 % pharmacologically_active.csv file and aggregate those to allDrugs format
 switch whatTargets
     case 'active'
-        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_approved_target_polypeptide_ids.csv/pharmacologically_active.csv');
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_approved_target_polypeptide_ids/pharmacologically_active.csv');
     case 'all'
-        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_approved_target_polypeptide_ids.csv/all.csv');
+        targetsBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_approved_target_polypeptide_ids/all.csv');
 end
-vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/drugbank_vocabulary.csv');
+vocabularyBANK = readtable('data/TREATMENTlists/Drug_Bank_database/2024/drugbank_vocabulary.csv');
 
 % keep only Human genes
 IND_human = contains(targetsBANK.Species, 'Humans'); 
