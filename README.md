@@ -73,6 +73,21 @@ end
 ```
 These commands will save `PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_geneLabels_th0.mat` files.   
 
+#### :label: Aggregate drug target information
+
+1. Combine drug target information from `.txt` files into matlab format
+```matlab
+dataTable = give_drugTargets('all', 'drugbank');
+```
+This will save `drugTargets_2020_all_drugbank.mat` file;
+
+2. Generate 5000 drug-based null vectors for each disorder.
+For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2155 genes;   
+For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
+```matlab
+generate_randomDrug_nulls('drugbank')
+```
+
 #### :label: Aggregate GWAS-based information
 
 1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2022.sh`.
@@ -100,20 +115,6 @@ GenerateResultsTables('2021')
 ```
 This will create `geneScores` structure for each disorder (takes several hours to run).
 
-#### :label: Aggregate drug target information
-
-1. Combine drug target information from `.txt` files into matlab format
-```matlab
-dataTable = give_drugTargets('all', 'drugbank');
-```
-This will save `drugTargets_2020_all_drugbank.mat` file;
-
-2. Generate 5000 drug-based null vectors for each disorder.
-For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2155 genes;   
-For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
-```matlab
-generate_randomDrug_nulls('drugbank')
-```
 
 ### Analysis
 
