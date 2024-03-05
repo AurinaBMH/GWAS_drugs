@@ -23,6 +23,7 @@ for i=1:length(similarityTypes)
         TF = TF1|TF2;
         
         enrichment_score_drug_dis = enrichment_score_drug(:,TF);
+        enrichment_score_drug_dis.(disorders{d})(isnan(enrichment_score_drug_dis.(disorders{d}))) = 0;
         writetable(enrichment_score_drug_dis, sprintf('enrichment_2024/enrichment_%s_drug_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
         
         % for GWAS
@@ -33,6 +34,9 @@ for i=1:length(similarityTypes)
         [~, Ie, Igwas] = intersect(entrezIDs.query, enrichment_score_gwas_dis.geneNames);
         
         enrichment_score_gwas_dis.geneNames(Igwas) = entrezIDs.entrezgene(Ie);
+        % replace NaN with 0 for enrichment analysis
+        enrichment_score_gwas_dis.geneWeightsGWAS(isnan(enrichment_score_gwas_dis.geneWeightsGWAS)) = 0; 
+        
         writetable(enrichment_score_gwas_dis, sprintf('enrichment_2024/enrichment_%s_gwas_%s', disorders{d}, similarityTypes{i}), 'Delimiter', '\t')
         
     end
