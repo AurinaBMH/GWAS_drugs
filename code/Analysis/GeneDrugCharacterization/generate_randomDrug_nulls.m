@@ -12,7 +12,7 @@ numNulls = 5000;
 params = SetDefaultParams();
 whatDiseases_Treatment = params.whatDiseases_Treatment_ALL; 
 
-[geneNamesGWAS,~] = GiveMeNormalizedScoreVector('ADHD','GWAS','MAGMAdefault',params.geneScore, params.whatThreshold);
+[geneNamesGWAS,~] = GiveMeNormalizedScoreVector('ADHD3','GWAS','MAGMAdefault',params.geneScore, params.whatThreshold);
 [~,~, disorderDrugs, allDrugs] = ImportTreatmentLists(true, params.whatDrugTargets, params.whatTargets);
 
 numGenes = length(geneNamesGWAS); 
@@ -31,13 +31,13 @@ end
 
 switch whatSelection
     case 'random' % these are for old version of the data
-        fileName = sprintf('DataOutput_2022/nulls_%d_%stargets_randomDrugR.mat', numNulls,params.whatDrugTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR.mat', numNulls,params.whatDrugTargets); 
     case 'proportional' % these are for old version of the data
-        fileName = sprintf('DataOutput_2022/nulls_%d_%stargets_randomDrugP.mat', numNulls,params.whatDrugTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugP.mat', numNulls,params.whatDrugTargets); 
     case 'proportionalPsych' % these are used for drugbank data
-        fileName = sprintf('DataOutput_2022/nulls_%d_%stargets_randomDrugP_%s_drugbank_psych.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugP_%s_drugbank_psych.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
     case 'drugbank'  % these are used for drugbank data
-        fileName = sprintf('DataOutput_2022/nulls_%d_%stargets_randomDrugR_%s_drugbank.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR_%s_drugbank.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
 end
 
 save(fileName, 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames', 'params');

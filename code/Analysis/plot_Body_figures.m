@@ -2,14 +2,14 @@ function plot_Body_figures()
 
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
-whatDiseases_GWAS = {'IBD','RA', 'HF', 'DIABETES'}; %'BIPandSCZ'
+whatDiseases_GWAS = {'IBD','RA', 'HF', 'DIABETES2'}; %'BIPandSCZ'
 whatMeasures = 'allBody';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets);
 
 %-------------------------------------------------------
 % Figure S3: Correspondence across different data processing methods
 %-------------------------------------------------------
-DOrecalc = false;
+DOrecalc = true;
 plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc);
 
 %-------------------------------------------------------
@@ -30,7 +30,7 @@ for s=1:length(similarityTypes)
     end
     
     [rhosALL ,pValsALL] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, length(similarityTypes), whatMeasures);
-    figureName = sprintf('figures_2022/BarChart_body_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    figureName = sprintf('figures_2024/BarChart_body_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
     
     

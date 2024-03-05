@@ -7,7 +7,7 @@ if nargin < 4
 end
 
 % load null data
-fileName = sprintf('nulls_5000_2020targets_%s.mat', whatNull); 
+fileName = sprintf('nulls_5000_2024targets_%s.mat', whatNull); 
 load(fileName, 'whatDiseases_Treatment', 'RANDOMdrugs_treatment', 'geneNames');
 
 

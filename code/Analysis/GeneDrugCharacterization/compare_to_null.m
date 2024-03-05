@@ -7,7 +7,7 @@ end
 
 params = SetDefaultParams();
 whatGWAS = whatGWAS(isstrprop(whatGWAS,'alpha'));
-load(sprintf('DataOutput_2022/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+load(sprintf('DataOutput_2024/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
 
 
 % choose null for the corresponding disorder

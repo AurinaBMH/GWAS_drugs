@@ -90,5 +90,5 @@ for D=1:length(Disorders)
 end
 
 % save single file for future analyses
-save(sprintf('DataOutput_%s/GWAS_disordersMAGMA_%s.mat', whichYear, whichYear), 'DISORDERlist')
+save(sprintf('DataOutput_2024/GWAS_disordersMAGMA_%s.mat', whichYear), 'DISORDERlist')
 end

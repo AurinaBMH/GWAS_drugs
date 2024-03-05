@@ -5,7 +5,7 @@ if nargin < 3
 end
 
 if nargin < 4
-    whatYear = '2022'; 
+    whatYear = '2024'; 
 end
 
 if nargin < 5
@@ -16,7 +16,7 @@ end
 
 if recalc
     [Ptable, measureNames] = compare_optimizedScores(whatDiseases_GWAS, whatMeasures, whatNull);
-    fileName = sprintf('DataOutput_2022/Ptable_%s_%s.mat', whatMeasures, whatYear); 
+    fileName = sprintf('DataOutput_2024/Ptable_%s_%s.mat', whatMeasures, whatYear); 
     save(fileName, 'Ptable', 'measureNames'); 
 else
     load(sprintf('Ptable_%s_%s.mat', whatMeasures, whatYear))

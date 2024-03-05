@@ -7,7 +7,7 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 3
-    whatDrugTargets = '2020';
+    whatDrugTargets = '2024';
     whatTargets = 'all';
     % 2020 - uses automated AA version
 end
@@ -35,9 +35,17 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-
-        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
-
+        
+        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets);
+        
+        load(fileName, 'dataTable');
+    case '2024'
+        % use drug targets assigned automatically by AA in 08/2020
+        % it takes ~10s to run, so load the pre-computed data here
+        % dataTable = give_drugTargets();
+        
+        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets);
+        
         load(fileName, 'dataTable');
 end
 

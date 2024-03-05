@@ -36,9 +36,9 @@ params.numNull = 5000;
 
 % keep only psychiatric drugs+ diabetes
 % for 2021 data
-params.whatGWAS_2021 = {'ADHD', 'MDD2', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
+params.whatGWAS_2021 = {'ADHD', 'MDD3', 'SCZ', 'BIP2', 'DIABETES', 'HF', 'IBD', 'RA'};
 % for 2022 data
-params.whatGWAS_2022 = {'ADHD3','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
+%params.whatGWAS_2022 = {'ADHD3','MDD3', 'SCZ3', 'BIP3', 'DIABETES', 'HF', 'IBD', 'RA'};
 % for 2024 data
 params.whatGWAS_2024 = {'ADHD3','MDD4', 'SCZ3', 'BIP3', 'DIABETES2', 'HF', 'IBD', 'RA'};
 

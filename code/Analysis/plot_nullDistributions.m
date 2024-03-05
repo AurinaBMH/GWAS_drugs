@@ -1,7 +1,7 @@
 function [f, Ptable] = plot_nullDistributions(whatYear)
 
 if nargin < 1
-    whatYear = '2022'; 
+    whatYear = '2024'; 
 end
 
 whatMeasures = 'allPsych';
@@ -13,8 +13,9 @@ colLine = [252,78,42]/255;
 % based on all radnom drug nulls or only using psychiatric drug nulls; 
 typesNull = {'randomDrugR_all_drugbank','randomDrugP_all_drugbank_psych'}; 
 for t=1:length(typesNull)
+    
 % for BIP
-if strcmp(whatYear, '2022')
+if strcmp(whatYear, '2024')
     whatDiseases_GWAS = {'BIP3'};
 elseif strcmp(whatYear, '2021')
     whatDiseases_GWAS = {'BIP2'};
@@ -22,8 +23,13 @@ end
 [BIP_rhosALL{t} ,~, whatDiseases_Treatment, BIP_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 
-% for DIABETES
-whatDiseases_GWAS = {'DIABETES'}; 
+% for DIABETES, use newer GWAS
+if strcmp(whatYear, '2024')
+    whatDiseases_GWAS = {'DIABETES2'};
+elseif strcmp(whatYear, '2021')
+    whatDiseases_GWAS = {'DIABETES'};
+end
+
 [DIABETES_rhosALL{t} ,~, whatDiseases_Treatment, DIABETES_null{t}] = ...
     DistinguishingCharBar('PPI_mapped_th600','percPPIneighbors1', typesNull{t}, 'BF', whatDiseases_GWAS, false, 4, whatMeasures);
 end
@@ -52,8 +58,6 @@ xlabel('GWAS-treatment similarity')
 ylabel({'Count'})
 set(gca,'FontSize', 20)
 title('Bipolar disorder')
-        
-        
 
 % find DIABETES in DIABETES list
 [~, IND_diabetes] = intersect(whatDiseases_Treatment,'DIABETES', 'stable');

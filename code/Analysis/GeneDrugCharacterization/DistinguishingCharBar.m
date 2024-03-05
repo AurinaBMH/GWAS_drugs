@@ -15,7 +15,7 @@ end
 
 if nargin < 5
     params = SetDefaultParams();
-    whatDiseases_GWAS = params.whatGWAS_2022;
+    whatDiseases_GWAS = params.whatGWAS_2024;
 end
 
 if nargin < 6
@@ -57,7 +57,7 @@ if strcmp(whatNull, 'randomGene')
     
 elseif contains(whatNull, 'randomDrug')
     
-    load(sprintf('DataOutput_2022/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    load(sprintf('DataOutput_2024/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');

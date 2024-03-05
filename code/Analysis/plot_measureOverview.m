@@ -54,7 +54,7 @@ for l=1:size(Pmatrix,1)
     xticklabels(whatDiseases_Treatment_label(ix));
     xtickangle(90);
     xlim([0 5]); 
-    
+    ylim([0 3.5])
 %     ax{l}.XTickLabelRotation = 90;
     xlabel('Disorder')
     ylabel('-log10(P)')    

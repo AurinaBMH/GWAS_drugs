@@ -21,7 +21,7 @@ end
 whatThreshold='BF';
 
 % load information on genes mapped using different methods
-load(sprintf('DataOutput_%s/GWAS_disordersMAGMA_%s.mat', whichYear, whichYear))
+load(sprintf('DataOutput_2024/GWAS_disordersMAGMA_%s.mat', whichYear))
 
 %-------------------------------------------------------------------------------
 numDiseases = length(whatDiseases);
@@ -31,7 +31,7 @@ for k = 1:numDiseases
     geneScores = pipeline(DISORDERlist, whatDisease, whatThreshold);
     % Save:
     fileName = sprintf('resultsTable_%s_%s_%s_%s_drugbank.mat',whatDisease, whatThreshold, params.whatDrugTargets, params.whatTargets);
-     fileName = fullfile(sprintf('DataOutput_%s', whichYear),fileName);
+    fileName = fullfile(sprintf('DataOutput_2024'),fileName);
     save(fileName,'geneScores');
     fprintf(1,'Saved results to %s!!!\n\n\n',fileName);
 end

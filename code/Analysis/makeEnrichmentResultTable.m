@@ -1,6 +1,8 @@
 function GOtableCON = makeEnrichmentResultTable(disorder, measuretype)
 % Compile ermineJ results and keep only signifficant values after FDR correction
 
+mkdir enrichment_2024/output/filter
+
 % this is output file from ermineJ
 if strcmp(measuretype, 'PPI')
     analysistype = 'ORA';
@@ -15,7 +17,7 @@ for n=1:length(onwhat)
     type = sprintf('%s_%s_run_on_%s_%s.erminej', disorder, analysistype, onwhat{n}, measuretype);
     fileINname = sprintf('%s.txt', type);
     
-    ermineJResultsBPcon = ReadInErmineJ(sprintf('enrichment_2022/output/%s', fileINname));
+    ermineJResultsBPcon = ReadInErmineJ(sprintf('enrichment_2024/output/%s', fileINname));
     CONall = vertcat(ermineJResultsBPcon);
     CONall.corr_pval = mafdr(CONall.pval,'BHFDR',true);
     CONall = CONall(1:100,:);
@@ -28,7 +30,8 @@ for n=1:length(onwhat)
     GOtableCON.Pval_corr = round(CONall.corr_pval*(10^num_dig))/(10^num_dig);
     
     % save file as .csv
-    fileOUTname = sprintf('enrichment_2022/output/filter/ermineJresults_%s.csv', type);
+    
+    fileOUTname = sprintf('enrichment_2024/output/filter/ermineJresults_%s.csv', type);
     writetable(GOtableCON,fileOUTname)
 end
 

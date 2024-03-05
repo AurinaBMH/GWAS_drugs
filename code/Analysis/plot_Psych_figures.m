@@ -1,12 +1,12 @@
 % Generating results for psychiatric disorders:
-function plot_Psych_figures()
+function [T_diabetes, T_bip] = plot_Psych_figures()
 %-------------------------------------------------------
 % Set the options
 %-------------------------------------------------------
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_GWAS = {'ADHD3', 'MDD3','SCZ3','BIP3','DIABETES'};
+whatDiseases_GWAS = {'ADHD3','MDD4','SCZ3','BIP3','DIABETES2'};
 numDrugs = length(params.whatDiseases_Treatment); 
 whatMeasures = 'allPsych';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets); 
@@ -40,8 +40,8 @@ for s=1:length(similarityTypes)
     
     [rhosALL ,pValsALL, whatDiseases_Treatment, ~, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % save scores for enrichment
-    save(sprintf('enrichment_2022/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
-    save(sprintf('enrichment_2022/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
+    save(sprintf('enrichment_2024/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
+    save(sprintf('enrichment_2024/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
     
     
     % find corresponsing match
@@ -49,7 +49,7 @@ for s=1:length(similarityTypes)
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
 
-    figureName = sprintf('figures_2022/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    figureName = sprintf('figures_2024/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
 
     
@@ -59,11 +59,11 @@ end
 % Figure 2: Calculate matches for individual disorders
 %-------------------------------------------------------
 f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
-figureName = sprintf('figures_2022/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
+figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
 % score genes by contribution: 
-[Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES', 'DIABETES', 'PPI_mapped_th600');
+[Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES2', 'DIABETES', 'PPI_mapped_th600');
 [Prank_bip, Drank_bip, Grank_bip] = rank_gene_contribution('BIP3', 'BIP', 'PPI_mapped_th600');
 
 % these are genes that more significantly contribute to the match between
@@ -89,7 +89,7 @@ Mnumbers = cell(numGWAS,1);
 for i=1:numGWAS
 
     [f, Mnames{i}, Mnumbers{i}] = correlate_geneMeasures(whatDiseases_GWAS{i}, whatMeasures, true);
-    figureName = sprintf('figures_2022/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
+    figureName = sprintf('figures_2024/%s_geneMeasures_%s', whatDiseases_GWAS{i}, whatMeasures);
     print(f,figureName,'-dpng','-r300');
     
 end
@@ -99,8 +99,8 @@ end
 %-------------------------------------------------------
 % Plot null distributions when choosing from all and from psychiatric drugs: 
 % in this example PPI-based significant results are used: bipolar disorder and diabetes; 
-[f, Ptable_null] = plot_nullDistributions(); 
-figureName = 'figures_2022/Null_distribution_comparison';
+[f, Ptable_null] = plot_nullDistributions();
+figureName = 'figures_2024/Null_distribution_comparison';
 print(f,figureName,'-dpng','-r300');
 
 end
