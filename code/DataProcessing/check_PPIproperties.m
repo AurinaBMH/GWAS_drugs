@@ -1,22 +1,24 @@
 % check how many genes survive thresholding
 
-load('GWAS_disordersMAGMA.mat')
+load('GWAS_disordersMAGMA_2024.mat')
 
-mappings = {'MAGMAdefault', 'eQTLbrain'}; 
+mappings = {'MAGMAdefault','eQTLbrain'}; 
 disorders = fieldnames(DISORDERlist.MAGMAdefault); 
-
-pThr = 0.01; 
         
 for i=1:length(mappings)
     for j=1:length(disorders)
         
-        mapLIST = DISORDERlist.(mappings{i}).(disorders{j}); 
-        pFDR = mafdr(mapLIST.P, 'BHFDR', true); 
+        listGENESmapped = DISORDERlist.(mappings{i}).(disorders{j}); 
+        pThr_m = 0.05/size(listGENESmapped,1); % Bonf correction for the number of genes in the list
+        
+        allMappedDiseaseGenes = listGENESmapped.GENENAME(listGENESmapped.P<pThr_m);
 
-        fprintf('%s %s: %d genes\n', mappings{i}, disorders{j}, sum(pFDR<pThr));
+        fprintf('%s %s: %d genes\n', mappings{i}, disorders{j}, length(allMappedDiseaseGenes));
         
     end
 end
+
+
 
 % visualise PPI network distances at different thresholds
 thrs = [400,600,900]; 
