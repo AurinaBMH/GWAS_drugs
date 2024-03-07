@@ -13,19 +13,18 @@ The code was written using MATLAB_R2020b.
 ## Data Information
 
 #### :dna: GWAS summary statistics:
-1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2022)'](https://doi.org/10.1101/2022.02.14.22270780)
+1. ADHD GWAS summary statistics based on [:green_book: 'Demontis et al (2023)'](https://doi.org/10.1038/s41588-022-01285-8)
 2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
-3. Major depression GWAS summary statistics based on [:green_book: 'Howard et al (2019)'](https://doi.org/10.1038/s41593-018-0326-7)
+3. Major depression GWAS summary statistics based on [:green_book: 'Als et al (2023)'](https://doi.org/10.1038/s41591-023-02352-1)
 4. Schizophrenia GWAS summary statistics based on [:green_book: 'Vassily Trubetskoy et al (2022)'](https://doi.org/10.1038/s41586-022-04434-5)
 5. Diabetes GWAS summary statistics based on [:green_book: 'Xue et al (2018)'](https://doi.org/10.1038/s41467-018-04951-w)
 6. Heart failure GWAS summary statistics based on [:green_book: 'Shah et al (2021)'](https://doi.org/10.1038/s41467-019-13690-5)
 7. Inflammatory bowel disease GWAS summary statistics based on [:green_book: 'Lange et al (2017)'](https://doi.org/10.1038/ng.3760)
 8. Rheumatoid arthritis GWAS summary statistics based on [:green_book: 'Okada et al (2013)'](https://doi.org/10.1038/nature12873)
 
-
 #### :books: PPI network data
 
-`9606.protein.links.v11.0.txt.gz (71.2 Mb)` and `9606.protein.info.v11.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 11.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 24th of June 2020;
+`9606.protein.links.v12.0.txt.gz (83.2 Mb)` and `9606.protein.info.v12.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 12.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 26th of February 2024;
 
 #### :pill: Treatments lists
 Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020.
@@ -38,6 +37,9 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 6. "heart failure" (for heart failure);
 7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and
 8. "rheumatoid arthritis" (for rheumatoid arthritis).
+
+#### :dna:pill:books: Treatment targets
+The list of genes used in all analyses is based on the combined set of all approved treatment targets from the [:books: 'DrugBank database (version $5.1.11)'](https://go.drugbank.com/), downloaded on the 26th of February 2024.
 
 ## Workflow
 
