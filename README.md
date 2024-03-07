@@ -37,8 +37,8 @@ Specifically, drugs for each indication were searched in the DrugBank database u
 6. "heart failure" (for heart failure);
 7. "Crohn's" and "ulcerative colitis" (for inflammatory bowel disease"); and
 8. "rheumatoid arthritis" (for rheumatoid arthritis).
-
-#### :dna:pill:books: Treatment targets
+   
+#### :books: Treatment targets
 The list of genes used in all analyses is based on the combined set of all approved treatment targets from the [:books: 'DrugBank database (version $5.1.11)'](https://go.drugbank.com/), downloaded on the 26th of February 2024.
 
 ## Workflow
@@ -46,7 +46,7 @@ The list of genes used in all analyses is based on the combined set of all appro
 ### Data files
 
 Raw data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/MjzVh95NbO3Sux4). Enrichment analysis results and associated files are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF).
-To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2022` folders in the root directory (19.3 GB when unzipped). GWAS summary statistics data for ADHD is not included here yet and will be uploaded upon the publication of the original article by Demontis et al. (2022).
+To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (19.3 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.  
 If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2) as well as the enrichment analysis results from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF), unzip and place the `DataOutput_2022` (780.8 MB when unzipped) and `enrichment_2022` folders in the root directory.
 This will allow to work with processed data and reproduce the figures immediately (data processing from raw files takes several days).
@@ -59,7 +59,7 @@ As a result, the contents of the root directory should be as follows:
 ![](code/plots/root_directory.png)
 
 #### :label: Aggregate PPI-based information
-Information on the PPI data (file: `9606.protein.links.v11.0.txt`) can be found in `data/PPIdata/README_PPI.txt`
+Information on the PPI data (file: `9606.protein.links.v12.0.txt`) can be found in `data/PPIdata/README_PPI.txt`
 1. Replace protein IDs with gene names using `make_PPI_linkfile()`;
 2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900:
 ```matlab
@@ -81,10 +81,10 @@ These commands will save `PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_ge
 ```matlab
 dataTable = give_drugTargets('all', 'drugbank');
 ```
-This will save `drugTargets_2020_all_drugbank.mat` file;
+This will save `drugTargets_2024_all_drugbank.mat` file;
 
 2. Generate 5000 drug-based null vectors for each disorder.
-For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2155 genes;   
+For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
 For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
 ```matlab
 generate_randomDrug_nulls('drugbank')
@@ -92,8 +92,8 @@ generate_randomDrug_nulls('drugbank')
 
 #### :label: Aggregate GWAS-based information
 
-1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2022.sh`.
-First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2022.sh` to indicate the location of code, .annot files and reference genome.
+1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`.
+First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2024.sh` to indicate the location of code, .annot files and reference genome.
 
 2. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
 The output is saved to `BIOMART_geneIDs.txt`;
@@ -111,11 +111,11 @@ save_MAGMAHresults('2021')
 ```matlab
 GenerateResultsTables()
 ```
-To generate data using an older set of GWAS summary statistics:
-```matlab
-GenerateResultsTables('2021')
+
 ```
 This will create `geneScores` structure for each disorder (takes several hours to run).
+
+For replicating results using an alternative set of GWAS summary statistics:
 
 
 ### Analysis
@@ -167,7 +167,7 @@ Save gene scores for enrichment analysis:
 save_enrichment_scores()
 ```
 
-Run the enrichment analysis using ermineJ software, save the results from each analysis in the `enrichment_2022/output` folder.
+Run the enrichment analysis using ermineJ software, save the results from each analysis in the `enrichment_2024/output` folder.
 Enrichment analysis results derived from ermineJ are already provided. Aggregate results using:
 ```matlab
 save_enrichment_results();
