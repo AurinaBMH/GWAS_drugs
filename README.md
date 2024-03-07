@@ -17,7 +17,7 @@ The code was written using MATLAB_R2020b.
 2. Bipolar disorder GWAS summary statistics based on [:green_book: 'Mullins et al (2021)'](https://doi.org/10.1038/s41588-021-00857-4)
 3. Major depression GWAS summary statistics based on [:green_book: 'Als et al (2023)'](https://doi.org/10.1038/s41591-023-02352-1)
 4. Schizophrenia GWAS summary statistics based on [:green_book: 'Trubetskoy et al (2022)'](https://doi.org/10.1038/s41586-022-04434-5)
-5. Diabetes GWAS summary statistics based on [:green_book: 'Xue et al (2018)'](https://doi.org/10.1038/s41467-018-04951-w)
+5. Diabetes GWAS summary statistics based on [:green_book: 'Mahajan et al (2022)'](https://doi.org/10.1038/s41588-022-01058-3)
 6. Heart failure GWAS summary statistics based on [:green_book: 'Shah et al (2021)'](https://doi.org/10.1038/s41467-019-13690-5)
 7. Inflammatory bowel disease GWAS summary statistics based on [:green_book: 'Lange et al (2017)'](https://doi.org/10.1038/ng.3760)
 8. Rheumatoid arthritis GWAS summary statistics based on [:green_book: 'Okada et al (2013)'](https://doi.org/10.1038/nature12873)
@@ -48,7 +48,7 @@ The list of genes used in all analyses is based on the combined set of all appro
 Raw data files required for this project are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/MjzVh95NbO3Sux4). Enrichment analysis results and associated files are hosted on [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF).
 To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (19.3 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.  
-If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2) as well as the enrichment analysis results from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF), unzip and place the `DataOutput_2022` (780.8 MB when unzipped) and `enrichment_2022` folders in the root directory.
+If you would like only to reproduce figures presented in the manuscript, please download pre-processed data from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/a3byrTft99HEyr2) as well as the enrichment analysis results from [this CloudStor repository](https://cloudstor.aarnet.edu.au/plus/s/1L3AJSlIqxgAzaF), unzip and place the `DataOutput_2024` (780.8 MB when unzipped) and `enrichment_2024` folders in the root directory.
 This will allow to work with processed data and reproduce the figures immediately (data processing from raw files takes several days).
 To reproduce figures, move to the **"Analysis"** section.
 
@@ -111,8 +111,11 @@ save_MAGMAHresults('2021')
 ```matlab
 GenerateResultsTables()
 ```
-
+To generate data using an older set of GWAS summary statistics:
+```matlab
+GenerateResultsTables('2021')
 ```
+
 This will create `geneScores` structure for each disorder (takes several hours to run).
 
 For replicating results using an alternative set of GWAS summary statistics:
