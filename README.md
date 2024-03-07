@@ -134,10 +134,10 @@ plot_Psych_figures()
 
 `Figure 3` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
 ![](code/plots/compareMeasures_ADHD3_allPsych.png)
-![](code/plots/compareMeasures_MDD3_allPsych.png)
+![](code/plots/compareMeasures_MDD4_allPsych.png)
 ![](code/plots/compareMeasures_SCZ3_allPsych.png)
 ![](code/plots/compareMeasures_BIP3_allPsych.png)
-![](code/plots/compareMeasures_DIABETES_allPsych.png)
+![](code/plots/compareMeasures_DIABETES2_allPsych.png)
 
 `Figure S1` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
 ![](code/plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank.png)
@@ -147,10 +147,10 @@ plot_Psych_figures()
 
 `Figure S2` - Correlation between mapping methods.
 ![](code/plots/ADHD3_geneMeasures_allPsych.png)
-![](code/plots/MDD3_geneMeasures_allPsych.png)
+![](code/plots/MDD4_geneMeasures_allPsych.png)
 ![](code/plots/SCZ3_geneMeasures_allPsych.png)
 ![](code/plots/BIP3_geneMeasures_allPsych.png)
-![](code/plots/DIABETES_geneMeasures_allPsych.png)
+![](code/plots/DIABETES2_geneMeasures_allPsych.png)
 
 `Figure S4` - The comparison of different null models for significance testing.
 ![](code/plots/Null_distribution_comparison.png)
@@ -163,7 +163,7 @@ plot_Body_figures()
 ![](code/plots/compareMeasures_HF_allBody.png)
 ![](code/plots/compareMeasures_RA_allBody.png)
 ![](code/plots/compareMeasures_IBD_allBody.png)
-![](code/plots/compareMeasures_DIABETES_allBody.png)
+![](code/plots/compareMeasures_DIABETES2_allBody.png)
 
 Save gene scores for enrichment analysis:
 ```matlab
@@ -186,7 +186,7 @@ plot_Psych_figures_2021()
 
 `Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
 ![](code/plots/compareMeasures_ADHD_allPsych.png)
-![](code/plots/compareMeasures_MDD2_allPsych.png)
+![](code/plots/compareMeasures_MDD3_allPsych.png)
 ![](code/plots/compareMeasures_SCZ_allPsych.png)
 ![](code/plots/compareMeasures_BIP2_allPsych.png)
 ![](code/plots/compareMeasures_DIABETES_allPsych.png)
