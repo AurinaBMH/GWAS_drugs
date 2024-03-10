@@ -45,23 +45,23 @@ The list of genes used in all analyses is based on the combined set of all appro
 
 ### Data files
 
-Data files required for this project are located hosted on [this Figshare repository]([https://XXX](https://figshare.com/s/3fdbdfa3a3138103e1e4)). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
+Data files required for this project are located hosted on [this Figshare repository]([[https://XXX](https://figshare.com/s/3fdbdfa3a3138103e1e4)]). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
 To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (23.35 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.
-If you would like only to reproduce figures presented in the manuscript, please download pre-processed data [DataOutput_2024](https://XXX) as well as the enrichment analysis results from [enrichment_2024.zip](https://XXX), unzip and place the `DataOutput_2024` (780.8 MB when unzipped) and `enrichment_2024` folders in the root directory.
+If you would like only to reproduce figures presented in the manuscript, please download pre-processed data `DataOutput_2024.zip` as well as the enrichment analysis results `enrichment_2024.zip`, unzip and place the `DataOutput_2024` (812.2 MB when unzipped) and `enrichment_2024` folders in the root directory.
 This will allow to work with processed data and reproduce the figures immediately (data processing from raw files takes several days).
 To reproduce figures, move to the **"Analysis"** section.
 
 ### Data processing
-First, add all sub-folders to the path using startup() function from the root directory.
-All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the startup() function.
+First, add all sub-folders to the path using `startup()` function from the root directory.
+All scripts and functions need to be run from the root directory that contains `data` folder and other folders created running the `startup()` function.
 As a result, the contents of the root directory should be as follows:
 ![](code/plots/root_directory.png)
 
 #### :label: Aggregate PPI-based information
 Information on the PPI data (file: `9606.protein.links.v12.0.txt`) can be found in `data/PPIdata/README_PPI.txt`
 1. Replace protein IDs with gene names using `make_PPI_linkfile()`;
-2. Generate a binary PPI network thresholdeds at different evidence thresholds: 0,400,600,900:
+2. Generate a binary PPI network thresholded at different evidence thresholds: 0,400,600,900:
 ```matlab
 % BINARY networks:
 PPIthrs = [0,400,600,900];
@@ -85,14 +85,13 @@ This will save `drugTargets_2024_all_drugbank.mat` file;
 
 #### :label: Aggregate GWAS-based information
 
-1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`.Files generated using this script are already placed in `GWASlists/GWASgenes_2022`, so this step can be skipped.
-First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2024.sh` to indicate the location of code, .annot files and reference genome.
-Takes several days to run for all disorders and mapping methods.
+1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`. Files generated using this script are already placed in `GWASlists/GWASgenes_2022`, so this step can be skipped.
+To run the script, first modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2024.sh` to indicate the location of code, .annot files, and reference genome. Takes several days to run for all disorders and mapping methods.
 
-2. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
+3. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
 The output is saved to `BIOMART_geneIDs.txt` (this file is already saved in `GWASlists`); 
 
-3. Update gene IDs for MAGMA outputs and collate all results into a single .mat file:
+4. Update gene IDs for MAGMA outputs and collate all results into a single .mat file:
 ```matlab
 save_MAGMAHresults()
 ```
@@ -115,8 +114,8 @@ This will create `geneScores` structure for each disorder (takes several hours t
 #### :label: Generate drug-based nulls
 
 Generate 5000 drug-based null vectors for each disorder.
-For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
-For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
+For each disorder, a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
+For example, there are 14 drugs for ADHD, 22 for bipolar disorder, and 45 for diabetes, so for each disorder that number of random treatments is selected.
 ```matlab
 generate_randomDrug_nulls('drugbank')
 ```
@@ -175,7 +174,7 @@ Save gene scores for enrichment analysis:
 save_enrichment_scores()
 ```
 
-Run the enrichment analysis using ermineJ software (see more detail in the manuscript), save the results from each analysis in the `enrichment_2024/output` folder.
+Run the enrichment analysis using ermineJ software (see more detail in the manuscript), and save the results from each analysis in the `enrichment_2024/output` folder.
 Enrichment analysis results derived from ermineJ are already provided. Aggregate results using:
 ```matlab
 save_enrichment_results();
