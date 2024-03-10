@@ -83,22 +83,17 @@ dataTable = give_drugTargets('all', 'drugbank');
 ```
 This will save `drugTargets_2024_all_drugbank.mat` file;
 
-2. Generate 5000 drug-based null vectors for each disorder.
-For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
-For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
-```matlab
-generate_randomDrug_nulls('drugbank')
-```
-
 #### :label: Aggregate GWAS-based information
 
 1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`.
 First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2024.sh` to indicate the location of code, .annot files and reference genome.
+Takes several days to run for all disorders and mapping methods. 
 
-2. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
+
+3. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
 The output is saved to `BIOMART_geneIDs.txt`;
 
-3. Update gene IDs for MAGMA outputs and collate all results into a single .mat file:
+4. Update gene IDs for MAGMA outputs and collate all results into a single .mat file:
 ```matlab
 save_MAGMAHresults()
 ```
@@ -118,8 +113,19 @@ GenerateResultsTables('2021')
 
 This will create `geneScores` structure for each disorder (takes several hours to run).
 
-For replicating results using an alternative set of GWAS summary statistics:
+#### :label: Generate drug-based nulls
 
+Generate 5000 drug-based null vectors for each disorder.
+For each disorder a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
+For example, there are 14 drugs for ADHD, 22 for bopolar disorder and 45 for diabetes, so for each disorder that number of random treatments is selected.
+```matlab
+generate_randomDrug_nulls('drugbank')
+```
+
+Generate null vectors based on psychiatric disorder drugs only
+```matlab
+generate_randomDrug_nulls('proportionalPsych')
+```
 
 ### Analysis
 
@@ -170,7 +176,7 @@ Save gene scores for enrichment analysis:
 save_enrichment_scores()
 ```
 
-Run the enrichment analysis using ermineJ software, save the results from each analysis in the `enrichment_2024/output` folder.
+Run the enrichment analysis using ermineJ software (see more detail in the manuscript), save the results from each analysis in the `enrichment_2024/output` folder.
 Enrichment analysis results derived from ermineJ are already provided. Aggregate results using:
 ```matlab
 save_enrichment_results();
