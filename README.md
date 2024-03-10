@@ -45,7 +45,7 @@ The list of genes used in all analyses is based on the combined set of all appro
 
 ### Data files
 
-Data files required for this project are located hosted on [this Figshare repository]([[https://XXX](https://figshare.com/s/3fdbdfa3a3138103e1e4)]). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
+Data files required for this project are located hosted on [this Figshare repository](https://figshare.com/s/3fdbdfa3a3138103e1e4). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
 To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (23.35 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.
 If you would like only to reproduce figures presented in the manuscript, please download pre-processed data `DataOutput_2024.zip` as well as the enrichment analysis results `enrichment_2024.zip`, unzip and place the `DataOutput_2024` (812.2 MB when unzipped) and `enrichment_2024` folders in the root directory.
