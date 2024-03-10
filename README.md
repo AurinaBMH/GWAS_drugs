@@ -71,6 +71,7 @@ for t=1:length(PPIthrs)
     [AdjPPI,geneNames] = PPINImport(false, PPIthrs(t), 'HGNCmatch');
     distMatrix = ComputePPIDist(PPIthrs(t), false);  
 end
+
 % WEIGHTED network:
 
 [AdjPPI,geneNames] = PPINImport(true);
