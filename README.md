@@ -169,6 +169,13 @@ plot_Body_figures()
 ![](code/plots/compareMeasures_IBD_allBody.png)
 ![](code/plots/compareMeasures_DIABETES2_allBody.png)
 
+
+Score individual genes based on their contribution to the similarity score (`Table S1`):
+```matlab
+TpBIP = rank_gene_contribution('BIP3', 'BIP', 'PPI_mapped_th600');
+TpDIABETES = rank_gene_contribution('DIABETES2', 'DIABETES', 'PPI_mapped_th600');
+```
+
 Save gene scores for enrichment analysis:
 ```matlab
 save_enrichment_scores()
@@ -179,6 +186,7 @@ Enrichment analysis results derived from ermineJ are already provided. Aggregate
 ```matlab
 save_enrichment_results();
 ```
+
 
 For replicating results using an alternative set of GWAS summary statistics (`Figure S5`, `Figure S6`, `Figure S7`) generate figures using:
 ```matlab
