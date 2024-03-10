@@ -64,6 +64,7 @@ Information on the PPI data (file: `9606.protein.links.v12.0.txt`) can be found 
 2. Generate a binary PPI network thresholded at different evidence thresholds: 0,400,600,900:
 ```matlab
 % BINARY networks:
+
 PPIthrs = [0,400,600,900];
 for t=1:length(PPIthrs)   
     % save PPI Adj and distance matrix
@@ -71,6 +72,7 @@ for t=1:length(PPIthrs)
     distMatrix = ComputePPIDist(PPIthrs(t), false);  
 end
 % WEIGHTED network:
+
 [AdjPPI,geneNames] = PPINImport(true);
 ```
 These commands will save `PPI_HGNC_Adj_th0.mat/PPI_HGNC_Dist_th0.mat/PPI_HGNC_geneLabels_th0.mat` files.   
