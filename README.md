@@ -45,7 +45,7 @@ The list of genes used in all analyses is based on the combined set of all appro
 
 ### Data files
 
-Raw data files required for this project are located hosted on [this Figshare repository](https://XXX). Data files are located in [data.zip](https://XXX). Enrichment analysis results and associated files are located in [enrichment_2024.zip](https://XXX).
+Data files required for this project are located hosted on [this Figshare repository]([https://XXX](https://figshare.com/s/3fdbdfa3a3138103e1e4)). Raw data files are located in [data.zip]. Enrichment analysis results and associated files are located in [enrichment_2024.zip].
 To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (23.35 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.  
 If you would like only to reproduce figures presented in the manuscript, please download pre-processed data [DataOutput_2024](https://XXX) as well as the enrichment analysis results from [enrichment_2024.zip](https://XXX), unzip and place the `DataOutput_2024` (780.8 MB when unzipped) and `enrichment_2024` folders in the root directory.
@@ -87,7 +87,8 @@ This will save `drugTargets_2024_all_drugbank.mat` file;
 
 1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`.
 First, modify paths in lines 1-5 of `code/DataProcessing/HMAGMA/HMAGMA_code_2024.sh` to indicate the location of code, .annot files and reference genome.
-Takes several days to run for all disorders and mapping methods. 
+Takes several days to run for all disorders and mapping methods.
+Files generated using this script are already placed in `GWASlists/GWASgenes_2022`. 
 
 
 3. Gene names are in the `ENSG` format. Get gene name to entrezID mapping using `code/DataProcessing/HMAGMA/get_BIOMARTdata.R`.
