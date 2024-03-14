@@ -1,7 +1,7 @@
 clear all; close all; 
 %similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AllenMeanCoexpMapped'};
 % rank genes for relevant pairs of GWAS vs drug on SNP position measure
-similarityType = 'MAGMAdefault';
+similarityType = 'PPI_mapped_th600';
 % these lists are pairs of GWASvsDrugs for ranking;
 whatGWAS = {'MDD2', 'SCZ', 'BIP2', 'DIABETES'};
 whatDrugs = {'BIP', 'BIP', 'BIP', 'DIABETES'}; 

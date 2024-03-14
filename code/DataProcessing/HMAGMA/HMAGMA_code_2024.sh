@@ -13,9 +13,9 @@ WHEREISANNOT='/Users/aurinaa/Documents/PostDoc/projects/GWASdrugs/data/GWASlists
 # it needed to be removed for MAGMA to run
 # line: 10 114758349 rs7903146 T C 0.291584512494863 0.3059 0.0077 1.33e-347 597475
 
-# DIABETES2 GWAS contains a few lines with a very low p-value, that is read as non-number; Should be 1e-300, but filtering automatically 
-also doesn't read such values as numbers. Therefore, this is done manually. These lines needed to be removed for MAGMA to run
-# remove one by one; 
+# DIABETES2 GWAS contains a few lines with a very low p-value, that is read as non-number; Should be 1e-300, but filtering automatically
+# also doesn't read such values as numbers. Therefore, this is done manually. These lines needed to be removed for MAGMA to run
+# remove one by one;
 
 # sed -i '' '6660720d' pgcDIABETES2.txt
 # sed -i '' '6660734d' pgcDIABETES2.txt
@@ -34,11 +34,9 @@ also doesn't read such values as numbers. Therefore, this is done manually. Thes
 # sed -i '' '6660920d' pgcDIABETES2.txt
 
 
-# latest dataset: 'MDD3' 'ADHD3' 'SCZ3' 'BIP3' 'DIABETES' 'HF' 'RA' 'IBD'
-# in 2024 updated MDD4, DIABETES2; 
-# original list ('MDD3' 'ADHD3' 'SCZ3' 'BIP3' 'DIABETES' 'HF' 'RA' 'IBD' 'MDD2' 'ADHD' 'SCZ' 'BIP2')
-# older datasets for psychiatric disorders: 'MDD2' 'ADHD' 'SCZ' 'BIP2'
-for DISORDER in 'DIABETES2'
+# latest dataset main text: 'MDD4' 'ADHD3' 'SCZ3' 'BIP3' 'DIABETES2' 'HF' 'RA' 'IBD'
+# older datasets 2021 option: 'MDD3' 'ADHD' 'SCZ' 'BIP2' 'DIABETES'
+for DISORDER in 'MDD4' 'ADHD3' 'SCZ3' 'BIP3' 'DIABETES2' 'HF' 'RA' 'IBD' 'MDD3' 'ADHD' 'SCZ' 'BIP2' 'DIABETES'
 do
 # with p-values
 # 1. use different HMAGMA annotations

@@ -1,11 +1,8 @@
 % Make folders that will be used to save data
-mkdir DataOutput_2022
+mkdir data
 mkdir DataOutput_2024
 mkdir figures_2021
-mkdir figures_2022
 mkdir figures_2024
-mkdir enrichment_2021
-mkdir enrichment_2022
 mkdir enrichment_2024
 
 % Add paths required for the project (ignoring hidden, including version control)

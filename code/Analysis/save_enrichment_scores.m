@@ -2,7 +2,7 @@
 function save_enrichment_scores()
 
 entrezIDs = readtable('enrichment_2024/SynGO_id_convert_2024-02-04_1415/idmap.xlsx');
-similarityTypes = {'PPI_mapped_th600'}; %{'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
+similarityTypes = {'PPI_mapped_th600'}; 
 disorders = {'ADHD', 'BIP', 'MDD', 'SCZ', 'DIABETES'};
 
 for i=1:length(similarityTypes)
