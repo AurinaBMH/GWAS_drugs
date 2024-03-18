@@ -24,10 +24,10 @@ The code was written using MATLAB_R2020b.
 
 #### :books: PPI network data
 
-`9606.protein.links.v12.0.txt.gz (83.2 Mb)` and `9606.protein.info.v12.0.txt.gz (1.9 Mb)` - downloaded from [:books: 'STRING database (version 12.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 26th of February 2024;
+`9606.protein.links.v12.0.txt.gz (83.2 Mb)` and `9606.protein.info.v12.0.txt.gz (1.9 Mb)` - downloaded from [:books:'STRING database (version 12.0)'](https://string-db.org/cgi/download.pl?sessionId=a1fHJhN5R9Md&species_text=Homo+sapiens) on the 26th of February 2024;
 
 #### :pill: Treatments lists
-Treatments for different conditions of interest were selected by searching the [:medical_symbol: 'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020.
+Treatments for different conditions of interest were selected by searching the [:medical_symbol:'DrugBank database'](www.drugbank.ca), accessed on September 3, 2020.
 Specifically, drugs for each indication were searched in the DrugBank database using the following search terms:
 1. "attention deficit" (for ADHD);
 2. "bipolar" (for bipolar disorder) excluding "bipolar depression";
@@ -45,7 +45,7 @@ The list of genes used in all analyses is based on the combined set of all appro
 
 ### Data files
 
-Data files required for this project are located hosted on [this Figshare repository](https://doi.org/10.6084/m9.figshare.25356919). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
+Data files required for this project are hosted on [this Figshare repository](https://doi.org/10.6084/m9.figshare.25356919). Raw data files are located in `data.zip`. Enrichment analysis results and associated files are located in `enrichment_2024.zip`.
 To perform all analyses and process the data from raw files, please download and place `data` and `enrichment_2024` folders in the root directory (23.35 GB when unzipped).
 If you would like to process all data, please follow the instructions in the data **"Data processing"** section.
 If you would like only to reproduce figures presented in the manuscript, please download pre-processed data `DataOutput_2024.zip` as well as the enrichment analysis results `enrichment_2024.zip`, unzip and place the `DataOutput_2024` (812.2 MB when unzipped) and `enrichment_2024` folders in the root directory.
