@@ -6,7 +6,6 @@ function plot_Psych_figures_2021()
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-% updated MDD and diabetes, change to 'MDD3'
 whatDiseases_GWAS = {'ADHD','MDD3','SCZ','BIP2','DIABETES'};
 numDrugs = length(params.whatDiseases_Treatment); 
 whatMeasures = 'allPsych';

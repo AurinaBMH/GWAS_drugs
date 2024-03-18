@@ -2,7 +2,7 @@ function plot_Body_figures()
 
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
-whatDiseases_GWAS = {'IBD','RA', 'HF', 'DIABETES2'}; %'BIPandSCZ'
+whatDiseases_GWAS = {'IBD','RA', 'HF', 'DIABETES2'};
 whatMeasures = 'allBody';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets);
 
