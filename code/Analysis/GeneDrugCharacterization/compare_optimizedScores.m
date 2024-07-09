@@ -3,7 +3,7 @@ function [Ptable, measureTable] = compare_optimizedScores(whatDiseases_GWAS, wha
 %y - response: drug score
 if nargin < 1
     params = SetDefaultParams();
-    whatDiseases_GWAS = params.whatGWAS_2022;
+    whatDiseases_GWAS = params.whatGWAS_2024;
 end
 if nargin < 2
     whatMeasures = 'allPsych'; % 'reduced' or 'all';

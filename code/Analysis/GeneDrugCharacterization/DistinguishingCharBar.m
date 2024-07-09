@@ -29,7 +29,7 @@ end
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
-params = SetDefaultParams();    
+params = SetDefaultParams();   
 whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
 whatScore = params.whatScore;
 %-------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ if strcmp(whatNull, 'randomGene')
     
 elseif contains(whatNull, 'randomDrug')
     
-    load(sprintf('DataOutput_2024/nulls_5000_%stargets_%s.mat', params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
+    load(sprintf('DataOutput_2024/nulls_%d_%stargets_%s.mat', params.numNull, params.whatDrugTargets, whatNull), 'RANDOMdrugs_treatment', 'whatDiseases_Treatment', 'geneNames');
     %geneNames_nulls = geneNames;
     % select nulls for drugs that will be visualised
     [whatDiseases_Treatment, Tind] = intersect(whatDiseases_Treatment, whatDiseases_Treatment_SEL, 'stable');

@@ -32,7 +32,7 @@ params.whatScore = 'weightedSum'; %'Kendall', 'weightedSum'
 params.whatThreshold = 'BF';
 params.whatDrugTargets = '2024';
 params.whatTargets = 'all';
-params.numNull = 5000; 
+params.numNull = 10000; 
 
 % keep only psychiatric drugs+ diabetes
 % for 2021 data

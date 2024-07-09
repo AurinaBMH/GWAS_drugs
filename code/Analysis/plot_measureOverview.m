@@ -18,7 +18,11 @@ for l=1:size(Pmatrix,1)
     cMapGeneric_n = cMapGeneric;
 
     Pplot = Pmatrix(l,:);
-    [Pbar, ix] = sort(-log10(Pplot), 'descend'); 
+    Pplot(Pplot==0) = 1/params.numNull; 
+    %[Pbar, ix] = sort(-log10(Pplot), 'descend'); 
+    % don't order
+    Pbar = -log10(Pplot); 
+    ix = 1:length(Pplot); 
 
     ax{l} = subplot(1,size(Pmatrix,1),l); hold on
     % line for BF corrected value, p=0.01
@@ -54,7 +58,7 @@ for l=1:size(Pmatrix,1)
     xticklabels(whatDiseases_Treatment_label(ix));
     xtickangle(90);
     xlim([0 5]); 
-    ylim([0 3.5])
+    ylim([0 4])
 %     ax{l}.XTickLabelRotation = 90;
     xlabel('Disorder')
     ylabel('-log10(P)')    

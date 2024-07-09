@@ -38,20 +38,27 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL, whatDiseases_Treatment, ~, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+    [rhosALL ,pValsALL_randDrug, whatDiseases_Treatment_randDrug, ~, enrichment_score_GWAS_randDrug, enrichment_score_drug_randDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % save scores for enrichment
-    save(sprintf('enrichment_2024/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS'); 
-    save(sprintf('enrichment_2024/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug')
+    save(sprintf('enrichment_2024/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS_randDrug'); 
+    save(sprintf('enrichment_2024/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug_randDrug')
     
     
     % find corresponsing match
-    [T, INDr, INDc] = intersect(whatDiseases_Treatment, whatDiseases_GWAS_name, 'stable'); 
+    [T, INDr, INDc] = intersect(whatDiseases_Treatment_randDrug, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
-    Pmatrix(s,:) = diag(pValsALL(INDr, INDc)); 
+    Pmatrix(s,:) = diag(pValsALL_randDrug(INDr, INDc)); 
 
     figureName = sprintf('figures_2024/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
 
+    % get p-values for psych null
+    [~ ,pValsALL_psychDrug, whatDiseases_Treatment_psychDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP_all_drugbank_psych', 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+     % find corresponsing match
+    [T_psych, INDr_psych, INDc_psych] = intersect(whatDiseases_Treatment_psychDrug, whatDiseases_GWAS_name, 'stable'); 
+    % select disorder to itself - diagonal
+    Pmatrix_psych(s,:) = diag(pValsALL_psychDrug(INDr_psych, INDc_psych)); 
+    
     
 end
 
@@ -61,6 +68,11 @@ end
 f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
 figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
+
+f = plot_measureOverview(Pmatrix_psych, T_psych, similarityTypes_label); 
+figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, 'randomDrugP_all_drugbank_psych');
+print(gcf,figureName,'-dpng','-r300');
+
 
 % score genes by contribution: 
 [Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES2', 'DIABETES', 'PPI_mapped_th600');
@@ -77,7 +89,7 @@ T_bip = sortrows(T_bip, 2, 'ascend');
 %-------------------------------------------------------
 % Figure 3: Correspondence across different data processing methods
 %-------------------------------------------------------
-DOrecalc = true; % select true if any data was updated since the last run
+DOrecalc = false; % select true if any data was updated since the last run
 pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 %-------------------------------------------------------
@@ -101,6 +113,16 @@ end
 % in this example PPI-based significant results are used: bipolar disorder and diabetes; 
 [f, Ptable_null] = plot_nullDistributions();
 figureName = 'figures_2024/Null_distribution_comparison';
+print(f,figureName,'-dpng','-r300');
+
+%-------------------------------------------------------
+% Figure in eMethods 4: The number of genes contributing to the similarity score for each disorder and mapping method.
+%-------------------------------------------------------
+% plot a matrix indicating a number of contributing genes in each disorder
+% and mapping method
+[f, nr_g] = count_number_contributing_genes(); 
+
+figureName = 'figures_2024/Number_of_contributing_genes';
 print(f,figureName,'-dpng','-r300');
 
 end

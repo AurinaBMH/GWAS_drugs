@@ -49,7 +49,7 @@ Ptable.BIPpsy = mean(N_bip_psy>rho_BIP_BIP);
 ax{1} = subplot(1,2,1); 
 histogram(N_bip_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
 histogram(N_bip_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
-plot([rho_BIP_BIP rho_BIP_BIP],[0 300], 'LineWidth', 3, 'Color', colLine)
+plot([rho_BIP_BIP rho_BIP_BIP],[0 600], 'LineWidth', 3, 'Color', colLine)
 box off
 legend('All treatment null','Psychiatric treatment null')
 legend boxoff  
@@ -71,7 +71,7 @@ Ptable.DIABpsy = mean(N_diabetes_psy>rho_DIABETES);
 ax{2} = subplot(1,2,2);
 histogram(N_diabetes_all, 50, 'EdgeColor', colAll, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
 histogram(N_diabetes_psy, 50, 'EdgeColor', colPsy, 'FaceColor', [1 1 1], 'LineWidth', 2); hold on; 
-plot([rho_DIABETES rho_DIABETES],[0 300], 'LineWidth', 3, 'Color', colLine)
+plot([rho_DIABETES rho_DIABETES],[0 600], 'LineWidth', 3, 'Color', colLine)
 box off
 legend('All treatment null','Psychiatric treatment null')
 legend boxoff  

@@ -8,7 +8,7 @@ end
 % of drugs for comparison to all, but for now making a separate null for
 % each drug list; 
 
-numNulls = 5000; 
+numNulls = 10000; 
 params = SetDefaultParams();
 whatDiseases_Treatment = params.whatDiseases_Treatment_ALL; 
 
@@ -20,6 +20,9 @@ RANDOMdrugs = zeros(numGenes, numNulls);
 RANDOMdrugs_treatment = cell(length(whatDiseases_Treatment),1); 
 
 for i = 1:length(whatDiseases_Treatment)
+    
+    fprintf('Running nulls for %s\n', whatDiseases_Treatment{i})
+    
     for j = 1:numNulls
         diseaseName = whatDiseases_Treatment{i}; 
 
