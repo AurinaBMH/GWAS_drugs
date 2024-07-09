@@ -116,7 +116,7 @@ This will create `geneScores` structure for each disorder (takes several hours t
 
 #### :label: Generate drug-based nulls
 
-Generate 5000 drug-based null vectors for each disorder.
+Generate 10 000 drug-based null vectors for each disorder.
 For each disorder, a corresponding number of random drugs is selected and treatment-based scores are calculated across all 2232 genes;   
 For example, there are 14 drugs for ADHD, 22 for bipolar disorder, and 45 for diabetes, so for each disorder that number of random treatments is selected.
 ```matlab
