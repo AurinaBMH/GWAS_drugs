@@ -105,7 +105,6 @@ end
 % in the file name
 
 fileName = sprintf('DataOutput_2024/drugTargets_%s_%s_%s.mat', params.whatDrugTargets, whatTargets, whatDatabase);
-
         
 save(fileName, 'dataTable'); 
 
