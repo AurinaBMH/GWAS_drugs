@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets, whatTargets)
+function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists_sensitivity(normalizeWithinDrugs, whatDrugTargets, whatTargets)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -7,12 +7,17 @@ if nargin < 1
     normalizeWithinDrugs = true;
 end
 if nargin < 2
-    whatDrugTargets = '2024'; 
+    whatDrugTargets = 'sensitivity'; 
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
     % 2020 - uses automated AA version
 end
 if nargin < 3
+    params = SetDefaultParams();
+    whatTargets = params.whatTargets; 
+end
+
+if nargin < 4
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
 end
@@ -27,7 +32,7 @@ end
 % drug as equally important for the efficacy of that drug:
 
 params = SetDefaultParams();
-whatDiseases = params.whatDiseases_Treatment_ALL; 
+whatDiseases = params.whatDiseases_Treatment_classes; 
 
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------

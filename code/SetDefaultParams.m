@@ -51,6 +51,10 @@ params.whatDiseases_Treatment_label_body = {'Diabetes', 'IBD', 'Heart failure', 
 params.whatDiseases_Treatment_ALL = unique([params.whatDiseases_Treatment, params.whatDiseases_Treatment_body], 'stable');
 params.whatDiseases_Treatment_label_ALL = unique([params.whatDiseases_Treatment_label, params.whatDiseases_Treatment_label_body], 'stable');
 
+% list treatment classes
+params.whatDiseases_Treatment_classes = {'BIP_lithium', 'BIP_antipsychotic', 'BIP_antidepressant', 'BIP_anticonvulsant'};
+params.whatDiseases_Treatment_classes_label = {'BIP lithium', 'BIP antipsychotic', 'BIP antidepressant', 'BIP anticonvulsant'};
+
 params.whatANNOT_psych = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
     'eQTLbrain', 'eQTLWhole_Blood', 'eQTLPancreas', 'eQTLLiver', ...
     'AllenMapped', 'AlleneQTLbrain', ...

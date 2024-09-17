@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists(normalizeWithinDrugs, whatDrugTargets, whatTargets)
+function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists_sensitivity_random(normalizeWithinDrugs, drugs_rand, whatDrugTargets, whatTargets)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -6,13 +6,20 @@ function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatm
 if nargin < 1
     normalizeWithinDrugs = true;
 end
+
 if nargin < 2
-    whatDrugTargets = '2024'; 
+    whatDrugTargets = 'sensitivity'; 
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
     % 2020 - uses automated AA version
 end
+
 if nargin < 3
+    params = SetDefaultParams();
+    whatTargets = params.whatTargets; 
+end
+
+if nargin < 4
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
 end
@@ -22,53 +29,43 @@ if normalizeWithinDrugs
     fprintf(1,'Weighting genes equally within a drug...\n');
 end
 
+
 %-------------------------------------------------------------------------------
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
-
 params = SetDefaultParams();
-whatDiseases = params.whatDiseases_Treatment_ALL; 
-
+whatDiseases = [params.whatDiseases_Treatment_classes,'RANDOM'];
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
-
+%% Initialize variables.
 switch whatDrugTargets
     case '2020'
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-
-        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+        
+        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
         
     case '2024'
+        % use drug targets assigned automatically by AA in 08/2020
+        % it takes ~10s to run, so load the pre-computed data here
+        % dataTable = give_drugTargets();
         
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets); 
+        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
         
     case 'sensitivity'
         
         fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets); 
         load(fileName, 'dataTable');
-        
 end
 
-% get all drugs with active gene targets from DrugBank
+% add drugs_rand to the dataTable
+dataTable.('RANDOM') = drugs_rand; 
 allDrugs = get_allDrugBank_targets(whatTargets); 
-% make a table of all mentioned drugs with their targets keeping only unique ones 
-% DT = cell(numDiseases,1); 
-% for kk=1:numDiseases
-%    DT{kk} = dataTable.(whatDiseases{kk}); 
-% end 
-% 
-% allDrugs = vertcat(DT{:}); 
-% % remove drugs with non-existent targets
-% allDrugs(strcmp(string(allDrugs.Target), ""),:) = [];  
-% % select only unique drug names
-% [~, INDunique] = unique(allDrugs.Name); 
-% allDrugs = allDrugs(INDunique,:); 
 
 %-------------------------------------------------------------------------------
 % Get a list of all genes mentioned:
@@ -127,20 +124,18 @@ end
 
 %-------------------------------------------------------------------------------
 % Process into a unique set of genes:
-% unique set of genes now consists of all available genes as active DrugBank targets; 
-% allGenes = unique(vertcat(geneLists{:}));
 allGenes = strjoin(allDrugs.Target,', ');
 allGenes = unique(split(allGenes, ', '));
 allGenes = allGenes(~cellfun('isempty',allGenes));  
 numGenes = length(allGenes);
-fprintf(1,'There are %u drug target genes in the DrugBank\n', numGenes);
+fprintf(1,'There are %u pharmacologically active genes in the DrugBank\n', numGenes);
 
 %-------------------------------------------------------------------------------
 % Construct a gene x disease table
 indicatorMatrix = zeros(numGenes,numDiseases);
 for i = 1:numGenes
     for j = 1:numDiseases
-        theGeneIsHere = strcmpi(allGenes{i},geneLists{j});
+        theGeneIsHere = strcmp(allGenes{i},geneLists{j});
         if any(theGeneIsHere)
             indicatorMatrix(i,j) = counts{j}(theGeneIsHere);
         end
@@ -170,9 +165,5 @@ indicatorTable = array2table(indicatorMatrix,'RowNames',allGenes,...
 percIndicatorTable = array2table(propMatrix,'RowNames',allGenes,...
     'VariableNames',whatDiseases);
 
-% Sort the table:
-% [~,ix] = sort(meanRow,'descend');
-% indicatorTable = indicatorTable(ix,:);
-% percIndicatorTable = percIndicatorTable(ix,:);
 
 end
