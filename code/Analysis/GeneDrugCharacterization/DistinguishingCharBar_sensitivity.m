@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL, enrichment_score_GWAS, enrichment_score_drug] = DistinguishingCharBar_sensitivity(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whichYear)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL] = DistinguishingCharBar_sensitivity(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whichYear)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -15,7 +15,7 @@ end
 
 if nargin < 5
     params = SetDefaultParams();
-    whatDiseases_GWAS = params.whatDiseases_Treatment_classes;
+    whatDiseases_GWAS = {'BIP3'};
 end
 
 if nargin < 6
@@ -30,7 +30,7 @@ end
 %-------------------------------------------------------------------------------
 % Load in default parameters:
 params = SetDefaultParams();   
-whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_ALL;
+whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_classes;
 %-------------------------------------------------------------------------------
 
 switch whatMeasures
@@ -82,7 +82,7 @@ numDiseases_GWAS = length(whatDiseases_GWAS);
 %-------------------------------------------------------------------------------
 % Load treatment weights of each gene implicated in each disorder:
 % load drugs scores for all disorders, will select values from these
-[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors(whatDiseases_Treatment_ALL,'Drug');
+[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors_sensitivity(whatDiseases_Treatment,'Drug');
 numDrugScores = length(drugScoresAll);
 
 %===============================================================================
@@ -104,12 +104,7 @@ for i = 1:numDiseases_GWAS
     [geneNames,ia,ib] = intersect(geneNamesGWAS,geneNamesDrug);
     geneWeightsGWAS = geneWeightsGWAS(ia);
     drugScores = drugScoresAll(ib,:);
-    
-    % save for enrichment
-    enrichment_score_GWAS.(whatDisease) = table(geneNames, geneWeightsGWAS); 
-    drugScores_save = array2table(drugScores); 
-    enrichment_score_drug = [geneNames, drugScores_save];
-    enrichment_score_drug.Properties.VariableNames = [{'geneName'}, whatDiseases_Treatment_ALL(:)']; 
+   
     
     fprintf(1,'%u matching (/%u %s GWAS); (/%u with treatment weights)\n',...
         length(ia),length(geneWeightsGWAS),whatDisease,length(drugScores));
@@ -328,7 +323,7 @@ for i = 1:numDiseases_GWAS
         xlabel('Disease treatment')
         ylabel({'GWAS-treatment', 'similarity'})
         title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
-        cMapGeneric = BF_getcmap('set4',numDiseases_Treatment,false);
+        cMapGeneric = BF_getcmap('reds',numDiseases_Treatment,false);
         cMapGeneric_n = cMapGeneric;
         
         for k=1:length(isSig)

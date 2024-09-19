@@ -38,9 +38,9 @@ switch whatSelection
     case 'proportional' % these are for old version of the data
         fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugP_sensitivity.mat', numNulls,params.whatDrugTargets); 
     case 'proportionalPsych' % these are used for drugbank data
-        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugP_%s_drugbank_psych_sensitivity.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugP_%s_drugbank_psych_treatment_class.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
     case 'drugbank'  % these are used for drugbank data
-        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR_%s_drugbank_sensitivity.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
+        fileName = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR_%s_drugbank_treatment_class.mat', numNulls,params.whatDrugTargets, params.whatTargets); 
 end
 
 save(fileName, 'RANDOMdrugs_treatment', 'treatment_classes', 'geneNames', 'params');

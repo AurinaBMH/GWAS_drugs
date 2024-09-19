@@ -53,6 +53,9 @@ switch whatDrugTargets
         fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets); 
         load(fileName, 'dataTable');
         
+        whatDiseases = params.whatDiseases_Treatment_classes; 
+        numDiseases = length(whatDiseases);
+        
 end
 
 % get all drugs with active gene targets from DrugBank
