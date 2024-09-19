@@ -172,7 +172,7 @@ for i = 1:numDiseases_GWAS
         for k = 1:numDiseases_Treatment
             % if rho is not-NaN, calculate the p-value, but if NaN - assign NaN; 
             if ~isnan(rhos(k))
-                isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/numMeasures));
+                isSig_BF(k) = logical((mean(rhos(k) < nullScores) < 0.05/length(whatDiseases_Treatment_SEL)));
                 isSig(k) = logical((mean(rhos(k) < nullScores) < 0.05));
                 pVals(k) = mean(rhos(k) < nullScores);
             else
@@ -241,7 +241,7 @@ for i = 1:numDiseases_GWAS
             end
             % Compute p-values: based on separate nulls
             if ~isnan(rhos(l))
-                isSig_BF(l) = logical((mean(rhos(l) < nullScores) < 0.05/numMeasures));
+                isSig_BF(l) = logical((mean(rhos(l) < nullScores) < 0.05/length(whatDiseases_Treatment_SEL)));
                 isSig(l) = logical((mean(rhos(l) < nullScores) < 0.05));
                 pVals(l) = mean(rhos(l) < nullScores);
             else
@@ -323,7 +323,7 @@ for i = 1:numDiseases_GWAS
         xlabel('Disease treatment')
         ylabel({'GWAS-treatment', 'similarity'})
         title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
-        cMapGeneric = BF_getcmap('reds',numDiseases_Treatment,false);
+        cMapGeneric = BF_getcmap('4reds',numDiseases_Treatment,false);
         cMapGeneric_n = cMapGeneric;
         
         for k=1:length(isSig)

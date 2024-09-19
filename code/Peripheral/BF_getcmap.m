@@ -354,7 +354,7 @@ switch whichMap
                     252, 146, 114;
                     222, 45, 38];
             case 4
-                cmapOut = [254, 229, 217;
+                cmapOut = [254, 224, 210;
                     252, 174, 145;
                     251, 106, 74;
                     203, 24, 29];
@@ -399,6 +399,13 @@ switch whichMap
                     165, 15, 21;
                     103, 0, 13];
         end
+        
+    case '4reds'
+        cmapOut = [239, 59, 44;
+                    252, 174, 145;
+                    251, 106, 74;
+                    203, 24, 29];
+        
     case 'bluegreen'
         if numGrads > 9, numGrads = 9; end
         switch numGrads

@@ -11,7 +11,7 @@ end
 
 f = figure('color','w', 'Position', [300, 300, 1500, 500]);
 ax = cell(size(Pmatrix,1),1);
-cMapGeneric = BF_getcmap('reds',size(Pmatrix,2),false);
+cMapGeneric = BF_getcmap('4reds',size(Pmatrix,2),false);
 
 for l=1:size(Pmatrix,1)
 
@@ -25,8 +25,11 @@ for l=1:size(Pmatrix,1)
     ix = 1:length(Pplot); 
 
     ax{l} = subplot(1,size(Pmatrix,1),l); hold on
-    % line for BF corrected value, p=0.01
-    yline(-log10(0.01), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
+    
+    % line for BF corrected value, p=0.05/16 - 4 treatment types and 4 maping methods
+    yline(-log10(0.05/(length(Pplot).*length(similarityTypes_label))), ':', 'color', [.01 .01 .01], 'LineWidth', 3);
+    % line for BF corrected value, p=0.0125 - 4 treatment types
+    yline(-log10(0.05/(length(Pplot))), ':', 'color', [.15 .15 .15], 'LineWidth', 3);
     % line for 0.05
     yline(-log10(0.05), ':', 'color', [160,160,160]/255, 'LineWidth', 3);
     %cMapGeneric_n = brighten(cMapGeneric,0.1);
