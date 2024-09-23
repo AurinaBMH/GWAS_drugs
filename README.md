@@ -146,27 +146,37 @@ plot_Psych_figures()
 ![](code/plots/compareMeasures_BIP3_allPsych.png)
 ![](code/plots/compareMeasures_DIABETES2_allPsych.png)
 
-`Figure S1` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
+
+`Figure S2` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
 ![](code/plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank.png)
 ![](code/plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank.png)
 ![](code/plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank.png)
 ![](code/plots/BarChart_psych_AlleneQTLbrain_allPsych_randomDrugR_all_drugbank.png)
 
-`Figure S2` - Correlation between mapping methods.
+`Figure S3` - Correlation between mapping methods.
 ![](code/plots/ADHD3_geneMeasures_allPsych.png)
 ![](code/plots/MDD4_geneMeasures_allPsych.png)
 ![](code/plots/SCZ3_geneMeasures_allPsych.png)
 ![](code/plots/BIP3_geneMeasures_allPsych.png)
 ![](code/plots/DIABETES2_geneMeasures_allPsych.png)
 
-`Figure S4` - The comparison of different null models for significance testing.
+`Figure S3` - The comparison of different null models for significance testing.
 ![](code/plots/Null_distribution_comparison.png)
 
-For non-psychiatric disorders (`Figure S3`):
+
+Specificity analysis for bipolar disorder treatments (`Figure S1`):
+```matlab
+plot_sensitivity_figures()
+```
+`Figure S1` - For specificity analysis for bipolar disorder using different classes of treatments – anticonvulsants, antidepressants, antipsychotics, and lithium.
+![](code/plots/BarP_withinDisorder_BIP_treatment_class_randomDrugR_all_drugbank_treatment_class.png)
+
+
+For non-psychiatric disorders (`Figure S4`):
 ```matlab
 plot_Body_figures()
 ```
-`Figure S3` - The correspondence between treatment targets and genes implicated in a GWAS for non-psychiatric disorders across different mapping methods.
+`Figure S4` - The correspondence between treatment targets and genes implicated in a GWAS for non-psychiatric disorders across different mapping methods.
 ![](code/plots/compareMeasures_HF_allBody.png)
 ![](code/plots/compareMeasures_RA_allBody.png)
 ![](code/plots/compareMeasures_IBD_allBody.png)
@@ -191,22 +201,22 @@ save_enrichment_results();
 ```
 
 
-For replicating results using an alternative set of GWAS summary statistics (`Figure S5`, `Figure S6`, `Figure S7`) generate figures using:
+For replicating results using an alternative set of GWAS summary statistics (`Figure S6`, `Figure S7`, `Figure S8`) generate figures using:
 ```matlab
 plot_Psych_figures_2021()
 ```
 
-`Figure S5` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
+`Figure S6` - The correspondence between treatment targets and genes implicated in GWAS data for each disorder.
 ![](code/plots/BarP_withinDisorder_allPsych_randomDrugR_all_drugbank_2021.png)
 
-`Figure S6` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
+`Figure S7` - The correspondence between treatment targets and genes implicated in a GWAS for each disorder across different mapping methods.
 ![](code/plots/compareMeasures_ADHD_allPsych.png)
 ![](code/plots/compareMeasures_MDD3_allPsych.png)
 ![](code/plots/compareMeasures_SCZ_allPsych.png)
 ![](code/plots/compareMeasures_BIP2_allPsych.png)
 ![](code/plots/compareMeasures_DIABETES_allPsych.png)
 
-`Figure S7` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
+`Figure S8` - The pairwise correspondence between treatment targets and genes implicated in GWAS for each disorder.
 ![](code/plots/BarChart_psych_MAGMAdefault_allPsych_randomDrugR_all_drugbank_2021.png)
 ![](code/plots/BarChart_psych_PPI_mapped_th600_allPsych_randomDrugR_all_drugbank_2021.png)
 ![](code/plots/BarChart_psych_eQTLbrain_allPsych_randomDrugR_all_drugbank_2021.png)
