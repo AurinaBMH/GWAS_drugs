@@ -86,6 +86,13 @@ dataTable = give_drugTargets('all', 'drugbank');
 ```
 This will save `drugTargets_2024_all_drugbank.mat` file;
 
+2. Combine drug target information for bipolar disorder specificity analysis from `.txt` files into matlab format
+```matlab
+dataTable = give_drugTargets_sensitivity('all', 'drugbank');
+```
+This will save `drugTargets_2024_all_drugbank_treatment_class.mat` file;
+
+
 #### :label: Aggregate GWAS-based information
 
 1. Map genes based on GWAS summary statistics for each disorder using `HMAGMA_code_2024.sh`. Files generated using this script are already placed in `GWASlists/GWASgenes_2022`, so this step can be skipped.
@@ -128,6 +135,12 @@ Generate null vectors based on psychiatric disorder drugs only
 generate_randomDrug_nulls('proportionalPsych')
 ```
 
+Generate null vectors for the specificity analysis for bipolar disorder using different classes of treatments – anticonvulsants, antidepressants, antipsychotics, and lithium.
+```matlab
+generate_randomDrug_nulls_sensitivity('drugbank')
+```
+
+
 ### Analysis
 
 #### :scroll: Reproduce results presented in the manuscript:
@@ -164,7 +177,7 @@ plot_Psych_figures()
 ![](code/plots/Null_distribution_comparison.png)
 
 
-Specificity analysis for bipolar disorder treatments (`Figure S1`):
+For specificity analysis for bipolar disorder treatments (`Figure S1`):
 ```matlab
 plot_sensitivity_figures()
 ```
