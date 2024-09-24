@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists_sensitivity_random(normalizeWithinDrugs, drugs_rand, whatDrugTargets, whatTargets)
+function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists_sensitivity_random(normalizeWithinDrugs, drugs_rand, whatDrugTargets, whatTargets, whatDisorder)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -11,17 +11,20 @@ if nargin < 2
     whatDrugTargets = 'sensitivity'; 
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
     % 2020 - uses automated AA version
 end
 
 if nargin < 3
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
 end
 
 if nargin < 4
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
 end
 
 
@@ -34,7 +37,18 @@ end
 % Whether to treat each drug as equally important, and each gene targeted by a
 % drug as equally important for the efficacy of that drug:
 params = SetDefaultParams();
-whatDiseases = [params.whatDiseases_Treatment_classes,'RANDOM'];
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+end
+
+whatDiseases = [treatment_classes,'RANDOM'];
 numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
@@ -59,8 +73,13 @@ switch whatDrugTargets
         
     case 'sensitivity'
         
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets); 
+        if strcmp(whatDisorder, 'BIP')
+            fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets);
+        else
+            fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class_%s.mat', whatTargets, whatDisorder);
+        end
         load(fileName, 'dataTable');
+        
 end
 
 % add drugs_rand to the dataTable

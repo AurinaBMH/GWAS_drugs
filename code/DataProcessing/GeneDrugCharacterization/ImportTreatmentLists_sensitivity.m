@@ -1,4 +1,4 @@
-function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists_sensitivity(normalizeWithinDrugs, whatDrugTargets, whatTargets)
+function [indicatorTable,percIndicatorTable, dataTable, allDrugs] = ImportTreatmentLists_sensitivity(normalizeWithinDrugs, whatDrugTargets, whatTargets, whatDisorder)
 % Import information on gene targets for psychiatric conditions
 %-------------------------------------------------------------------------------
 % Input parameters:
@@ -10,16 +10,19 @@ if nargin < 2
     whatDrugTargets = 'sensitivity'; 
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
     % 2020 - uses automated AA version
 end
 if nargin < 3
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
 end
 
 if nargin < 4
     params = SetDefaultParams();
     whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
 end
 
 
@@ -32,9 +35,19 @@ end
 % drug as equally important for the efficacy of that drug:
 
 params = SetDefaultParams();
-whatDiseases = params.whatDiseases_Treatment_classes; 
 
-numDiseases = length(whatDiseases);
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+end
+
+numDiseases = length(treatment_classes);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
@@ -44,18 +57,22 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-
-        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+        
+        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
         
     case '2024'
         
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets); 
+        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
         
     case 'sensitivity'
         
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets); 
+        if strcmp(whatDisorder, 'BIP')
+            fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets);
+        else
+            fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class_%s.mat', whatTargets, whatDisorder);
+        end
         load(fileName, 'dataTable');
         
 end
@@ -80,7 +97,7 @@ allDrugs = get_allDrugBank_targets(whatTargets);
 geneLists = cell(numDiseases,1);
 counts = cell(numDiseases,1);
 for k = 1:numDiseases
-    whatDisease = whatDiseases{k};
+    whatDisease = treatment_classes{k};
     geneList = dataTable.(whatDisease).Target;
     geneList = cellfun(@(x)strsplit(x,','),geneList,'UniformOutput',false);
     if normalizeWithinDrugs
@@ -171,9 +188,9 @@ end
 
 % Make a table:
 indicatorTable = array2table(indicatorMatrix,'RowNames',allGenes,...
-    'VariableNames',whatDiseases);
+    'VariableNames',treatment_classes);
 percIndicatorTable = array2table(propMatrix,'RowNames',allGenes,...
-    'VariableNames',whatDiseases);
+    'VariableNames',treatment_classes);
 
 % Sort the table:
 % [~,ix] = sort(meanRow,'descend');

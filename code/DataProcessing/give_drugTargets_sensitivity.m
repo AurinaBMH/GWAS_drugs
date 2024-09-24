@@ -1,9 +1,13 @@
-function dataTable = give_drugTargets_sensitivity(whatTargets, whatDatabase)
+function dataTable = give_drugTargets_sensitivity(whatTargets, whatDatabase, whatDisorder)
 if nargin < 1
     whatTargets = 'all'; 
 end
 if nargin < 2
     whatDatabase = 'drugbank'; 
+end
+
+if nargin < 3
+    whatDisorder = 'BIP'; 
 end
 
 % currently the total list of genes is based on all pharmacologically
@@ -13,7 +17,16 @@ end
 % This function gives drug targets for selected lists of disorders based on
 % DrugBank and Drug repurposing hub
 params = SetDefaultParams();
-treatment_classes = params.whatDiseases_Treatment_classes;
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+end
 
 % import Drug repurposing hub
 if strcmp(whatDatabase, 'both')
@@ -103,12 +116,13 @@ for d = 1:length(treatment_classes)
     fprintf(1,'%s has %u drugs\n',treatment_classes{d},length(drugName));
 end
 
-% active is default - will not have a not in the name, all will have a flag
-% in the file name
+% name based on disorder
+if strcmp(whatDisorder, 'BIP')
+    fileName = sprintf('DataOutput_2024/drugTargets_%s_%s_%s_treatment_class.mat', params.whatDrugTargets, whatTargets, whatDatabase);
+else
+    fileName = sprintf('DataOutput_2024/drugTargets_%s_%s_%s_treatment_class_%s.mat', params.whatDrugTargets, whatTargets, whatDatabase, whatDisorder);
+end
 
-fileName = sprintf('DataOutput_2024/drugTargets_%s_%s_%s_treatment_class.mat', params.whatDrugTargets, whatTargets, whatDatabase);
-
-        
 save(fileName, 'dataTable'); 
 
 end

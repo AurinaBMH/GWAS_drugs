@@ -51,9 +51,21 @@ params.whatDiseases_Treatment_label_body = {'Diabetes', 'IBD', 'Heart failure', 
 params.whatDiseases_Treatment_ALL = unique([params.whatDiseases_Treatment, params.whatDiseases_Treatment_body], 'stable');
 params.whatDiseases_Treatment_label_ALL = unique([params.whatDiseases_Treatment_label, params.whatDiseases_Treatment_label_body], 'stable');
 
-% list treatment classes
+% list treatment classes BIP
 params.whatDiseases_Treatment_classes = {'BIP_lithium', 'BIP_antipsychotic', 'BIP_antidepressant', 'BIP_anticonvulsant'};
 params.whatDiseases_Treatment_classes_label = {'BIP lithium', 'BIP antipsychotic', 'BIP antidepressant', 'BIP anticonvulsant'};
+
+% list treatment classes SCZ
+params.whatDiseases_Treatment_classes_SCZ = {'SCZ_antidepressant', 'SCZ_atypical_antipsychotic', 'SCZ_typical_antipsychotic'};
+params.whatDiseases_Treatment_classes_label_SCZ ={'SCZ antidepressant', 'SCZ atypical antipsychotic', 'SCZ typical antipsychotic'};
+
+% list treatment classes MDD
+params.whatDiseases_Treatment_classes_MDD = {'MDD_atypical_antidepressant', 'MDD_atypical_antipsychotic', 'MDD_antipsychotic', 'MDD_MAOI', 'MDD_SNRI', 'MDD_SSRI', 'MDD_TCA'};
+params.whatDiseases_Treatment_classes_label_MDD = {'MDD atypical antidepressant', 'MDD atypical antipsychotic', 'MDD antipsychotic', 'MDD benzodiazepine', 'MDD mood stabiliser', 'MDD stimulant','MDD MAOI', 'MDD SNRI', 'MDD SSRI', 'MDD TCA'};
+
+% list treatment classes ADHD
+params.whatDiseases_Treatment_classes_ADHD = {'ADHD_stimulant', 'ADHD_nonstimulant'};
+params.whatDiseases_Treatment_classes_label_ADHD = {'ADHD stimulant', 'ADHD nonstimulant'}; 
 
 params.whatANNOT_psych = {'MAGMAdefault', 'Adult_brain', 'Fetal_brain', 'Neuro', 'Astro', ...
     'eQTLbrain', 'eQTLWhole_Blood', 'eQTLPancreas', 'eQTLLiver', ...

@@ -1,8 +1,11 @@
-function [RNADOMdrugs, geneNames] = give_randomDrug_null_sensitivity(diseaseName, disorderDrugs, allDrugs, whatSelection)
+function [RNADOMdrugs, geneNames] = give_randomDrug_null_sensitivity(diseaseName, disorderDrugs, allDrugs, whatSelection, whatDisorder)
 
 if nargin<4
     whatSelection = 'drugbank'; 
+    whatDisorder = 'BIP'; 
 end
+
+params = SetDefaultParams();
 
 % This function for a selected disease: 
 % 1. finds a number of drugs for that disease
@@ -11,8 +14,7 @@ end
 % it as an additional disease
 
    
-% e.g. for ADHD, it selects 18 random drugs and so on. 
-params = SetDefaultParams();
+% e.g. for ADHD, it selects 18 random drugs and so on.
 % find the number of drugs selected for that disease
 numDrugs = size(disorderDrugs.(diseaseName),1); 
 
@@ -116,7 +118,7 @@ drugs_rand = allDrugs(INDrand,:);
 normalizeWithinDrugs = true;
 % this is a modified version of the original ImportTreatmentLists that adds random set as a separate disease
 % need to keep other dseases as well, so the list of targets is complete
-indicatorTable = ImportTreatmentLists_sensitivity_random(normalizeWithinDrugs, drugs_rand, 'sensitivity');
+indicatorTable = ImportTreatmentLists_sensitivity_random(normalizeWithinDrugs, drugs_rand, 'sensitivity', params.whatTargets, whatDisorder);
 geneWeights = indicatorTable.('RANDOM');
 
 % Normalize (non-NaN elements) to unit vector as 2-norm:
