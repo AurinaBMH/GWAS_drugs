@@ -30,8 +30,6 @@ whatNull = sprintf('randomDrugR_%s_drugbank_treatment_class', params.whatTargets
 % Figure S1: Calculate matches between BIP3 GWAS and each treatment class
 %-------------------------------------------------------
 
-nullScores = cell(length(similarityTypes),1); 
-
 for s=1:length(similarityTypes)
     
     if contains(similarityTypes{s},'PPI')

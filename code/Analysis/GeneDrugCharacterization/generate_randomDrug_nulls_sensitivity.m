@@ -1,7 +1,6 @@
 function generate_randomDrug_nulls_sensitivity(whatSelection, whatDisorder)
 if nargin<1
     whatSelection = 'drugbank'; 
-    whatDisorder = 'BIP'; 
 end
 if nargin<2
     whatDisorder = 'BIP'; 
