@@ -1,9 +1,12 @@
 function dataTable = give_drugTargets_sensitivity(whatTargets, whatDatabase, whatDisorder)
 if nargin < 1
     whatTargets = 'all'; 
+    whatDatabase = 'drugbank'; 
+    whatDisorder = 'BIP'; 
 end
 if nargin < 2
     whatDatabase = 'drugbank'; 
+    whatDisorder = 'BIP';
 end
 
 if nargin < 3

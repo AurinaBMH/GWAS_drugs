@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL] = DistinguishingCharBar_sensitivity(similarityType,whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whichYear)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL] = DistinguishingCharBar_sensitivity(similarityType, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whatDisorder)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -26,32 +26,70 @@ if nargin < 7
     numMeasures = length(whatDiseases_GWAS); 
 end
 
+if nargin < 8
+    whatMeasures = 'treatment_class'; 
+end
+
+if nargin < 9
+    whatDisorder = 'BIP'; 
+end
+
 
 %-------------------------------------------------------------------------------
 % Load in default parameters:
-params = SetDefaultParams();   
-whatDiseases_Treatment_ALL = params.whatDiseases_Treatment_classes;
+params = SetDefaultParams();  
+
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+end
+
 %-------------------------------------------------------------------------------
 
 switch whatMeasures
     case {'allPsych', 'reduced', 'reduced5'}
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment; 
-        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label; 
+        
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment;
+        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label;
     case 'allBody'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body; 
+        
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_body;
         whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_body;
         
     case 'all'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_label_ALL; 
-        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_ALL; 
         
-    case 'BIP_treatment_class'
-
-        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes; 
-        whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label; 
+        whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_label_ALL;
+        whatDiseases_Treatment_label = params.whatDiseases_Treatment_label_ALL;
+        
+    case 'treatment_class'
+        
+        switch whatDisorder
+            case 'BIP'
+                
+                whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes;
+                whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label;
+                
+            case 'MDD'
+                
+                whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes_MDD;
+                whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label_MDD;
+                
+            case 'ADHD'
+                
+                whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes_ADHD;
+                whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label_ADHD;
+                
+            case 'SCZ'
+                whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes_SCZ;
+                whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label_SCZ;
+        end
+        
 end
 
 if strcmp(whatNull, 'randomGene')
@@ -60,7 +98,13 @@ if strcmp(whatNull, 'randomGene')
     
 elseif contains(whatNull, 'randomDrug')
     
-    load(sprintf('DataOutput_2024/nulls_%d_%stargets_%s.mat', params.numNull, params.whatDrugTargets, whatNull), ...
+    if strcmp(whatDisorder, 'BIP')
+        fileName_null = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR_%s_drugbank_treatment_class.mat', params.numNull, params.whatDrugTargets, params.whatTargets);
+    else
+        fileName_null = sprintf('DataOutput_2024/nulls_%d_%stargets_randomDrugR_%s_drugbank_treatment_class_%s.mat', params.numNull, params.whatDrugTargets, params.whatTargets, whatDisorder);
+    end
+    
+    load(fileName_null, ...
         'RANDOMdrugs_treatment', 'treatment_classes', 'geneNames');
     
     %geneNames_nulls = geneNames;
@@ -115,7 +159,7 @@ for i = 1:numDiseases_GWAS
     
     for k = 1:numDiseases_Treatment
         % select drug list
-        kIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{k});
+        kIND = contains(treatment_classes, whatDiseases_Treatment{k});
         geneWeights_treatment = drugScores(:,kIND);
      
         rhos(k) = ComputeDotProduct(geneWeights_treatment,geneWeightsGWAS);
@@ -186,7 +230,7 @@ for i = 1:numDiseases_GWAS
         
         for l = 1:numDiseases_Treatment
             % select drugs from selected list
-            lIND = contains(whatDiseases_Treatment_ALL, whatDiseases_Treatment{l});
+            lIND = contains(treatment_classes, whatDiseases_Treatment{l});
             nullScores = zeros(numNulls,1);
             for k = 1:numNulls
                 % separate set of nulls for each drug target list

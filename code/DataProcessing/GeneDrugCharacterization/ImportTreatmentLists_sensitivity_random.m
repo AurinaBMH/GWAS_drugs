@@ -5,6 +5,10 @@ function [indicatorTable,percIndicatorTable, dataTable] = ImportTreatmentLists_s
 %-------------------------------------------------------------------------------
 if nargin < 1
     normalizeWithinDrugs = true;
+    whatDrugTargets = 'sensitivity'; 
+    params = SetDefaultParams();
+    whatTargets = params.whatTargets; 
+    whatDisorder = 'BIP'; 
 end
 
 if nargin < 2

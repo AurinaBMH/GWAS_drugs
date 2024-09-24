@@ -1,14 +1,29 @@
 % Generating results for psychiatric disorders:
-function Pmatrix = plot_sensitivity_figures()
+function Pmatrix = plot_sensitivity_figures(whatDisorder)
+
+if nargin < 1
+    whatDisorder = 'BIP'; 
+end
 %-------------------------------------------------------
 % Set the options
 %-------------------------------------------------------
 params = SetDefaultParams();
 similarityTypes = {'MAGMAdefault', 'PPI_mapped_th600', 'eQTLbrain', 'AlleneQTLbrain'};
 similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'}; 
-whatDiseases_classes = params.whatDiseases_Treatment_classes;
-numDrugs = length(whatDiseases_classes); 
-whatMeasures = 'BIP_treatment_class';
+
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+end
+
+numDrugs = length(treatment_classes); 
+whatMeasures = 'treatment_class'; 
 whatNull = sprintf('randomDrugR_%s_drugbank_treatment_class', params.whatTargets); 
 
 %-------------------------------------------------------
@@ -33,11 +48,11 @@ for s=1:length(similarityTypes)
 
         
     % find corresponsing match
-    [T, INDr] = intersect(whatDiseases_Treatment_randDrug, whatDiseases_classes, 'stable'); 
+    [T, INDr] = intersect(whatDiseases_Treatment_randDrug, treatment_classes, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = pValsALL_randDrug(INDr); 
 
-    figureName = sprintf('figures_2024/BarChart_BIPsensitivity_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
+    figureName = sprintf('figures_2024/BarChart_%s_treatment_class_%s_%s_%s', whatDisorder, similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
 end
 
@@ -45,7 +60,7 @@ end
 % Figure 2: Calculate matches for individual disorders
 %-------------------------------------------------------
 f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label); 
-figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
+figureName = sprintf('figures_2024/BarP_%s_treatment_class_%s_%s', whatDisorder, whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 % 
 % 
