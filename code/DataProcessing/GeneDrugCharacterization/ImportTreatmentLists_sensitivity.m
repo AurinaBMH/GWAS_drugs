@@ -35,7 +35,6 @@ end
 % drug as equally important for the efficacy of that drug:
 
 params = SetDefaultParams();
-
 switch whatDisorder
     case 'BIP'
         treatment_classes = params.whatDiseases_Treatment_classes;

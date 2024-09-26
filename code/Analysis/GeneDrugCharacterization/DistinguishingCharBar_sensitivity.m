@@ -1,4 +1,4 @@
-function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL] = DistinguishingCharBar_sensitivity(similarityType, whatProperty, whatNull, whatThreshold, whatDiseases_GWAS, doPlot, numMeasures, whatMeasures, whatDisorder)
+function [rhosALL ,pValsALL, whatDiseases_Treatment, nullScoresALL] = DistinguishingCharBar_sensitivity(similarityType, whatProperty, whatNull, whatThreshold, whatDisease_GWAS, doPlot, numMeasures, whatMeasures, whatDisorder)
 
 if nargin < 1
     similarityType = 'MAGMAdefault';
@@ -15,7 +15,7 @@ end
 
 if nargin < 5
     params = SetDefaultParams();
-    whatDiseases_GWAS = {'BIP3'};
+    whatDisease_GWAS = {'BIP3'};
 end
 
 if nargin < 6
@@ -23,7 +23,7 @@ if nargin < 6
 end
 
 if nargin < 7
-    numMeasures = length(whatDiseases_GWAS); 
+    numMeasures = length(whatDisease_GWAS); 
 end
 
 if nargin < 8
@@ -39,16 +39,16 @@ end
 % Load in default parameters:
 params = SetDefaultParams();  
 
-switch whatDisorder
-    case 'BIP'
-        treatment_classes = params.whatDiseases_Treatment_classes;
-    case 'MDD'
-        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
-    case 'ADHD'
-        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
-    case 'SCZ'
-        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
-end
+% switch whatDisorder
+%     case 'BIP'
+%         whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes;
+%     case 'MDD'
+%         treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+%     case 'ADHD'
+%         treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+%     case 'SCZ'
+%         treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+% end
 
 %-------------------------------------------------------------------------------
 
@@ -86,6 +86,7 @@ switch whatMeasures
                 whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label_ADHD;
                 
             case 'SCZ'
+                
                 whatDiseases_Treatment_SEL = params.whatDiseases_Treatment_classes_SCZ;
                 whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label_SCZ;
         end
@@ -121,19 +122,20 @@ end
 addNull = true;
 
 numDiseases_Treatment = length(whatDiseases_Treatment);
-numDiseases_GWAS = length(whatDiseases_GWAS);
+numDiseases_GWAS = length(whatDisease_GWAS);
 
 %-------------------------------------------------------------------------------
 % Load treatment weights of each gene implicated in each disorder:
 % load drugs scores for all disorders, will select values from these
-[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors_sensitivity(whatDiseases_Treatment,'Drug');
+[geneNamesDrug,drugScoresAll] = GiveMeNormalizedScoreVectors_sensitivity(whatDiseases_Treatment,'Drug', '', '', whatDisorder);
+
 numDrugScores = length(drugScoresAll);
 
 %===============================================================================
 if doPlot
     f = figure('color','w', 'Position', [300, 300, 1500, 400]);
     ax = cell(numDiseases_GWAS,1);
-    if length(whatDiseases_GWAS)>3
+    if length(whatDisease_GWAS)>3
         f.Position = [471,945,1830,318];
     end
 end
@@ -141,7 +143,7 @@ rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 nullScoresALL = cell(numDiseases_GWAS,1); 
 for i = 1:numDiseases_GWAS
-    whatDisease = whatDiseases_GWAS{i};
+    whatDisease = whatDisease_GWAS{i};
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
     
     % Combine two datasets on overlap:
@@ -366,7 +368,7 @@ for i = 1:numDiseases_GWAS
         ax{i}.XTickLabelRotation = 45;
         xlabel('Disease treatment')
         ylabel({'GWAS-treatment', 'similarity'})
-        title(sprintf('%s',whatDiseases_GWAS{i}),'interpreter','none')
+        title(sprintf('%s',whatDisease_GWAS{i}),'interpreter','none')
         cMapGeneric = BF_getcmap('4reds',numDiseases_Treatment,false);
         cMapGeneric_n = cMapGeneric;
         

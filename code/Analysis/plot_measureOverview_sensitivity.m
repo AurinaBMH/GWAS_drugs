@@ -1,9 +1,25 @@
-function f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label)
+function f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label, whatDisorder)
 % make a bar plot measure to disorder
 
 params = SetDefaultParams();
-[~, ord] = intersect(params.whatDiseases_Treatment_classes, T, 'stable'); 
-whatDiseases_Treatment_label = params.whatDiseases_Treatment_classes_label(ord); 
+
+switch whatDisorder
+    case 'BIP'
+        treatment_classes = params.whatDiseases_Treatment_classes;
+        treatment_classes_label = params.whatDiseases_Treatment_classes_label;
+    case 'MDD'
+        treatment_classes = params.whatDiseases_Treatment_classes_MDD;
+        treatment_classes_label = params.whatDiseases_Treatment_classes_label_MDD;
+    case 'ADHD'
+        treatment_classes = params.whatDiseases_Treatment_classes_ADHD;
+        treatment_classes_label = params.whatDiseases_Treatment_classes_label_ADHD; 
+    case 'SCZ'
+        treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
+        treatment_classes_label = params.whatDiseases_Treatment_classes_label_SCZ; 
+end
+
+[~, ord] = intersect(treatment_classes, T, 'stable'); 
+whatDiseases_Treatment_label = treatment_classes_label(ord); 
 
 for kk=1:length(whatDiseases_Treatment_label)
     whatDiseases_Treatment_label{kk} = strcat(whatDiseases_Treatment_label{kk}, "    "); 
@@ -11,8 +27,14 @@ end
 
 f = figure('color','w', 'Position', [300, 300, 1500, 500]);
 ax = cell(size(Pmatrix,1),1);
-cMapGeneric = BF_getcmap('4reds',size(Pmatrix,2),false);
 
+switch whatDisorder
+    case {'BIP', 'SCZ', 'ADHD'}
+        cMapGeneric = BF_getcmap('4reds',size(Pmatrix,2),false);
+    case {'MDD'}
+        cMapGeneric = BF_getcmap('reds',size(Pmatrix,2),false);
+end
+    
 for l=1:size(Pmatrix,1)
 
     cMapGeneric_n = cMapGeneric;

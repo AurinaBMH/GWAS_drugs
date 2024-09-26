@@ -1,4 +1,4 @@
-function [geneNames,data] = GiveMeNormalizedScoreVectors_sensitivity(whichTreatments,whatMeasurement,similarityType,whatProperty,orderByWhat)
+function [geneNames,data] = GiveMeNormalizedScoreVectors_sensitivity(whichTreatments,whatMeasurement,similarityType,whatProperty,whatDisorder)
 % Can provide multiple diseases, will loop over them:
 %-------------------------------------------------------------------------------
 if nargin < 3
@@ -7,9 +7,7 @@ end
 if nargin < 4
     whatProperty = '';
 end
-if nargin < 5
-    orderByWhat = 'none';
-end
+
 %-------------------------------------------------------------------------------
 
 % Retrieve:
@@ -18,7 +16,7 @@ geneNames = cell(numDiseases,1);
 geneWeightsNorm = cell(numDiseases,1);
 for i = 1:numDiseases
     whatTreatment = whichTreatments{i};
-    [geneNames{i},geneWeightsNorm{i}] = GiveMeNormalizedScoreVector_sensitivity(whatTreatment,whatMeasurement,similarityType,whatProperty);
+    [geneNames{i},geneWeightsNorm{i}] = GiveMeNormalizedScoreVector_sensitivity(whatTreatment,whatMeasurement,similarityType,whatProperty, 'BF', whatDisorder);
 end
 
 % Agglomerate:

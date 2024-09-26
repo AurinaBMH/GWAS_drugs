@@ -52,8 +52,9 @@ for s=1:length(similarityTypes)
     figureName = sprintf('figures_2024/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
 
+    
     % get p-values for psych null
-    [~ ,pValsALL_psychDrug, whatDiseases_Treatment_psychDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP_all_drugbank_psych', 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+    [~ ,pValsALL_psychDrug, whatDiseases_Treatment_psychDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP_all_drugbank_psych', 'BF', whatDiseases_GWAS, false, numDrugs, whatMeasures);
      % find corresponsing match
     [T_psych, INDr_psych, INDc_psych] = intersect(whatDiseases_Treatment_psychDrug, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
@@ -69,9 +70,9 @@ f = plot_measureOverview(Pmatrix, T, similarityTypes_label);
 figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 
-f = plot_measureOverview(Pmatrix_psych, T_psych, similarityTypes_label); 
-figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, 'randomDrugP_all_drugbank_psych');
-print(gcf,figureName,'-dpng','-r300');
+% f = plot_measureOverview(Pmatrix_psych, T_psych, similarityTypes_label); 
+% figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, 'randomDrugP_all_drugbank_psych');
+% print(gcf,figureName,'-dpng','-r300');
 
 
 % score genes by contribution: 

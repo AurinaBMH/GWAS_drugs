@@ -61,7 +61,7 @@ params.whatDiseases_Treatment_classes_label_SCZ ={'SCZ antidepressant', 'SCZ aty
 
 % list treatment classes MDD
 params.whatDiseases_Treatment_classes_MDD = {'MDD_atypical_antidepressant', 'MDD_atypical_antipsychotic', 'MDD_antipsychotic', 'MDD_MAOI', 'MDD_SNRI', 'MDD_SSRI', 'MDD_TCA'};
-params.whatDiseases_Treatment_classes_label_MDD = {'MDD atypical antidepressant', 'MDD atypical antipsychotic', 'MDD antipsychotic', 'MDD benzodiazepine', 'MDD mood stabiliser', 'MDD stimulant','MDD MAOI', 'MDD SNRI', 'MDD SSRI', 'MDD TCA'};
+params.whatDiseases_Treatment_classes_label_MDD = {'MDD atypical antidepressant', 'MDD atypical antipsychotic', 'MDD antipsychotic', 'MDD MAOI', 'MDD SNRI', 'MDD SSRI', 'MDD TCA'};
 
 % list treatment classes ADHD
 params.whatDiseases_Treatment_classes_ADHD = {'ADHD_stimulant', 'ADHD_nonstimulant'};

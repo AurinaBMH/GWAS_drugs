@@ -27,9 +27,7 @@ end
 % drug as equally important for the efficacy of that drug:
 
 params = SetDefaultParams();
-whatDiseases = params.whatDiseases_Treatment_ALL; 
 
-numDiseases = length(whatDiseases);
 %-------------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------------
@@ -39,23 +37,22 @@ switch whatDrugTargets
         % use drug targets assigned automatically by AA in 08/2020
         % it takes ~10s to run, so load the pre-computed data here
         % dataTable = give_drugTargets();
-
-        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets); 
+        
+        fileName = sprintf('DataOutput_2022/drugTargets_2020_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
+        
+        whatDiseases = params.whatDiseases_Treatment_ALL; 
+        numDiseases = length(whatDiseases);
+
         
     case '2024'
         
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets); 
+        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank.mat', whatTargets);
         load(fileName, 'dataTable');
         
-    case 'sensitivity'
-        
-        fileName = sprintf('DataOutput_2024/drugTargets_2024_%s_drugbank_treatment_class.mat', whatTargets); 
-        load(fileName, 'dataTable');
-        
-        whatDiseases = params.whatDiseases_Treatment_classes; 
+        whatDiseases = params.whatDiseases_Treatment_ALL; 
         numDiseases = length(whatDiseases);
-        
+   
 end
 
 % get all drugs with active gene targets from DrugBank

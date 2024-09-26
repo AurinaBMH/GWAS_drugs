@@ -1,9 +1,9 @@
-function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector_sensitivity(whatDisease,whatMeasurement,similarityType,whatProperty, whatThreshold)
+function [geneNames,geneWeightsNorm,geneWeights] = GiveMeNormalizedScoreVector_sensitivity(whatTreatment,whatMeasurement,similarityType,whatProperty, whatThreshold, whatDisorder)
 %---------------------------------------r----------------------------------------
 % Inputs:
 %-------------------------------------------------------------------------------
 if nargin < 1
-    whatDisease = 'BIP';
+    whatTreatment = 'BIP';
 end
 if nargin < 2
     whatMeasurement = 'GWAS';
@@ -35,14 +35,14 @@ whatNorm = params.whatNorm;
 switch whatMeasurement
 case 'Drug'
     normalizeWithinDrugs = true;
-    indicatorTable = ImportTreatmentLists(normalizeWithinDrugs, 'sensitivity', params.whatTargets);
+    indicatorTable = ImportTreatmentLists_sensitivity(normalizeWithinDrugs, 'sensitivity', params.whatTargets, whatDisorder);
     geneNames = indicatorTable.Row;
-    geneWeights = indicatorTable.(whatDisease);
+    geneWeights = indicatorTable.(whatTreatment);
 case 'GWAS'
     % Load data:
-    fileName = sprintf('DataOutput_2024/resultsTable_%s_%s_%s_%s_drugbank.mat',whatDisease, whatThreshold, params.whatDrugTargets, params.whatTargets);
+    fileName = sprintf('DataOutput_2024/resultsTable_%s_%s_%s_%s_drugbank.mat',whatTreatment, whatThreshold, params.whatDrugTargets, params.whatTargets);
     load(fileName,'geneScores');
-    fprintf(1,'Loaded gene scores for %s from %s\n',whatDisease,fileName);
+    fprintf(1,'Loaded gene scores for %s from %s\n',whatTreatment,fileName);
     geneNames = geneScores.gene;
     
     if strcmp(similarityType, 'MAGMAdefault') || strcmp(similarityType, 'eQTLbrain')

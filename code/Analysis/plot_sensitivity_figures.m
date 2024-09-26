@@ -13,7 +13,7 @@ similarityTypes_label = {'SNP position', 'PPI network', 'Brain eQTL', 'AHBA'};
 
 switch whatDisorder
     case 'BIP'
-        treatment_classes = params.whatDiseases_Treatment_classes;
+        treatment_classes = params.whatDiseases_Treatment_classes; 
     case 'MDD'
         treatment_classes = params.whatDiseases_Treatment_classes_MDD;
     case 'ADHD'
@@ -22,9 +22,12 @@ switch whatDisorder
         treatment_classes = params.whatDiseases_Treatment_classes_SCZ;
 end
 
-numDrugs = length(treatment_classes); 
-whatMeasures = 'treatment_class'; 
-whatNull = sprintf('randomDrugR_%s_drugbank_treatment_class', params.whatTargets); 
+ix_dis = contains(params.whatGWAS_2024, whatDisorder);
+whatDisease_GWAS = params.whatGWAS_2024(ix_dis);
+
+numDrugs = length(treatment_classes);
+whatMeasures = 'treatment_class';
+whatNull = sprintf('randomDrugR_%s_drugbank_treatment_class', params.whatTargets);
 
 %-------------------------------------------------------
 % Figure S1: Calculate matches between BIP3 GWAS and each treatment class
@@ -42,7 +45,8 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL, pValsALL_randDrug, whatDiseases_Treatment_randDrug] = DistinguishingCharBar_sensitivity(similarityTypes{s}, whatProperty, whatNull, 'BF', {'BIP3'}, true, numDrugs, whatMeasures);
+    [rhosALL, pValsALL_randDrug, whatDiseases_Treatment_randDrug] = DistinguishingCharBar_sensitivity(similarityTypes{s}, whatProperty, whatNull, 'BF',...
+        whatDisease_GWAS, true, numDrugs, whatMeasures, whatDisorder);
 
         
     % find corresponsing match
@@ -57,7 +61,7 @@ end
 %-------------------------------------------------------
 % Figure 2: Calculate matches for individual disorders
 %-------------------------------------------------------
-f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label); 
+f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label, whatDisorder); 
 figureName = sprintf('figures_2024/BarP_%s_treatment_class_%s_%s', whatDisorder, whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
 % 
