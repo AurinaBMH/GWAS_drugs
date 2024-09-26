@@ -38,7 +38,8 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL_randDrug, whatDiseases_Treatment_randDrug, ~, enrichment_score_GWAS_randDrug, enrichment_score_drug_randDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
+    [rhosALL ,pValsALL_randDrug, whatDiseases_Treatment_randDrug, ~, enrichment_score_GWAS_randDrug, enrichment_score_drug_randDrug] = ...
+        DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % save scores for enrichment
     save(sprintf('enrichment_2024/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS_randDrug'); 
     save(sprintf('enrichment_2024/enrichment_drug_%s.mat', similarityTypes{s}), 'enrichment_score_drug_randDrug')
@@ -54,7 +55,8 @@ for s=1:length(similarityTypes)
 
     
     % get p-values for psych null
-    [~ ,pValsALL_psychDrug, whatDiseases_Treatment_psychDrug] = DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP_all_drugbank_psych', 'BF', whatDiseases_GWAS, false, numDrugs, whatMeasures);
+    [~ ,pValsALL_psychDrug, whatDiseases_Treatment_psychDrug] = ...
+        DistinguishingCharBar(similarityTypes{s},whatProperty, 'randomDrugP_all_drugbank_psych', 'BF', whatDiseases_GWAS, false, numDrugs, whatMeasures);
      % find corresponsing match
     [T_psych, INDr_psych, INDc_psych] = intersect(whatDiseases_Treatment_psychDrug, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
@@ -73,7 +75,6 @@ print(gcf,figureName,'-dpng','-r300');
 % f = plot_measureOverview(Pmatrix_psych, T_psych, similarityTypes_label); 
 % figureName = sprintf('figures_2024/BarP_withinDisorder_%s_%s', whatMeasures, 'randomDrugP_all_drugbank_psych');
 % print(gcf,figureName,'-dpng','-r300');
-
 
 % score genes by contribution: 
 [Prank_diabetes, Drank_diabetes, Grank_diabetes] = rank_gene_contribution('DIABETES2', 'DIABETES', 'PPI_mapped_th600');
