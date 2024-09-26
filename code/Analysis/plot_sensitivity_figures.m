@@ -46,7 +46,7 @@ for s=1:length(similarityTypes)
     end
     
     [rhosALL, pValsALL_randDrug, whatDiseases_Treatment_randDrug] = DistinguishingCharBar_sensitivity(similarityTypes{s}, whatProperty, whatNull, 'BF',...
-        whatDisease_GWAS, true, numDrugs, whatMeasures, whatDisorder);
+        whatDisease_GWAS, false, numDrugs, whatMeasures, whatDisorder);
 
         
     % find corresponsing match
