@@ -64,13 +64,7 @@ end
 f = plot_measureOverview_sensitivity(Pmatrix, T, similarityTypes_label, whatDisorder); 
 figureName = sprintf('figures_2024/BarP_%s_treatment_class_%s_%s', whatDisorder, whatMeasures, whatNull);
 print(gcf,figureName,'-dpng','-r300');
-% 
-% 
-% %-------------------------------------------------------
-% % Figure 3: Correspondence across different data processing methods
-% %-------------------------------------------------------
-% DOrecalc = true; % select true if any data was updated since the last run
-% pPlot_all = plot_compareMeasures(whatDiseases_classes, whatMeasures, DOrecalc); 
+
 
 end
 
