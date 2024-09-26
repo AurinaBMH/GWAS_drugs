@@ -7,7 +7,7 @@ whatMeasures = 'allBody';
 whatNull = sprintf('randomDrugR_%s_drugbank', params.whatTargets);
 
 %-------------------------------------------------------
-% Figure S3: Correspondence across different data processing methods
+% Figure S4: Correspondence across different data processing methods
 %-------------------------------------------------------
 DOrecalc = true;
 plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc);

@@ -21,7 +21,7 @@ for i=1:length(whatDiseases_GWAS)
 end
 
 %-------------------------------------------------------
-% Figure S1: Calculate pairwise matches 
+% Figure S6: Calculate pairwise matches 
 %-------------------------------------------------------
 
 nullScores = cell(length(similarityTypes),1); 
@@ -56,7 +56,7 @@ for s=1:length(similarityTypes)
 end
 
 %-------------------------------------------------------
-% Figure 2: Calculate matches for individual disorders
+% Figure S5: Calculate matches for individual disorders
 %-------------------------------------------------------
 f = plot_measureOverview(Pmatrix, T, similarityTypes_label); 
 figureName = sprintf('figures_2021/BarP_withinDisorder_%s_%s', whatMeasures, whatNull);
@@ -75,7 +75,7 @@ T_bip = join(Prank_bip, Drank_bip);
 T_bip = sortrows(T_bip, 2, 'ascend');
 
 %-------------------------------------------------------
-% Figure 3: Correspondence across different data processing methods
+% Figure S7: Correspondence across different data processing methods
 %-------------------------------------------------------
 DOrecalc = true; % select true if any data was updated since the last run
 pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc, '2021'); 

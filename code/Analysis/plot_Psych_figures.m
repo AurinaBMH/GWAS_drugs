@@ -21,7 +21,7 @@ for i=1:length(whatDiseases_GWAS)
 end
 
 %-------------------------------------------------------
-% Figure S1: Calculate pairwise matches 
+% Figure S2: Calculate pairwise matches 
 %-------------------------------------------------------
 
 nullScores = cell(length(similarityTypes),1); 
@@ -95,7 +95,7 @@ DOrecalc = false; % select true if any data was updated since the last run
 pPlot_all = plot_compareMeasures(whatDiseases_GWAS, whatMeasures, DOrecalc); 
 
 %-------------------------------------------------------
-% Figure S2: Correlation between GWAS-based scores for different data processing methods
+% Figure S3: Correlation between GWAS-based scores for different data processing methods
 %-------------------------------------------------------
 Mnames = cell(numGWAS,1); 
 Mnumbers = cell(numGWAS,1); 
@@ -109,7 +109,7 @@ for i=1:numGWAS
 end
 
 %-------------------------------------------------------
-% Figure S4: different null distributions for bipolar disorder and diabetes
+% Figure S8: different null distributions for bipolar disorder and diabetes
 %-------------------------------------------------------
 % Plot null distributions when choosing from all and from psychiatric drugs: 
 % in this example PPI-based significant results are used: bipolar disorder and diabetes; 
