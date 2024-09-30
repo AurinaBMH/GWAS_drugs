@@ -82,7 +82,7 @@ for l=1:size(Pmatrix,1)
     xticks(1:length(ix));
     xticklabels(whatDiseases_Treatment_label(ix));
     xtickangle(90);
-    xlim([0 5]); 
+    %xlim([0 5]); 
     ylim([0 4])
 %     ax{l}.XTickLabelRotation = 90;
     xlabel('Treatment class')

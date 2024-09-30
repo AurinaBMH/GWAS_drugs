@@ -369,7 +369,14 @@ for i = 1:numDiseases_GWAS
         xlabel('Disease treatment')
         ylabel({'GWAS-treatment', 'similarity'})
         title(sprintf('%s',whatDisease_GWAS{i}),'interpreter','none')
-        cMapGeneric = BF_getcmap('4reds',numDiseases_Treatment,false);
+        
+        switch whatDisorder
+            case {'BIP', 'SCZ', 'ADHD'}
+                cMapGeneric = BF_getcmap('4reds',length(rhos),false);
+            case {'MDD'}
+                cMapGeneric = BF_getcmap('set3',length(rhos),false);
+        end
+       
         cMapGeneric_n = cMapGeneric;
         
         for k=1:length(isSig)
