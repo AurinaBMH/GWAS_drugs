@@ -49,6 +49,7 @@ for s=1:length(similarityTypes)
     [T, INDr, INDc] = intersect(whatDiseases_Treatment_randDrug, whatDiseases_GWAS_name, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL_randDrug(INDr, INDc)); 
+    rhomatrix = diag(rhosALL(INDr, INDc)); 
 
     figureName = sprintf('figures_2024/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');
