@@ -1,4 +1,4 @@
-function pVals = compare_to_null(whatGWAS, geneWeightGWAS, drugScores_DIS, geneWeightsGWAS_all, whatNull, whatNorm)
+function [pVals, rhos, nullScores] = compare_to_null(whatGWAS, geneWeightGWAS, drugScores_DIS, geneWeightsGWAS_all, whatNull, whatNorm)
 
 if nargin < 5
     whatNull = 'randomDrugR_all_drugbank';

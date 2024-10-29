@@ -45,7 +45,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL, pValsALL_randDrug, whatDiseases_Treatment_randDrug] = DistinguishingCharBar_sensitivity(similarityTypes{s}, whatProperty, whatNull, 'BF',...
+    [rhosALL, pValsALL_randDrug, whatDiseases_Treatment_randDrug, nullScoresALL{s}] = DistinguishingCharBar_sensitivity(similarityTypes{s}, whatProperty, whatNull, 'BF',...
         whatDisease_GWAS, false, numDrugs, whatMeasures, whatDisorder);
 
         
@@ -53,6 +53,7 @@ for s=1:length(similarityTypes)
     [T, INDr] = intersect(whatDiseases_Treatment_randDrug, treatment_classes, 'stable'); 
     % select disorder to itself - diagonal
     Pmatrix(s,:) = pValsALL_randDrug(INDr); 
+    RHOmatrix(s,:) = rhosALL(INDr); 
 
 end
 

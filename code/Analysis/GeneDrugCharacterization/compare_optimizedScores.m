@@ -41,7 +41,8 @@ for i = 1:numGWAS
     ypred = predict(mdl,geneWeightsGWAS_ALL);
     ypredNorm = normalizeScoreVector(ypred, whatNorm);
     
-    Pval_comb = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, geneWeightsGWAS_ALL, whatNull, whatNorm);
+    [Pval_comb, rhos_comb, nullScores_comb] = compare_to_null(whatGWAS, ypredNorm, drugScores_ord, geneWeightsGWAS_ALL, whatNull, whatNorm);
+   
     
     if Pval_comb==0
         Pval_comb = 1/params.numNull;

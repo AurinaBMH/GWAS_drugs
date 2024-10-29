@@ -38,7 +38,7 @@ for s=1:length(similarityTypes)
         end
     end
     
-    [rhosALL ,pValsALL_randDrug, whatDiseases_Treatment_randDrug, ~, enrichment_score_GWAS_randDrug, enrichment_score_drug_randDrug] = ...
+    [rhosALL ,pValsALL_randDrug, whatDiseases_Treatment_randDrug, null_scores_all, enrichment_score_GWAS_randDrug, enrichment_score_drug_randDrug] = ...
         DistinguishingCharBar(similarityTypes{s}, whatProperty, whatNull, 'BF', whatDiseases_GWAS, true, numDrugs, whatMeasures);
     % save scores for enrichment
     save(sprintf('enrichment_2024/enrichment_GWAS_%s.mat', similarityTypes{s}), 'enrichment_score_GWAS_randDrug'); 
@@ -50,6 +50,18 @@ for s=1:length(similarityTypes)
     % select disorder to itself - diagonal
     Pmatrix(s,:) = diag(pValsALL_randDrug(INDr, INDc)); 
     rhomatrix = diag(rhosALL(INDr, INDc)); 
+
+    % get p, vals, rho vals, mean rand rho and SD 
+    P_all_order = pValsALL_randDrug(INDr, INDc); 
+    RHO_all_order = rhosALL(INDr, INDc); 
+    for ddd = 1:length(whatDiseases_GWAS)
+        % reorder based on treatment order
+        whatDisease = whatDiseases_GWAS{ddd}; 
+        NULL = null_scores_all.(whatDisease); 
+        NULL_ord = NULL(INDr); 
+        NULL_all_order.(whatDisease) = NULL_ord; 
+        
+    end
 
     figureName = sprintf('figures_2024/BarChart_psych_%s_%s_%s', similarityTypes{s}, whatMeasures, whatNull);
     print(gcf,figureName,'-dpng','-r300');

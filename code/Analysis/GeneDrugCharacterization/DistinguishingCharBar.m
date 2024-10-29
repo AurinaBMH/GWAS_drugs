@@ -90,7 +90,7 @@ if doPlot
 end
 rhosALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
 pValsALL = zeros(numDiseases_Treatment,numDiseases_GWAS);
-nullScoresALL = cell(numDiseases_GWAS,1); 
+%nullScoresALL = table; %cell(numDiseases_GWAS,1); 
 for i = 1:numDiseases_GWAS
     whatDisease = whatDiseases_GWAS{i};
     [geneNamesGWAS,geneWeightsGWAS] = GiveMeNormalizedScoreVector(whatDisease,'GWAS',similarityType,whatProperty, whatThreshold);
@@ -261,7 +261,7 @@ for i = 1:numDiseases_GWAS
     
     % Sort:
     [~,ix] = sort(rhos,'descend');
-    nullScoresALL{i} = all_nullScores; 
+    nullScoresALL.(whatDisease) = all_nullScores; 
     all_nullScores = all_nullScores(ix);
     rhos = rhos(ix);
     
